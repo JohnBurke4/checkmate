@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+
+
 
 // For the testing purposes, you should probably use https://pub.dev/packages/uuid
 String randomString() {
@@ -14,7 +17,11 @@ String randomString() {
   return base64UrlEncode(values);
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -38,7 +45,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<types.Message> _messages = [];
-  final _user = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b66666c');
+  final _user = const types.User(id: 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1');
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   void _addMessage(types.Message message) {
     setState(() {
@@ -55,10 +63,33 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     _addMessage(textMessage);
+    print(message.text);
+
+    Future<void> addUser() {
+      CollectionReference users = FirebaseFirestore.instance.collection('user');
+      // Call the user's CollectionReference to add a new user
+      return users
+          .add({
+            'full_name': "John Doe", // John Doe
+            'company': "Stokes and Sons", // Stokes and Sons
+            'age': 42 // 42
+          })
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
+    addUser();
   }
 
+  
   @override
   Widget build(BuildContext context) {
+
+     
+    
+
+
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
