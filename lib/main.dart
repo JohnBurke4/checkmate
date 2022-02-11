@@ -8,8 +8,6 @@ import 'dart:math';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 
-
-
 // For the testing purposes, you should probably use https://pub.dev/packages/uuid
 String randomString() {
   final random = Random.secure();
@@ -31,22 +29,51 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MyHomePage(),
+      home: ChatRoom(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class ChatRoom extends StatefulWidget {
+  const ChatRoom({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _ChatRoomState createState() => _ChatRoomState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ChatRoomState extends State<ChatRoom> {
+  String chatRoomId = "FBCJhytvnLyweXAYaLC8";
+  String userId = "qb6OCKQa8pWd2ndmCq6BBE4HBJ23";
+  //String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
   List<types.Message> _messages = [];
-  final _user = const types.User(id: 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1');
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late final _user = types.User(id: userId);
+
+
+  Future<void> fetchPastMessages () async {
+    try{
+      await  FirebaseFirestore.instance
+      .collection('messages')
+      .doc(chatRoomId)
+      .collection("list")
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      final textMessage = types.TextMessage(
+        author: types.User(id: doc["author"]),
+        createdAt: doc["createdAt"],
+        id: doc["id"],
+        text: doc["text"],
+      );
+      _addMessage(textMessage);
+
+      print(doc["text"]);
+    });
+  });
+    }catch(e){
+      print(e);
+    }
+  }
+
 
   void _addMessage(types.Message message) {
     setState(() {
@@ -65,31 +92,34 @@ class _MyHomePageState extends State<MyHomePage> {
     _addMessage(textMessage);
     print(message.text);
 
-    Future<void> addUser() {
-      CollectionReference users = FirebaseFirestore.instance.collection('user');
+    Future<void> addMessage() async {
+      CollectionReference messages =
+          FirebaseFirestore.instance.collection('messages');
       // Call the user's CollectionReference to add a new user
-      return users
+      return messages
+          .doc(chatRoomId)
+          .collection("list")
           .add({
-            'full_name': "John Doe", // John Doe
-            'company': "Stokes and Sons", // Stokes and Sons
-            'age': 42 // 42
+            'author': userId,
+            'createdAt': textMessage.createdAt, // John Doe
+            'id': textMessage.id,
+            'text': message.text,
           })
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+          .then((value) => print("Message Added"))
+          .catchError((error) => print("Failed to add message: $error"));
     }
 
-    addUser();
+    addMessage();
   }
 
-  
+  @override
+  void initState(){
+    super.initState;
+    fetchPastMessages ();
+  }
+
   @override
   Widget build(BuildContext context) {
-
-     
-    
-
-
-
     return Scaffold(
       body: SafeArea(
         bottom: false,
