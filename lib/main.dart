@@ -43,8 +43,8 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> {
   String chatRoomId = "FBCJhytvnLyweXAYaLC8";
-  String userId = "qb6OCKQa8pWd2ndmCq6BBE4HBJ23";
-  //String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
+  //String userId = "qb6OCKQa8pWd2ndmCq6BBE4HBJ23";
+  String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
   List<types.Message> _messages = [];
   late final _user = types.User(id: userId);
 
@@ -55,6 +55,7 @@ class _ChatRoomState extends State<ChatRoom> {
       .collection('messages')
       .doc(chatRoomId)
       .collection("list")
+      .orderBy('createdAt')
       .get()
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((doc) {
