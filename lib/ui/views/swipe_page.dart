@@ -1,3 +1,4 @@
+import 'package:checkmate/MockData/Accounts.dart';
 import 'package:checkmate/ui/components/swipe_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,45 +14,32 @@ class SwipePage extends StatefulWidget {
 class _SwipePageState extends State<SwipePage>
     with TickerProviderStateMixin {
 
-  List<String> welcomeImages = [
-    "assets/test/tinderSample1.jpg",
-    "assets/test/tinderSample2.jpg",
-    "assets/test/tinderSample3.jpg",
-    "assets/test/tinderSample4.jpg",
-  ];
+
 
   List<SwipeItem> _swipeItems = List<SwipeItem>.empty(growable: true);
   MatchEngine _matchEngine = MatchEngine();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<String> _names = ["Red", "Blue", "Green", "Yellow", "Orange"];
-  List<Color> _colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange
-  ];
 
   @override
   void initState() {
-    for (int i = 0; i < welcomeImages.length; i++) {
+    for (int i = 0; i < MockAccounts.accounts.length; i++) {
       _swipeItems.add(SwipeItem(
-          content: SwipeCard(account: Account(Name:"John", PhotoUrl: welcomeImages[i])),
+          content: SwipeCard(user: MockAccounts.accounts[i]),
           likeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Liked John"),
+              content: Text("Liked" +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
           nopeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Nope John"),
+              content: Text("Disliked" +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
           superlikeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Superliked John"),
+              content: Text("Superliked" +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
@@ -70,7 +58,7 @@ class _SwipePageState extends State<SwipePage>
   Widget build(BuildContext context) {
 
     return Container(
-        height: MediaQuery.of(context).size.height*0.6,
+        height: MediaQuery.of(context).size.height*0.7,
         alignment: Alignment.topCenter,
         child: SwipeCards(
           matchEngine: _matchEngine,

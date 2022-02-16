@@ -27,10 +27,7 @@ class _NavBarState extends State<NavBar> {
       'Index 0: Me',
       style: optionStyle,
     ),
-    Text(
-      'Index 1: Swipe',
-      style: optionStyle,
-    ),
+    SwipePage(),
     Text(
       'Index 2: Chat',
       style: optionStyle,

@@ -1,17 +1,24 @@
 import 'package:location/location.dart';
 
 class User{
-  late String imagePath;
+  late String id;
   late String name;
   late String bio;
-  late String _email;
-
+  late String email;
   late int age;
-  late int _ID;
+  late List<String> imagePaths;
+  late String abilityLevel;
+  late String location;
 
-  late chessAbility abilityLevel;
-
-  late Location location;
+  User.fromJSON(Map<dynamic, dynamic> json):
+        id = json["id"] ?? "0",
+        name = json["name"] ?? "John Dow",
+        bio = json["bio"] ?? "",
+        email = json["email"] ?? "0",
+        age = json["age"] ?? 0,
+        imagePaths = List<String>.from(json["imagePaths"]),
+        abilityLevel = json["abilityLevel"] ?? "beginner",
+        location = json["location"] ?? "0";
 }
 
 enum chessAbility{
