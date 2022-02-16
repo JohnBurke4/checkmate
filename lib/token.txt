@@ -1,0 +1,3 @@
+This is the access token to call the mapbox API, please copy and paste in the widget_bar.dart to run it.
+
+pk.eyJ1IjoibmRray0wIiwiYSI6ImNremloa204cDFld3Uyd24yMjdxcTJlZjUifQ.3Di7cDFkBf-oKovlkYO_Tw
