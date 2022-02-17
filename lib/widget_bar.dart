@@ -30,8 +30,9 @@ class _NavBarState extends State<NavBar> {
       'Index 0: Me',
       style: optionStyle,
     ),
-    ChatRoom(),
     SwipePage(),
+    ChatRoom(),
+
   ];
 
   void _onItemTapped(int index) {

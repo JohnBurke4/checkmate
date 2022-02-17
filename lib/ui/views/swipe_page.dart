@@ -27,19 +27,19 @@ class _SwipePageState extends State<SwipePage>
           content: SwipeCard(user: MockAccounts.accounts[i]),
           likeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Liked" +  MockAccounts.accounts[i].name),
+              content: Text("Liked " +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
           nopeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Disliked" +  MockAccounts.accounts[i].name),
+              content: Text("Disliked " +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
           superlikeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Superliked" +  MockAccounts.accounts[i].name),
+              content: Text("Superliked " +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
