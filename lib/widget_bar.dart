@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:user_location/user_location.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'ui/views/swipe_page.dart';
 
 class NavBar extends StatefulWidget {
   @override
