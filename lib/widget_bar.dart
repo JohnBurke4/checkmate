@@ -1,3 +1,4 @@
+import 'package:checkmate/ui/views/user_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:user_location/user_location.dart';
@@ -26,10 +27,7 @@ class _NavBarState extends State<NavBar> {
 
   static List<Widget> _widgetOptions = <Widget>[
     // Put your widgets in here
-    Text(
-      'Index 0: Me',
-      style: optionStyle,
-    ),
+    UserPage(),
     SwipePage(),
     ChatRoom(),
 
@@ -61,7 +59,7 @@ class _NavBarState extends State<NavBar> {
                 "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
             additionalOptions: {
               // Paste the access token from the token.txt
-              'accessToken': '<access-token>>',
+              'accessToken': 'pk.eyJ1IjoibmRray0wIiwiYSI6ImNremloa204cDFld3Uyd24yMjdxcTJlZjUifQ.3Di7cDFkBf-oKovlkYO_Tw',
               'id': 'mapbox/streets-v11',
             },
           ),
