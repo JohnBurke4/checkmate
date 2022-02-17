@@ -1,3 +1,4 @@
+import 'package:checkmate/gallery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:user_location/user_location.dart';
@@ -25,10 +26,7 @@ class _NavBarState extends State<NavBar> {
 
   static List<Widget> _widgetOptions = <Widget>[
     // Put your widgets in here
-    Text(
-      'Index 0: Me',
-      style: optionStyle,
-    ),
+    Gallery(),
     Text(
       'Index 1: Swipe',
       style: optionStyle,
