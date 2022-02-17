@@ -4,6 +4,8 @@ import 'package:user_location/user_location.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import 'chat.dart';
+
 class NavBar extends StatefulWidget {
   @override
   _NavBarState createState() => _NavBarState();
@@ -31,10 +33,7 @@ class _NavBarState extends State<NavBar> {
       'Index 1: Swipe',
       style: optionStyle,
     ),
-    Text(
-      'Index 2: Chat',
-      style: optionStyle,
-    ),
+    ChatRoom(),
   ];
 
   void _onItemTapped(int index) {
