@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import '../../firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:math';
@@ -81,12 +81,12 @@ class _ChatRoomState extends State<ChatRoom> {
     _addMessage(textMessage);
 
     FirebaseFirestore.instance
-        .collection('messages')
+        .collection("messages")
         .doc(chatRoomId)
         .collection("list")
         .add({
           'author': userId,
-          'createdAt': textMessage.createdAt, // John Doe
+          'createdAt': DateTime.now(), // John Doe
           'id': textMessage.id,
           'text': message.text,
         })
@@ -126,7 +126,7 @@ class _ChatRoomState extends State<ChatRoom> {
             stream: FirebaseFirestore.instance
                 .collection('messages')
                 .doc(chatRoomId)
-                .collection("list")
+                .collection('list')
                 .orderBy('createdAt')
                 .snapshots(),
             builder:
@@ -135,7 +135,10 @@ class _ChatRoomState extends State<ChatRoom> {
                 return const Text('Something went wrong');
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text("Loading");
+                return const Center(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Color.fromARGB(255, 23, 29, 43))));
               }
 
               return SafeArea(

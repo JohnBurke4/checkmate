@@ -4,7 +4,7 @@ import 'package:checkmate/models/user.dart';
 
 class MockAccounts {
   static List<User> accounts = [
-    User.fromJSON(jsonDecode(user1Json)),
+  User.fromJSON(jsonDecode(user1Json)),
     User.fromJSON(jsonDecode(user2Json)),
     User.fromJSON(jsonDecode(user3Json))
 
