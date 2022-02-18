@@ -1,12 +1,11 @@
 import 'package:checkmate/ui/views/user_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:user_location/user_location.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+
 import 'ui/views/swipe_page.dart';
 
 import 'chat.dart';
+import 'map.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -20,17 +19,12 @@ class _NavBarState extends State<NavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  MapController mapController = MapController();
-  late UserLocationOptions userLocationOptions;
-  // ADD THIS
-  List<Marker> markers = [];
-
   static List<Widget> _widgetOptions = <Widget>[
     // Put your widgets in here
     UserPage(),
     SwipePage(),
     ChatRoom(),
-
+    MapPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -40,49 +34,13 @@ class _NavBarState extends State<NavBar> {
     });
   }
 
-  Widget _selectedWidget(int index, BuildContext context) {
-    if (index < 3) {
-      return _widgetOptions.elementAt(_selectedIndex);
-    } else {
-      return FlutterMap(
-        options: MapOptions(
-          center: LatLng(0, 0),
-          zoom: 15.0,
-          plugins: [
-            // ADD THIS
-            UserLocationPlugin(),
-          ],
-        ),
-        layers: [
-          TileLayerOptions(
-            urlTemplate:
-                "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-            additionalOptions: {
-              // Paste the access token from the token.txt
-              'accessToken': 'pk.eyJ1IjoibmRray0wIiwiYSI6ImNremloa204cDFld3Uyd24yMjdxcTJlZjUifQ.3Di7cDFkBf-oKovlkYO_Tw',
-              'id': 'mapbox/streets-v11',
-            },
-          ),
-          //MarkerLayerOptions(markers: markers),
-          userLocationOptions,
-        ],
-        mapController: mapController,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    userLocationOptions = UserLocationOptions(
-      context: context,
-      mapController: mapController,
-      markers: markers,
-    );
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('CheckMate')),
       ),
-      body: _selectedWidget(_selectedIndex, context),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.black,
         type: BottomNavigationBarType.fixed,
