@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'ui/views/swipe_page.dart';
 
-import 'ui/components/chatRoom.dart';
-import 'ui/components/friendList.dart';
+import 'ui/views/chatRoom.dart';
+import 'ui/views/friendList.dart';
 import 'map.dart';
 
 class NavBar extends StatefulWidget {
@@ -24,8 +24,8 @@ class _NavBarState extends State<NavBar> {
     // Put your widgets in here
     UserPage(),
     SwipePage(),
-    ChatRoom(),
     FriendList(),
+    MapPage(),
   ];
 
   void _onItemTapped(int index) {

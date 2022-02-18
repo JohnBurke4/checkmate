@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../../firebase_options.dart';
@@ -11,7 +11,10 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom({Key? key}) : super(key: key);
+  const ChatRoom({Key? key, required this.roomID}) : super(key: key);
+
+  final String roomID;
+  //final String uid;
 
   @override
   _ChatRoomState createState() => _ChatRoomState();
@@ -122,6 +125,10 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: const Center(child: const Text('CheckMate')),
+
+        ),
         body: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('messages')
@@ -140,13 +147,14 @@ class _ChatRoomState extends State<ChatRoom> {
                         valueColor: AlwaysStoppedAnimation<Color>(
                             Color.fromARGB(255, 23, 29, 43))));
               }
-
+              print(snapshot.data!.docs.length);
               return SafeArea(
                   bottom: false,
                   child: Chat(
                     messages: _messages,
                     onSendPressed: _handleSendPressed,
                     user: _user,
+                    showUserNames: true,
                   ));
             }));
   }
