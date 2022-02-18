@@ -1,3 +1,4 @@
+import 'package:checkmate/ui/views/swipe_page.dart';
 import 'package:checkmate/widget_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
