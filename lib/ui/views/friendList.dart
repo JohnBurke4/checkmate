@@ -15,10 +15,9 @@ import 'chatRoom.dart';
 class FriendList extends StatelessWidget {
   FriendList({Key? key}) : super(key: key);
 
-  late final Stream<DocumentSnapshot> _path = FirebaseFirestore.instance
-      .collection('user')
-      .doc("qb6OCKQa8pWd2ndmCq6BBE4HBJ23")
-      .snapshots();
+  String uid = "1T3rXg0NOgHJhNQ0j6fx";
+  late final Stream<DocumentSnapshot> _path =
+      FirebaseFirestore.instance.collection('user').doc(uid).snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +61,9 @@ class FriendList extends StatelessWidget {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return SafeArea(
-                            child: MessageFetching(
-                              roomID:  data['friends'][index]['roomID'],
-                          // chatRoomReference: FirebaseFirestore.instance
-                          //     .collection('messages')
-                          //     .doc(data['friends'][index]['roomID'])
-                          //     .collection('list')
-                          //     .orderBy('createdAt')
-                          //     .snapshots(),
-                        ));
+                            child: ChatRoom(
+                                roomID: data['friends'][index]['roomID'],
+                                uid: uid));
                       }))
                     },
                   );
@@ -88,7 +81,6 @@ class LastMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('messages')
@@ -98,7 +90,6 @@ class LastMessage extends StatelessWidget {
             .limit(1)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-
           print(roomID);
           if (snapshot.hasError) {
             return const Text('Something went wrong');
