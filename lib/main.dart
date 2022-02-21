@@ -1,5 +1,6 @@
 import 'package:checkmate/ui/views/swipe_page.dart';
 import 'package:checkmate/widget_bar.dart';
+import 'package:checkmate/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -32,8 +33,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: NavBar(),
+      home: const SignInScreen(),
     );
   }
 }
-
