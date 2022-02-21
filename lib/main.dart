@@ -1,4 +1,6 @@
+import 'package:checkmate/ui/views/edit_user_page.dart';
 import 'package:checkmate/ui/views/swipe_page.dart';
+import 'package:checkmate/ui/views/user_page.dart';
 import 'package:checkmate/widget_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,6 +35,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: NavBar(),
+      routes: {
+        '/user_page': (context) => UserPage(),
+        '/edit_user_page': (context) => EditProfilePage()
+      }
     );
   }
 }
