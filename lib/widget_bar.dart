@@ -55,6 +55,7 @@ class _NavBarState extends State<NavBar> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: const Text('CheckMate')),
+        automaticallyImplyLeading: false,
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(

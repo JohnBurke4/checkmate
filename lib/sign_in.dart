@@ -1,3 +1,4 @@
+import 'package:checkmate/widget_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
 import 'package:checkmate/home.dart';
@@ -50,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           password: _passwordTextController.text)
                       .then((value) {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                        MaterialPageRoute(builder: (context) => NavBar()));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
