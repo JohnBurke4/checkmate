@@ -88,10 +88,11 @@ class LastMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('messages')
-            .doc("FBCJhytvnLyweXAYaLC8")
+            .doc(this.roomID)
             .collection('list')
             .orderBy('createdAt', descending: true)
             .limit(1)
