@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   location: ^4.2.0
+  photo_view: ^0.13.0
   flutter:
     sdk: flutter
   flutter_map: any
