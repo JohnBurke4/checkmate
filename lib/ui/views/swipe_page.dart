@@ -1,4 +1,5 @@
 import 'package:checkmate/MockData/Accounts.dart';
+import 'package:checkmate/services/match.dart';
 import 'package:checkmate/ui/components/swipe_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,15 @@ class _SwipePageState extends State<SwipePage>
     for (int i = 0; i < MockAccounts.accounts.length; i++) {
       _swipeItems.add(SwipeItem(
           content: SwipeCard(user: MockAccounts.accounts[i]),
-          likeAction: () {
+          likeAction: () async {
+            await MatchServices.swipeRight(MockAccounts.accounts[i].id);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Liked " +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
-          nopeAction: () {
+          nopeAction: () async {
+            await MatchServices.swipeLeft(MockAccounts.accounts[i].id);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Disliked " +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
