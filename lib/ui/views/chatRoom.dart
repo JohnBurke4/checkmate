@@ -1,30 +1,23 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../../firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
-import 'dart:math';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-
-import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../../firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+
+import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:flutter/cupertino.dart';
+
+
 
 class ChatRoom extends StatefulWidget {
   final String roomID;
   final String uid;
-  const ChatRoom({Key? key, required this.roomID, required this.uid})
+  const ChatRoom(
+      {Key? key,
+      required this.roomID,
+      required this.uid})
       : super(key: key);
 
   @override
@@ -32,70 +25,39 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  List<types.Message> _messages = [];
+  TextEditingController _textController = new TextEditingController();
 
-  late final _user = types.User(id: widget.uid);
-  late Stream test = FirebaseFirestore.instance
-      .collection('messages')
-      .doc(widget.roomID)
-      .collection("list")
-      .snapshots();
-
-  StreamSubscription<QuerySnapshot>? messageListener;
-
-  String randomString() {
-    final random = Random.secure();
-    final values = List<int>.generate(16, (i) => random.nextInt(255));
-    return base64UrlEncode(values);
-  }
-
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
-
-  void _handlePreviewDataFetched(
-    types.TextMessage message,
-    types.PreviewData previewData,
-  ) {
-    final index = _messages.indexWhere((element) => element.id == message.id);
-    final updatedMessage = _messages[index].copyWith(previewData: previewData);
-
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      setState(() {
-        _messages[index] = updatedMessage;
-      });
-    });
-  }
-
-  void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: randomString(),
-      text: message.text,
-    );
-
-    _addMessage(textMessage);
-
+  void _handleSendPressed(String message) {
+    if (message == '') return;
     FirebaseFirestore.instance
         .collection("messages")
         .doc(widget.roomID)
         .collection("list")
         .add({
-          'author': widget.uid,
-          'createdAt': DateTime.now().millisecondsSinceEpoch, // John Doe
-          'id': textMessage.id,
-          'text': message.text,
-        })
-        .then((value) => print("Message Added"))
-        .catchError((error) => print("Failed to add message: $error"));
+      'author': widget.uid,
+      'createdAt': DateTime.now().millisecondsSinceEpoch, // John Doe
+      //'id': textMessage.id,
+      'text': message,
+    }).then((value) {
+      _textController.text = '';
+      print("Message Added");
+    }).catchError((error) => print("Failed to add message: $error"));
   }
 
   @override
   void initState() {
     super.initState;
+  }
+
+  bool isSender(String friend) {
+    return friend == widget.uid;
+  }
+
+  Alignment getAlignment(String friend) {
+    if (friend == widget.uid) {
+      return Alignment.topRight;
+    }
+    return Alignment.topLeft;
   }
 
   @override
@@ -109,7 +71,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 .collection('messages')
                 .doc(widget.roomID)
                 .collection('list')
-                .orderBy('createdAt')
+                .orderBy('createdAt',descending: true)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -124,27 +86,50 @@ class _ChatRoomState extends State<ChatRoom> {
               }
 
               if (snapshot.hasData) {
-                for (var document in snapshot.data!.docChanges) {
-                  Map<String, dynamic> data =
-                      document.doc.data() as Map<String, dynamic>;
-                  print(data);
-
-                  final textMessage = types.TextMessage(
-                    author: types.User(id: data["author"]),
-                    createdAt: data["createdAt"],
-                    id: data["id"],
-                    text: data["text"],
-                  );
-                  _messages.insert(0, textMessage);
-                }
                 return SafeArea(
-                    bottom: false,
-                    child: Chat(
-                      messages: _messages,
-                      onSendPressed: _handleSendPressed,
-                      user: _user,
-                      showUserNames: true,
-                    ));
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                            child: ListView(
+                                reverse: true,
+                                //padding : EdgeInsets.only(top: 15.0),
+                                children: snapshot.data!.docs
+                                    .map((DocumentSnapshot document) {
+                                  Map<String, dynamic> data =
+                                      document.data()! as Map<String, dynamic>;
+                                  return BubbleSpecialThree(
+                                    text: data['text'],
+                                    isSender: isSender(data['author']),
+                                    color: isSender(data['author'])
+                                        ? const Color(0xFF1B97F3)
+                                        : const Color(0xFFE8E8EE),
+                                    tail: false,
+                                    textStyle: const TextStyle(
+                                      fontSize: 25,
+                                      //color: Colors.white,
+                                    ),
+                                  );
+                                }).toList())),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 18.0),
+                                child: CupertinoTextField(
+                                  controller: _textController,
+                                ),
+                              ),
+                            ),
+                            CupertinoButton(
+                                child: Icon(Icons.send_sharp),
+                                onPressed: () =>
+                                    _handleSendPressed(_textController.text))
+                          ],
+                        )
+                      ]),
+                );
               }
               return Container();
             }));

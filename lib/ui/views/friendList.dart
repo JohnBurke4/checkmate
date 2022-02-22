@@ -7,22 +7,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-
 import 'chatRoom.dart';
 
 class FriendList extends StatelessWidget {
-  FriendList({Key? key}) : super(key: key);
+  const FriendList({Key? key}) : super(key: key);
 
-  String uid = "1T3rXg0NOgHJhNQ0j6fx";
-  late final Stream<DocumentSnapshot> _path =
-      FirebaseFirestore.instance.collection('user').doc(uid).snapshots();
+  final String uid = "1T3rXg0NOgHJhNQ0j6fx";
+
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: _path,
+        stream: FirebaseFirestore.instance.collection('user').doc(uid).snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -84,7 +80,7 @@ class LastMessage extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('messages')
-            .doc(this.roomID)
+            .doc(roomID)
             .collection('list')
             .orderBy('createdAt', descending: true)
             .limit(1)
