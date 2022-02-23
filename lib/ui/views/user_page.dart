@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'edit_user_page.dart';
+import ''
 class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext){
-    return Column(
+    return new Scaffold(
+    body: new Column(
       children: <Widget>[
         SizedBox(height: 30, ),
         Stack(
@@ -23,9 +25,19 @@ class UserPage extends StatelessWidget {
               style: TextStyle( fontSize: 15),)),
         ListTile(title: Text('Ability Level', style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold),),
             subtitle: Text('Experienced (1600+)',
-              style: TextStyle( fontSize: 15),))
+              style: TextStyle( fontSize: 15),)),
+
+        ElevatedButton(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          ),
+          onPressed: () {Navigator.pushNamed(buildContext, '/edit_user_page');
+          EditProfilePage(); },
+          child: Text('Edit Profile'),
+        )
 
       ],
+    )
     );
   }
 }
