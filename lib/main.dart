@@ -45,8 +45,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      /// check if user is signed (Open Chat page ) if user is not signed in (open welcome page)
-
       home: FirebaseAuth.instance.currentUser == null
           ? const SignInScreen()
           : NavBar(),
