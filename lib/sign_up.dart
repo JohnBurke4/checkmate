@@ -1,7 +1,6 @@
 import 'package:checkmate/widget_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
-import 'package:checkmate/home.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
