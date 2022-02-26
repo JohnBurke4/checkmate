@@ -1,3 +1,4 @@
+import 'package:checkmate/widget_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
 import 'package:checkmate/home.dart';
@@ -65,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       .then((value) {
                     print("Created New Account");
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                        MaterialPageRoute(builder: (context) => NavBar()));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });

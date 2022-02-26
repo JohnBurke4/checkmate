@@ -1,4 +1,6 @@
+import 'package:checkmate/sign_in.dart';
 import 'package:checkmate/ui/views/user_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +56,17 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.logout,
+            color: Colors.white,
+          ),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => SignInScreen()));
+          },
+        ),
         title: Center(child: const Text('CheckMate')),
         automaticallyImplyLeading: false,
       ),
