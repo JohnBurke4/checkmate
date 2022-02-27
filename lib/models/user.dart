@@ -1,6 +1,10 @@
 import 'package:location/location.dart';
 
 class User{
+  User(String name, String bio){
+    this.name = name;
+    this.bio = bio;
+  }
   late String id;
   late String name;
   late String bio;

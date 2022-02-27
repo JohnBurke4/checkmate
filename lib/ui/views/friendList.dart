@@ -7,22 +7,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-
 import 'chatRoom.dart';
 
 class FriendList extends StatelessWidget {
-  FriendList({Key? key}) : super(key: key);
+  const FriendList({Key? key}) : super(key: key);
 
-  late final Stream<DocumentSnapshot> _path = FirebaseFirestore.instance
-      .collection('user')
-      .doc("qb6OCKQa8pWd2ndmCq6BBE4HBJ23")
-      .snapshots();
+  final String uid = "1T3rXg0NOgHJhNQ0j6fx";
+
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: _path,
+        stream: FirebaseFirestore.instance.collection('user').doc(uid).snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -43,7 +39,7 @@ class FriendList extends StatelessWidget {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
 
-            print(data['friends'].toString());
+            print(data['friends'][0]['roomID'].toString().length);
             return ListView.builder(
                 itemCount: data['friends'].length,
                 itemBuilder: (context, index) {
@@ -62,8 +58,8 @@ class FriendList extends StatelessWidget {
                           MaterialPageRoute(builder: (context) {
                         return SafeArea(
                             child: ChatRoom(
-                          roomID: data['friends'][index]['roomID'],
-                        ));
+                                roomID: data['friends'][index]['roomID'],
+                                uid: uid));
                       }))
                     },
                   );
@@ -75,22 +71,22 @@ class FriendList extends StatelessWidget {
 }
 
 class LastMessage extends StatelessWidget {
-  const LastMessage({Key? key, required this.roomID}) : super(key: key);
-
   final String roomID;
+
+  const LastMessage({Key? key, required this.roomID}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("Room ID is $roomID");
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('messages')
-            .doc("FBCJhytvnLyweXAYaLC8")
+            .doc(roomID)
             .collection('list')
             .orderBy('createdAt', descending: true)
             .limit(1)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          print(roomID);
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -103,10 +99,15 @@ class LastMessage extends StatelessWidget {
 
           print("The length of collection is ${snapshot.data!.docs.length}");
           if (snapshot.hasData) {
-            Map<String, dynamic> data =
-                snapshot.data!.docs[0].data()! as Map<String, dynamic>;
+            if (snapshot.data!.docs.isEmpty) {
+              print("Have no contact before");
+              return Container();
+            } else {
+              Map<String, dynamic> data =
+                  snapshot.data!.docs[0].data()! as Map<String, dynamic>;
 
-            return Text(data['text'], overflow: TextOverflow.ellipsis);
+              return Text(data['text'], overflow: TextOverflow.ellipsis);
+            }
           }
           return Container();
         });
