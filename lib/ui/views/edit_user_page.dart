@@ -1,12 +1,8 @@
 
-//import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'user_page.dart';
-//import 'package:user_profile_ii_example/utils/user_preferences.dart';
-//import 'package:user_profile_ii_example/widget/appbar_widget.dart';
-//import 'package:user_profile_ii_example/widget/button_widget.dart';
-//import 'package:user_profile_ii_example/widget/profile_widget.dart';
-//import 'package:user_profile_ii_example/widget/textfield_widget.dart';
+import 'package:checkmate/models/user.dart';
+
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -14,11 +10,22 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  // User user = UserPreferences.myUser;
+  User user = User('','');
+  TextEditingController nameController = TextEditingController(text:"");
+  TextEditingController bioController = TextEditingController(text:"");
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    if(ModalRoute.of(context)!.settings.arguments != null){
+      User temp = ModalRoute.of(context)!.settings.arguments as User;
+      user.name = temp.name;
+      user.bio = temp.bio;
+      nameController.text = user.name;
+      bioController.text = user.bio;
+    }
+
+      return Scaffold(
     body: Column(
       children: [
         // ProfileWidget(
@@ -34,7 +41,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           width: 200,
           child:
           TextFormField(
-            initialValue:'Magnus',
+            controller: nameController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Full Name'
@@ -48,9 +55,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           width: 600,
           child:
           TextFormField(
+            controller: bioController,
             maxLines: 4,
-            initialValue:'My name is Magnus, but my mates call me Mag.\n''I got fed up of winning all the time'
-          ' so I thought I would try this app out since I have heard such great things about it.',
             decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Bio'
@@ -76,6 +82,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         //   onChanged: (email) {},
         // ),
         const SizedBox(height: 24),
+        ElevatedButton(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          ),
+          onPressed: () {user.name = nameController.text; user.bio = bioController.text;Navigator.pushNamed(context,'/user_page', arguments: user);
+          },
+          child: Text('Confirm Changes'),
+        )
         // TextFieldWidget(
         //   label: 'About',
         //   text: user.about,
@@ -83,6 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         //   onChanged: (about) {},
         // ),
       ],
+
     ));
   }
 }
