@@ -1,140 +1,77 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../../firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+
+import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:flutter/cupertino.dart';
+
+
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom({Key? key, required this.roomID}) : super(key: key);
-
   final String roomID;
-  //final String uid;
+  final String uid;
+  const ChatRoom(
+      {Key? key,
+      required this.roomID,
+      required this.uid})
+      : super(key: key);
 
   @override
   _ChatRoomState createState() => _ChatRoomState();
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  String chatRoomId = "FBCJhytvnLyweXAYaLC8";
-  //String userId = "qb6OCKQa8pWd2ndmCq6BBE4HBJ23";
-  String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
-  List<types.Message> _messages = [];
+  TextEditingController _textController = new TextEditingController();
 
-  late final _user = types.User(id: userId);
-  late Stream test = FirebaseFirestore.instance
-      .collection('messages')
-      .doc(chatRoomId)
-      .collection("list")
-      .snapshots();
-
-  StreamSubscription<QuerySnapshot>? messageListener;
-
-  String randomString() {
-    final random = Random.secure();
-    final values = List<int>.generate(16, (i) => random.nextInt(255));
-    return base64UrlEncode(values);
-  }
-
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
-
-  Future<void> fetchPastMessages() async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('messages')
-          .doc(chatRoomId)
-          .collection("list")
-          .orderBy('createdAt')
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          final textMessage = types.TextMessage(
-            author: types.User(id: doc["author"]),
-            createdAt: doc["createdAt"],
-            id: doc["id"],
-            text: doc["text"],
-          );
-          _addMessage(textMessage);
-
-          //print(doc["text"]);
-        });
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: randomString(),
-      text: message.text,
-    );
-
-    _addMessage(textMessage);
-
+  void _handleSendPressed(String message) {
+    if (message == '') return;
     FirebaseFirestore.instance
         .collection("messages")
-        .doc(chatRoomId)
+        .doc(widget.roomID)
         .collection("list")
         .add({
-          'author': userId,
-          'createdAt': DateTime.now(), // John Doe
-          'id': textMessage.id,
-          'text': message.text,
-        })
-        .then((value) => print("Message Added"))
-        .catchError((error) => print("Failed to add message: $error"));
+      'author': widget.uid,
+      'createdAt': DateTime.now().millisecondsSinceEpoch, // John Doe
+      //'id': textMessage.id,
+      'text': message,
+    }).then((value) {
+      _textController.text = '';
+      print("Message Added");
+    }).catchError((error) => print("Failed to add message: $error"));
   }
 
   @override
   void initState() {
     super.initState;
-    // fetchPastMessages();
-    messageListener = FirebaseFirestore.instance
-        .collection('messages')
-        .doc(chatRoomId)
-        .collection("list")
-        .orderBy('createdAt')
-        .snapshots()
-        .listen((snapshot) {
-      _messages.clear();
-      for (final document in snapshot.docs) {
-        //print(document.data());
-        final textMessage = types.TextMessage(
-          author: types.User(id: document.data()["author"]),
-          createdAt: document.data()["createdAt"],
-          id: document.data()["id"],
-          text: document.data()["text"],
-        );
-        _addMessage(textMessage);
-      }
-    });
+  }
+
+  bool isSender(String friend) {
+    return friend == widget.uid;
+  }
+
+  Alignment getAlignment(String friend) {
+    if (friend == widget.uid) {
+      return Alignment.topRight;
+    }
+    return Alignment.topLeft;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: const Text('CheckMate')),
-
+          title: const Center(child: Text('CheckMate')),
         ),
         body: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('messages')
-                .doc(chatRoomId)
+                .doc(widget.roomID)
                 .collection('list')
-                .orderBy('createdAt')
+                .orderBy('createdAt',descending: true)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -147,15 +84,54 @@ class _ChatRoomState extends State<ChatRoom> {
                         valueColor: AlwaysStoppedAnimation<Color>(
                             Color.fromARGB(255, 23, 29, 43))));
               }
-              print(snapshot.data!.docs.length);
-              return SafeArea(
-                  bottom: false,
-                  child: Chat(
-                    messages: _messages,
-                    onSendPressed: _handleSendPressed,
-                    user: _user,
-                    showUserNames: true,
-                  ));
+
+              if (snapshot.hasData) {
+                return SafeArea(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                            child: ListView(
+                                reverse: true,
+                                //padding : EdgeInsets.only(top: 15.0),
+                                children: snapshot.data!.docs
+                                    .map((DocumentSnapshot document) {
+                                  Map<String, dynamic> data =
+                                      document.data()! as Map<String, dynamic>;
+                                  return BubbleSpecialThree(
+                                    text: data['text'],
+                                    isSender: isSender(data['author']),
+                                    color: isSender(data['author'])
+                                        ? const Color(0xFF1B97F3)
+                                        : const Color(0xFFE8E8EE),
+                                    tail: false,
+                                    textStyle: const TextStyle(
+                                      fontSize: 25,
+                                      //color: Colors.white,
+                                    ),
+                                  );
+                                }).toList())),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 18.0),
+                                child: CupertinoTextField(
+                                  controller: _textController,
+                                ),
+                              ),
+                            ),
+                            CupertinoButton(
+                                child: Icon(Icons.send_sharp),
+                                onPressed: () =>
+                                    _handleSendPressed(_textController.text))
+                          ],
+                        )
+                      ]),
+                );
+              }
+              return Container();
             }));
   }
 }
