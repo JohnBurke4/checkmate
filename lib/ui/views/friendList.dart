@@ -12,7 +12,7 @@ import 'chatRoom.dart';
 class FriendList extends StatelessWidget {
   const FriendList({Key? key}) : super(key: key);
 
-  final String uid = "1T3rXg0NOgHJhNQ0j6fx";
+  final String uid = "6Q9Cn3yiqKXbhxU1RK2v9qDUqyJ3";
 
 
   @override

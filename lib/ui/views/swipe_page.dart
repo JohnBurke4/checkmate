@@ -27,7 +27,7 @@ class _SwipePageState extends State<SwipePage>
       _swipeItems.add(SwipeItem(
           content: SwipeCard(user: MockAccounts.accounts[i]),
           likeAction: () async {
-            await MatchServices.swipeRight(MockAccounts.accounts[i].id);
+            await MatchServices.swipeRight(MockAccounts.accounts[i].id,MockAccounts.accounts[i].name, context);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Liked " +  MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
