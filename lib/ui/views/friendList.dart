@@ -6,19 +6,19 @@ import '../../firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'chatRoom.dart';
 
 class FriendList extends StatelessWidget {
-  const FriendList({Key? key}) : super(key: key);
+  final String uid;
 
-  final String uid = "1T3rXg0NOgHJhNQ0j6fx";
-
+  const FriendList({Key? key, required this.uid}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance.collection('user').doc(uid).snapshots(),
+        stream:
+            FirebaseFirestore.instance.collection('user').doc(uid).snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -36,34 +36,38 @@ class FriendList extends StatelessWidget {
           }
           // print(snapshot.data!.docs.length);
           if (snapshot.hasData) {
-            Map<String, dynamic> data =
-                snapshot.data!.data() as Map<String, dynamic>;
+            if (snapshot.data!.data() == null) {
+              return Container();
+            } else {
+              Map<String, dynamic> data =
+                  snapshot.data!.data() as Map<String, dynamic>;
 
-            print(data['friends'][0]['roomID'].toString().length);
-            return ListView.builder(
-                itemCount: data['friends'].length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(data['friends'][index]['name']),
-                    iconColor: const Color.fromARGB(255, 248, 244, 14),
-                    leading: const Icon(
-                      Icons.audiotrack,
-                      color: Colors.green,
-                      size: 30.0,
-                    ), // a placeholder for user avator
-                    subtitle:
-                        LastMessage(roomID: data['friends'][index]['roomID']),
-                    onTap: () => {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return SafeArea(
-                            child: ChatRoom(
-                                roomID: data['friends'][index]['roomID'],
-                                uid: uid));
-                      }))
-                    },
-                  );
-                });
+              print(data['friends'][0]['roomID'].toString().length);
+              return ListView.builder(
+                  itemCount: data['friends'].length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(data['friends'][index]['name']),
+                      iconColor: const Color.fromARGB(255, 248, 244, 14),
+                      leading: const Icon(
+                        Icons.audiotrack,
+                        color: Colors.green,
+                        size: 30.0,
+                      ), // a placeholder for user avator
+                      subtitle:
+                          LastMessage(roomID: data['friends'][index]['roomID']),
+                      onTap: () => {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SafeArea(
+                              child: ChatRoom(
+                                  roomID: data['friends'][index]['roomID'],
+                                  uid: uid));
+                        }))
+                      },
+                    );
+                  });
+            }
           }
           return Container();
         });
