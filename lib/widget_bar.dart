@@ -12,24 +12,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
 
 class NavBar extends StatefulWidget {
+  final String uid;
+
+  const NavBar({Key? key, required this.uid}) : super(key: key);
+
   @override
   _NavBarState createState() => _NavBarState();
 }
 
 class _NavBarState extends State<NavBar> {
-  _NavBarState() {}
+  // _NavBarState() {};
+
+  // late String test = widget.uid;
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static List<Widget> _widgetOptions = <Widget>[
-    // Put your widgets in here
-    UserPage(),
-    SwipePage(),
-    FriendList(),
-    MapPage(),
-  ];
+  // static final List<Widget> _widgetOptions = <Widget>[
+  //   // Put your widgets in here
+  //   UserPage(),
+  //   SwipePage(),
+  //   FriendList(uid: getUid()),
+  //   MapPage(),
+  // ];
 
   LocationData? _currentPosition;
   Location location = new Location();
@@ -39,7 +45,12 @@ class _NavBarState extends State<NavBar> {
   @override
   void initState() {
     super.initState();
+    // test = widget.uid ;
     fetchLocation();
+  }
+
+  String getUid() {
+    return widget.uid;
   }
 
   void _onItemTapped(int index) {
@@ -67,7 +78,14 @@ class _NavBarState extends State<NavBar> {
         title: Center(child: const Text('CheckMate')),
         automaticallyImplyLeading: false,
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: <Widget>[
+        // Put your widgets in here
+        UserPage(),
+        SwipePage(),
+        FriendList(uid: widget.uid),
+        MapPage(),
+      ].elementAt(_selectedIndex),
+      //_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.black,
         type: BottomNavigationBarType.fixed,
