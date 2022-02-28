@@ -1,11 +1,15 @@
+import 'package:checkmate/sign_in.dart';
 import 'package:checkmate/ui/views/user_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'ui/views/swipe_page.dart';
-
-import 'chat.dart';
-import 'map.dart';
+import 'ui/views/chatRoom.dart';
+import 'ui/views/friendList.dart';
+import 'ui/views/map.dart';
+import 'package:location/location.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer';
 
 class NavBar extends StatefulWidget {
   @override
@@ -23,9 +27,20 @@ class _NavBarState extends State<NavBar> {
     // Put your widgets in here
     UserPage(),
     SwipePage(),
-    ChatRoom(),
+    FriendList(),
     MapPage(),
   ];
+
+  LocationData? _currentPosition;
+  Location location = new Location();
+  String tmp_location_list_id = 'c09uTg5jASyKjdpCXS7f';
+  String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLocation();
+  }
 
   void _onItemTapped(int index) {
     StatefulWidget route;
@@ -38,7 +53,19 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.logout,
+            color: Colors.white,
+          ),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => SignInScreen()));
+          },
+        ),
         title: Center(child: const Text('CheckMate')),
+        automaticallyImplyLeading: false,
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -67,5 +94,46 @@ class _NavBarState extends State<NavBar> {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  fetchLocation() async {
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _currentPosition = await location.getLocation();
+    log('data: $_currentPosition');
+    FirebaseFirestore.instance
+        .collection("tmp_locationData")
+        .doc(tmp_location_list_id)
+        .collection("location_list")
+        .add({
+          'author': userId,
+          'createdAt': DateTime.now(),
+          'lat': _currentPosition!.latitude,
+          'lon': _currentPosition!.longitude,
+        })
+        .then((value) => print("Message Added"))
+        .catchError((error) => print("Failed to add message: $error"));
+    // location.onLocationChanged.listen((LocationData currentLocation) {
+    //   setState(() {
+    //     _currentPosition = currentLocation;
+    //   });
+    // });
   }
 }
