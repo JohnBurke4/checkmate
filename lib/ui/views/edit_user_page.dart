@@ -86,7 +86,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
           ),
-          onPressed: () {user.name = nameController.text; user.bio = bioController.text;Navigator.pushNamed(context,'/user_page', arguments: user);
+          onPressed: () {user.name = nameController.text; user.bio = bioController.text;Navigator.pop(context, user);
           },
           child: Text('Confirm Changes'),
         )

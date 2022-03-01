@@ -7,21 +7,30 @@ import 'edit_user_page.dart';
 import 'package:checkmate/models/user.dart';
 class UserPage extends StatelessWidget {
   User user= User("Magnus C", "My bio");
-
+  ValueNotifier<String> nameText = ValueNotifier("");
+  ValueNotifier<String> bioText = ValueNotifier("");
   @override
   Widget build(BuildContext buildContext){
+    nameText.value = user.name;
+    bioText.value = user.bio;
     log("build");
-    if(ModalRoute.of(buildContext)!.settings.arguments != null) {
-      User temp = ModalRoute.of(buildContext)!.settings.arguments as User;
-      user.name = temp.name;
-      user.bio = temp.bio;
-      log(temp.name);
-      log(temp.bio);
-    }
-
+    log(nameText.value);
+    // if(ModalRoute.of(buildContext)!.settings.arguments != null) {
+    //   User temp = ModalRoute.of(buildContext)!.settings.arguments as User;
+    //   user.name = temp.name;
+    //   user.bio = temp.bio;
+    //   log(temp.name);
+    //   log(temp.bio);
+    // }
+    ValueListenableBuilder(
+      valueListenable: nameText,
+      builder: (context, value, child) {
+        return Text(value.toString());
+      },
+    );
     return  Scaffold(
     resizeToAvoidBottomInset: false,
-    body:  Column(
+    body:  ListView(
       children: <Widget>[
         SizedBox(height: 30, ),
         Stack(
@@ -31,7 +40,7 @@ class UserPage extends StatelessWidget {
             ]
         ),
         SizedBox(height: 20, ),
-        ListTile(title: Text(user.name, textAlign: TextAlign.center, style: TextStyle( fontSize: 35, fontWeight: FontWeight.bold),), subtitle: Text('The King in The North', textAlign: TextAlign.center, style: TextStyle( fontSize: 20),))
+        ListTile(title: Text(nameText.value, textAlign: TextAlign.center, style: TextStyle( fontSize: 35, fontWeight: FontWeight.bold),), subtitle: Text('The King in The North', textAlign: TextAlign.center, style: TextStyle( fontSize: 20),))
         ,SizedBox(height: 20, ),
         ListTile(title: Text('Bio', style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold),),
             subtitle: Text(user.bio,
@@ -44,15 +53,25 @@ class UserPage extends StatelessWidget {
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
           ),
-          onPressed: () {Navigator.pushNamed(buildContext, '/edit_user_page', arguments: user);
-          EditProfilePage(); },
+          onPressed: () {OpenEditPage(buildContext);},
           child: Text('Edit Profile'),
         )
 
       ],
+
     )
 
     );
+
+    }
+  void OpenEditPage(BuildContext context) async{
+    User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
+    user.name = temp.name;
+    user.bio = temp.bio;
+    nameText.value = user.name;
+    bioText.value = user.bio;
+    build(context);
   }
 
 }
+
