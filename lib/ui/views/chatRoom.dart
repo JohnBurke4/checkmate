@@ -35,7 +35,7 @@ class _ChatRoomState extends State<ChatRoom> {
         .collection("list")
         .add({
       'author': widget.uid,
-      'createdAt': DateTime.now().millisecondsSinceEpoch, // John Doe
+      'createdAt': DateTime.now(), // John Doe
       //'id': textMessage.id,
       'text': message,
     }).then((value) {
