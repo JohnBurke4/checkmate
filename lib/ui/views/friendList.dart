@@ -39,10 +39,14 @@ class FriendList extends StatelessWidget {
             if (snapshot.data!.data() == null) {
               return Container();
             } else {
+              // if (snapshot.data!.data().isEmpty) {
+              //   return Container();
+              // }
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
+              print(data.length);
 
-              print(data['friends'][0]['roomID'].toString().length);
+              // print(data['friends'][0]['roomID'].toString().length);
               return ListView.builder(
                   itemCount: data['friends'].length,
                   itemBuilder: (context, index) {

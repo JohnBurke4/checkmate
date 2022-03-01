@@ -75,6 +75,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              print("Yo");
               if (snapshot.hasError) {
                 return const Text('Something went wrong');
               }
