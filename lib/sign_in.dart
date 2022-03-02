@@ -49,8 +49,11 @@ class _SignInScreenState extends State<SignInScreen> {
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
                       .then((value) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => NavBar()));
+                    final String? uid = value.user?.uid;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NavBar(uid: uid!)));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
