@@ -30,28 +30,6 @@ class MatchServices {
     });
     if (await checkIfMatch(userId)) {
       await uploadMatch(userId, username);
-
-      // showDialog(
-      //     context: context,
-      //     builder: (context) {
-      //       return AlertDialog(
-      //         title: Text('Match'),
-      //         content: Text('Congrats its a match!'),
-      //         actions: <Widget>[
-      //           TextButton(
-      //               onPressed: () {
-      //                 Navigator.pop(context);
-      //               },
-      //               child: Text('OK')),
-      //           TextButton(
-      //             onPressed: () {
-      //               Navigator.pop(context);
-      //             },
-      //             child: Text('Send a Message'),
-      //           )
-      //         ],
-      //       );
-      //     });
     }
   }
 
