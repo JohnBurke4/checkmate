@@ -73,7 +73,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       'email' : _emailTextController.text,
                       'username' : _userNameTextController.text,
                       'uid': uid,
-                      "friends" : [],
                     }).then((value) {
                       
                       print("User entry Added");

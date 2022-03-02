@@ -1,4 +1,5 @@
 
+import 'package:checkmate/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,7 @@ import '../ui/views/chatRoom.dart';
 
 class MatchServices {
 
-  static Future<void> swipeRight(String userId, String username, context) async {
+  static Future<void> swipeRight(String? userId, String username, context) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     await FirebaseFirestore.instance
         .collection("user")
@@ -33,7 +34,7 @@ class MatchServices {
     }
   }
 
-  static Future<void> swipeLeft(String userId) async {
+  static Future<void> swipeLeft(String? userId) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     await FirebaseFirestore.instance
         .collection("user")
@@ -54,7 +55,7 @@ class MatchServices {
     });
   }
 
-  static Future<bool> checkIfMatch(String userId) async {
+  static Future<bool> checkIfMatch(String? userId) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     return FirebaseFirestore.instance
         .collection("user")
@@ -71,9 +72,9 @@ class MatchServices {
     });
   }
 
-  static Future<void> uploadMatch(String userId, String username) async {
+  static Future<void> uploadMatch(String? userId, String username) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
-    String name = "My Name";
+    String? name = DefaultFirebaseOptions.user?.name;
     var uuid = const Uuid();
     String chatId = uuid.v4();
 

@@ -5,10 +5,10 @@ class User{
     this.name = name;
     this.bio = bio;
   }
-  late String id;
+  late String? id;
   late String name;
   late String bio;
-  late String email;
+  late String? email;
   late int age;
   late List<String> imagePaths;
   late String abilityLevel;
