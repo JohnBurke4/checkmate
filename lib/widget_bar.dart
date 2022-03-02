@@ -1,12 +1,17 @@
+import 'package:checkmate/services/match.dart';
 import 'package:checkmate/sign_in.dart';
+import 'package:checkmate/gallery.dart';
 import 'package:checkmate/ui/views/user_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'ui/views/swipe_page.dart';
+
 import 'ui/views/chatRoom.dart';
 import 'ui/views/friendList.dart';
 import 'ui/views/map.dart';
+
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
@@ -47,7 +52,10 @@ class _NavBarState extends State<NavBar> {
     super.initState();
     // test = widget.uid ;
     fetchLocation();
+    MatchServices.getMatches(context);
   }
+
+
 
   String getUid() {
     return widget.uid;
