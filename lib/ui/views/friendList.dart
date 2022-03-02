@@ -16,11 +16,11 @@ class FriendList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
+    return StreamBuilder<QuerySnapshot>(
         stream:
-            FirebaseFirestore.instance.collection('user').doc(uid).snapshots(),
+            FirebaseFirestore.instance.collection('user').doc(uid).collection("friends").snapshots(),
         builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(
               child: Text("Something went wrong"),
@@ -36,22 +36,24 @@ class FriendList extends StatelessWidget {
           }
           // print(snapshot.data!.docs.length);
           if (snapshot.hasData) {
-            if (snapshot.data!.data() == null) {
+            if (snapshot.data!.docs.isEmpty) {
               return Container();
             } else {
               // if (snapshot.data!.data().isEmpty) {
               //   return Container();
               // }
-              Map<String, dynamic> data =
-                  snapshot.data!.data() as Map<String, dynamic>;
+              List<Map<String, dynamic>> data =
+              (snapshot.data!.docs.map((DocumentSnapshot document){
+                    return document.data()! as Map<String, dynamic>;
+                  }).toList(growable: true)) ;
               print(data.length);
 
               // print(data['friends'][0]['roomID'].toString().length);
               return ListView.builder(
-                  itemCount: data['friends'].length,
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(data['friends'][index]['name']),
+                      title: Text(data[index]['name']),
                       iconColor: const Color.fromARGB(255, 248, 244, 14),
                       leading: const Icon(
                         Icons.audiotrack,
@@ -59,13 +61,13 @@ class FriendList extends StatelessWidget {
                         size: 30.0,
                       ), // a placeholder for user avator
                       subtitle:
-                          LastMessage(roomID: data['friends'][index]['roomID']),
+                          LastMessage(roomID: data[index]['roomID']),
                       onTap: () => {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return SafeArea(
                               child: ChatRoom(
-                                  roomID: data['friends'][index]['roomID'],
+                                  roomID: data[index]['roomID'],
                                   uid: uid));
                         }))
                       },

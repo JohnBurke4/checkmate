@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import '../ui/views/chatRoom.dart';
+
 class MatchServices {
 
   static Future<void> swipeRight(String userId, String username, context) async {
@@ -29,27 +31,27 @@ class MatchServices {
     if (await checkIfMatch(userId)) {
       await uploadMatch(userId, username);
 
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Match'),
-              content: Text('Congrats its a match!'),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('OK')),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Send a Message'),
-                )
-              ],
-            );
-          });
+      // showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         title: Text('Match'),
+      //         content: Text('Congrats its a match!'),
+      //         actions: <Widget>[
+      //           TextButton(
+      //               onPressed: () {
+      //                 Navigator.pop(context);
+      //               },
+      //               child: Text('OK')),
+      //           TextButton(
+      //             onPressed: () {
+      //               Navigator.pop(context);
+      //             },
+      //             child: Text('Send a Message'),
+      //           )
+      //         ],
+      //       );
+      //     });
     }
   }
 
@@ -112,16 +114,18 @@ class MatchServices {
     FirebaseFirestore.instance
         .collection("user")
         .doc(myId)
-        .update({
-      'friends': FieldValue.arrayUnion([chatRoomMe])
-    });
+        .collection("friends")
+        .add(
+      chatRoomMe
+    );
 
     FirebaseFirestore.instance
         .collection("user")
-        .doc(userId)
-        .update({
-      'friends': FieldValue.arrayUnion([chatRoomThem])
-    });
+        .doc(userId).
+    collection("friends")
+        .add(
+        chatRoomThem
+    );
 
     FirebaseFirestore.instance
         .collection("messages")
@@ -139,5 +143,62 @@ class MatchServices {
 
   static Future<void> getLocalUsers() async {
 
+  }
+
+  static void getMatches(context) async {
+    String? myId = FirebaseAuth.instance.currentUser?.uid;
+    bool hasLoaded = false;
+    FirebaseFirestore.instance
+    .collection("user")
+    .doc(myId)
+    .collection("friends")
+    .snapshots().listen((event) {
+      if (event.docChanges.isNotEmpty){
+        if (hasLoaded){
+          for (var element in event.docChanges) {
+            if (element.type == DocumentChangeType.added){
+              var doc = element.doc.data();
+              if (doc != null && doc.containsKey("name")){
+                showMatch(context, doc);
+              }
+            }
+
+
+          }
+        }
+        hasLoaded = true;
+      }
+    });
+  }
+
+  static void showMatch(context, data){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Match'),
+            content: Text('Congrats you matched with ' + data["name"] + "!"),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK')),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) {
+                        return SafeArea(
+                            child: ChatRoom(
+                                roomID: data["roomID"],
+                                uid: data["uid"]));
+                      }));
+                },
+                child: const Text('Send a Message'),
+              )
+            ],
+          );
+        });
   }
 }

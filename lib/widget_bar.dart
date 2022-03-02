@@ -1,3 +1,4 @@
+import 'package:checkmate/services/match.dart';
 import 'package:checkmate/sign_in.dart';
 import 'package:checkmate/gallery.dart';
 import 'package:checkmate/ui/views/user_page.dart';
@@ -51,7 +52,10 @@ class _NavBarState extends State<NavBar> {
     super.initState();
     // test = widget.uid ;
     fetchLocation();
+    MatchServices.getMatches(context);
   }
+
+
 
   String getUid() {
     return widget.uid;
