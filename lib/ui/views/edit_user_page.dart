@@ -1,8 +1,7 @@
-
+import 'package:checkmate/gallery.dart';
 import 'package:flutter/material.dart';
 import 'user_page.dart';
 import 'package:checkmate/models/user.dart';
-
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -10,14 +9,13 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  User user = User('','');
-  TextEditingController nameController = TextEditingController(text:"");
-  TextEditingController bioController = TextEditingController(text:"");
+  User user = User('', '');
+  TextEditingController nameController = TextEditingController(text: "");
+  TextEditingController bioController = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
-
-    if(ModalRoute.of(context)!.settings.arguments != null){
+    if (ModalRoute.of(context)!.settings.arguments != null) {
       User temp = ModalRoute.of(context)!.settings.arguments as User;
       user.name = temp.name;
       user.bio = temp.bio;
@@ -25,55 +23,57 @@ class _EditProfilePageState extends State<EditProfilePage> {
       bioController.text = user.bio;
     }
 
-      return Scaffold(
-    body: Column(
+    return Scaffold(
+        body: Column(
       children: [
         // ProfileWidget(
         //   imagePath: user.imagePath,
         //   isEdit: true,
         //   onClicked: () async {},
         // ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 30),
+        SizedBox(
+          height: 160,
+          child: Gallery(),
+        ),
+        SizedBox(height: 2),
+        TextButton(
+          style: TextButton.styleFrom(
+            textStyle: const TextStyle(fontSize: 20),
+          ),
+          onPressed: () {},
+          child: const Text('Edit Photos'),
+        ),
+        SizedBox(height: 2),
         Container(
-
           //alignment: Alignment.centerRight,
           //padding: EdgeInsets.only(left:10),
           width: 200,
-          child:
-          TextFormField(
+          child: TextFormField(
             controller: nameController,
             decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Full Name'
-            ),
+                border: OutlineInputBorder(), labelText: 'Full Name'),
           ),
         ),
         const SizedBox(height: 24),
         Container(
-
-          padding: EdgeInsets.only(left:10),
+          padding: EdgeInsets.only(left: 10),
           width: 600,
-          child:
-          TextFormField(
+          child: TextFormField(
             controller: bioController,
             maxLines: 4,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Bio'
-            ),
+            decoration:
+                InputDecoration(border: OutlineInputBorder(), labelText: 'Bio'),
           ),
         ),
         const SizedBox(height: 24),
         Container(
-          padding: EdgeInsets.only(left:10),
+          padding: EdgeInsets.only(left: 10),
           width: 600,
-          child:
-          TextFormField(
-            initialValue:'Experienced (1600+)',
+          child: TextFormField(
+            initialValue: 'Experienced (1600+)',
             decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Ability Level'
-            ),
+                border: OutlineInputBorder(), labelText: 'Ability Level'),
           ),
         ),
         // TextFieldWidget(
@@ -86,7 +86,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
           ),
-          onPressed: () {user.name = nameController.text; user.bio = bioController.text;Navigator.pushNamed(context,'/user_page', arguments: user);
+          onPressed: () {
+            user.name = nameController.text;
+            user.bio = bioController.text;
+            Navigator.pushNamed(context, '/user_page', arguments: user);
           },
           child: Text('Confirm Changes'),
         )
@@ -97,7 +100,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         //   onChanged: (about) {},
         // ),
       ],
-
     ));
   }
 }
