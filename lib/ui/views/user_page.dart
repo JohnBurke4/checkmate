@@ -7,14 +7,30 @@ import 'edit_user_page.dart';
 import 'package:checkmate/gallery.dart';
 import 'package:checkmate/models/user.dart';
 
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
+  @override
+  _UserPage createState() => _UserPage();
+}
+
+class _UserPage extends State<UserPage>{
   User user = User("Magnus C", "My bio");
+
+  @override
+  void initState() {
+    super.initState;
+  }
 
   @override
   Widget build(BuildContext buildContext) {
     log("build");
-    if (ModalRoute.of(buildContext)!.settings.arguments != null) {
-      User temp = ModalRoute.of(buildContext)!.settings.arguments as User;
+    if (ModalRoute
+        .of(buildContext)!
+        .settings
+        .arguments != null) {
+      User temp = ModalRoute
+          .of(buildContext)!
+          .settings
+          .arguments as User;
       user.name = temp.name;
       user.bio = temp.bio;
       log(temp.name);
@@ -72,13 +88,23 @@ class UserPage extends StatelessWidget {
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
               onPressed: () {
-                Navigator.pushNamed(buildContext, '/edit_user_page',
-                    arguments: user);
-                EditProfilePage();
+                OpenEditPage(buildContext);
               },
               child: Text('Edit Profile'),
             )
           ],
         ));
+  }
+  void OpenEditPage(BuildContext context) async{
+    User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
+    setState(() {
+      user.name = temp.name;
+      user.bio = temp.bio;
+    });
+
+
+
+    log(user.name);
+    build(context);
   }
 }

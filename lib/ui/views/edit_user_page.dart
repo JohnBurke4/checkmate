@@ -24,6 +24,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,   //new line
         body: Column(
       children: [
         // ProfileWidget(
@@ -89,7 +90,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           onPressed: () {
             user.name = nameController.text;
             user.bio = bioController.text;
-            Navigator.pushNamed(context, '/user_page', arguments: user);
+            Navigator.pop(context, user);
           },
           child: Text('Confirm Changes'),
         )
