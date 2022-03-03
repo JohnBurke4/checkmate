@@ -30,6 +30,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     return Scaffold(
+        appBar: AppBar(
+          title: const Center(child: Text('Edit Profile')),
+          automaticallyImplyLeading: false,
+        ),
         resizeToAvoidBottomInset: false,   //new line
         body: Column(
       children: [
