@@ -1,5 +1,9 @@
 import 'package:checkmate/gallery.dart';
+import 'package:checkmate/services/match.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import '../../firebase_options.dart';
 import 'user_page.dart';
 import 'package:checkmate/models/user.dart';
 
@@ -17,6 +21,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     if (ModalRoute.of(context)!.settings.arguments != null) {
       User temp = ModalRoute.of(context)!.settings.arguments as User;
+      user.id = auth.FirebaseAuth.instance.currentUser?.uid;
+      user.email = auth.FirebaseAuth.instance.currentUser?.email;
       user.name = temp.name;
       user.bio = temp.bio;
       nameController.text = user.name;
@@ -24,6 +30,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     return Scaffold(
+        appBar: AppBar(
+          title: const Center(child: Text('Edit Profile')),
+          automaticallyImplyLeading: false,
+        ),
         resizeToAvoidBottomInset: false, //new line
         body: Column(
           children: [
@@ -32,7 +42,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             //   isEdit: true,
             //   onClicked: () async {},
             // ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             SizedBox(
               height: 160,
               child: Gallery(),
@@ -84,6 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onPressed: () {
                 user.name = nameController.text;
                 user.bio = bioController.text;
+                DefaultFirebaseOptions.uploadUserDetails(user);
                 Navigator.pop(context, user);
               },
               child: Text('Confirm Changes'),

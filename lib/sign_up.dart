@@ -2,7 +2,7 @@ import 'package:checkmate/widget_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -65,6 +65,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       .then((value) {
                     print("Created New Account");
                     final String? uid = value.user?.uid;
+
+                        FirebaseFirestore.instance
+                        .collection("user")
+                        .doc(uid)
+                        .set({
+                      'email' : _emailTextController.text,
+                      'username' : _userNameTextController.text,
+                      'uid': uid,
+                    }).then((value) {
+                      
+                      print("User entry Added");
+                    }).catchError(
+                            (error) => print("Failed to add user entry: $error"));
                     Navigator.push(
                         context,
                         MaterialPageRoute(

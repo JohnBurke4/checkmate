@@ -11,8 +11,8 @@ class MockAccounts {
 
   static String user1Json = """
   {
-    "id": "1",
-    "name": "John Burke",
+    "uid": "kEIsO8JtXdeRYSpKxYebSCFXyiS2",
+    "username": "John Burke",
     "bio": "Love to play chess",
     "email": "burkej15@tcd.ie",
     "age": 22,
@@ -26,8 +26,8 @@ class MockAccounts {
 
   static String user2Json = """
   {
-    "id": "2",
-    "name": "Homer Simpson",
+    "uid": "2",
+    "username": "Homer Simpson",
     "bio": "Chess is life",
     "email": "chessguy55@gmail.com",
     "age": 42,
@@ -41,8 +41,8 @@ class MockAccounts {
 
   static String user3Json = """
   {
-    "id": "3",
-    "name": "John Burke Again",
+    "uid": "3",
+    "username": "John Burke Again",
     "bio": "Chessssssssssss",
     "email": "burkej16@tcd.ie",
     "age": 21,
