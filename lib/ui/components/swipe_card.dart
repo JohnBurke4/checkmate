@@ -22,9 +22,13 @@ class _SwipeCardState extends State<SwipeCard> {
         children: <Widget>[
           GestureDetector(
             onTap: () {
-              setState(() {
-                i = (i + 1) % widget.user.imagePaths.length;
-              });
+              if (widget.user.imagePaths.length > 1){
+                setState(() {
+
+                  i = (i + 1) % widget.user.imagePaths.length;
+                });
+              }
+
             },
             child: Container(
               height: MediaQuery.of(context).size.height*0.5,
