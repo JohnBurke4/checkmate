@@ -1,3 +1,4 @@
+import 'package:checkmate/firebase_options.dart';
 import 'package:checkmate/services/match.dart';
 import 'package:checkmate/sign_in.dart';
 import 'package:checkmate/gallery.dart';

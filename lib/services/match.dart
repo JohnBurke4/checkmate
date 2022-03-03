@@ -179,13 +179,13 @@ class MatchServices {
 
           }
         }
-        hasLoaded = true;
+
       }
+      hasLoaded = true;
     });
   }
 
   static void showMatch(context, data) {
-    print("Hi");
     showDialog(
         context: context,
         builder: (context) {

@@ -79,9 +79,10 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
         home: nextScreen(),
-        routes: {
-          '/user_page': (context) => UserPage(),
-          '/edit_user_page': (context) => EditProfilePage()
-        });
+        // routes: {
+        //   '/user_page': (context) => UserPage(),
+        //   '/edit_user_page': (context) => EditProfilePage()
+        // }
+        );
   }
 }

@@ -4,6 +4,9 @@ class User{
   User(String name, String bio){
     this.name = name;
     this.bio = bio;
+    this.imagePaths = List.empty();
+    this.age = 0;
+    this.abilityLevel = "Beginner";
   }
   late String? id;
   late String name;
@@ -12,7 +15,6 @@ class User{
   late int age;
   late List<dynamic> imagePaths;
   late String abilityLevel;
-  late String location;
 
   User.fromJSON(Map<dynamic, dynamic> json):
         id = json["uid"] ?? "0",
@@ -21,19 +23,17 @@ class User{
         email = json["email"] ?? "0",
         age = json["age"] ?? 0,
         imagePaths = json["imagePaths"] ?? List.empty(),
-        abilityLevel = json["abilityLevel"] ?? "beginner",
-        location = json["location"] ?? "0";
+        abilityLevel = json["abilityLevel"] ?? "beginner";
 
-  Map<String, dynamic> toJson() =>
+  Map<String, Object?> toJson() =>
       {
         'uid': id,
         'username': name,
         'bio': bio,
         'email': email,
-        // 'age': age,
-        // 'imagePaths': imagePaths,
-        // 'abilityLevel' : abilityLevel,
-        // 'location' : location
+        'age': age,
+        'imagePaths': imagePaths,
+        'abilityLevel' : abilityLevel
       };
 }
 

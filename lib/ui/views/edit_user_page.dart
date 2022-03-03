@@ -8,26 +8,34 @@ import 'user_page.dart';
 import 'package:checkmate/models/user.dart';
 
 class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({Key? key}) : super(key: key);
+
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  User user = User('', '');
+  User? user = User('', '');
   TextEditingController nameController = TextEditingController(text: "");
   TextEditingController bioController = TextEditingController(text: "");
 
   @override
+  void initState() {
+    // TODO: implement initState
+    User? currentUser = DefaultFirebaseOptions.user;
+    user = currentUser ?? User("", "");
+    user?.id = auth.FirebaseAuth.instance.currentUser?.uid;
+    user?.email = auth.FirebaseAuth.instance.currentUser?.email;
+    nameController.text = user?.name ?? "Enter your name";
+    bioController.text = user?.bio ?? "Enter your bio";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments != null) {
-      User temp = ModalRoute.of(context)!.settings.arguments as User;
-      user.id = auth.FirebaseAuth.instance.currentUser?.uid;
-      user.email = auth.FirebaseAuth.instance.currentUser?.email;
-      user.name = temp.name;
-      user.bio = temp.bio;
-      nameController.text = user.name;
-      bioController.text = user.bio;
-    }
+    // if (ModalRoute.of(context)!.settings.arguments != null) {
+    //
+    // }
 
     return Scaffold(
         appBar: AppBar(
@@ -97,11 +105,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
           ),
-          onPressed: () {
-            user.name = nameController.text;
-            user.bio = bioController.text;
-            DefaultFirebaseOptions.uploadUserDetails(user);
-            Navigator.pop(context, user);
+          onPressed: () async {
+            user?.name = nameController.text;
+            user?.bio = bioController.text;
+            user?.imagePaths = [
+              'https://imageio.forbes.com/specials-images/imageserve/61499e784c9631d3af55ed22/Magnus-Carlsen-Mastercard-promotional-headshot/960x0.jpg?fit=bounds&format=jpg&width=960',
+              'https://upload.wikimedia.org/wikipedia/commons/e/ec/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped%29.jpg',
+              'https://upload.wikimedia.org/wikipedia/commons/a/aa/Carlsen_Magnus_%2830238051906%29.jpg',
+              'https://images.chesscomfiles.com/uploads/v1/news/895104.ba7ca489.668x375o.37bd1f5b4a08.jpeg',
+            ];
+            if (nameController.text == "" || bioController.text == ""){
+            }
+            else{
+
+              await DefaultFirebaseOptions.uploadUserDetails(user);
+              Navigator.pop(context);
+            }
           },
           child: Text('Confirm Changes'),
         )
