@@ -87,7 +87,7 @@ class DefaultFirebaseOptions {
         .doc(userId)
         .get();
     var data = doc.data();
-    user = User.fromJSON(data.);
+    // user = User.fromJSON(data.);
 
   }
 }
