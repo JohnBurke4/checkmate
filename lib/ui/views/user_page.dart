@@ -1,58 +1,124 @@
 import 'dart:developer';
 
+import 'package:checkmate/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'edit_user_page.dart';
+import 'package:checkmate/gallery.dart';
 import 'package:checkmate/models/user.dart';
-class UserPage extends StatelessWidget {
-  User user= User("Magnus C", "My bio");
+
+class UserPage extends StatefulWidget {
+  @override
+  _UserPage createState() => _UserPage();
+}
+
+class _UserPage extends State<UserPage> {
+  User user = User("Magnus C", "My bio");
 
   @override
-  Widget build(BuildContext buildContext){
-    log("build");
-    if(ModalRoute.of(buildContext)!.settings.arguments != null) {
-      User temp = ModalRoute.of(buildContext)!.settings.arguments as User;
-      user.name = temp.name;
-      user.bio = temp.bio;
-      log(temp.name);
-      log(temp.bio);
-    }
+  void initState() {
 
-    return  Scaffold(
-    resizeToAvoidBottomInset: false,
-    body:  Column(
-      children: <Widget>[
-        SizedBox(height: 30, ),
-        Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              CircleAvatar(radius: 80, backgroundColor: Colors.white, backgroundImage: NetworkImage('https://m.media-amazon.com/images/M/MV5BY2QxOWJiYzItMTQzMi00Y2MwLTgxNzMtN2ExMzc5MWZjZDFkXkEyXkFqcGdeQXVyNjUxMjc1OTM@._V1_UY1200_CR173,0,630,1200_AL_.jpg'),)
-            ]
-        ),
-        SizedBox(height: 20, ),
-        ListTile(title: Text(user.name, textAlign: TextAlign.center, style: TextStyle( fontSize: 35, fontWeight: FontWeight.bold),), subtitle: Text('The King in The North', textAlign: TextAlign.center, style: TextStyle( fontSize: 20),))
-        ,SizedBox(height: 20, ),
-        ListTile(title: Text('Bio', style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold),),
-            subtitle: Text(user.bio,
-              style: TextStyle( fontSize: 15),)),
-        ListTile(title: Text('Ability Level', style: TextStyle( fontSize: 15, fontWeight: FontWeight.bold),),
-            subtitle: Text('Experienced (1600+)',
-              style: TextStyle( fontSize: 15),)),
 
-        ElevatedButton(
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          ),
-          onPressed: () {Navigator.pushNamed(buildContext, '/edit_user_page', arguments: user);
-          EditProfilePage(); },
-          child: Text('Edit Profile'),
-        )
-
-      ],
-    )
-
-    );
+    super.initState;
   }
 
+  @override
+  Widget build(BuildContext buildContext) {
+    return FutureBuilder(
+        future: DefaultFirebaseOptions.getUserDetails(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            user = DefaultFirebaseOptions.user ?? User("My Name", "My bio");
+            if (DefaultFirebaseOptions.user?.imagePaths.isEmpty ?? true) {
+              WidgetsBinding.instance?.addPostFrameCallback((_) async {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const SafeArea(child: EditProfilePage());
+                }));
+              });
+            }
+            return Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: Column(
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    const SizedBox(
+                      height: 160,
+                      child: Gallery(),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ListTile(
+                        title: Text(
+                          user.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 35, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: const Text(
+                          'The King in The North',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20),
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ListTile(
+                        title: const Text(
+                          'Bio',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          user.bio,
+                          style: TextStyle(fontSize: 15),
+                        )),
+                    const ListTile(
+                        title: Text(
+                          'Ability Level',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          'Experienced (1600+)',
+                          style: TextStyle(fontSize: 15),
+                        )),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      onPressed: () {
+                        OpenEditPage(buildContext);
+                      },
+                      child: Text('Edit Profile'),
+                    )
+                  ],
+                ));
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+  }
+
+  void OpenEditPage(BuildContext context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return const SafeArea(child: EditProfilePage());
+    }));
+    user = DefaultFirebaseOptions.user ?? User("My Name", "My bio");
+    setState(() {});
+    //User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
+    // setState(() {
+    //   user.name = temp.name;
+    //   user.bio = temp.bio;
+    // });
+
+    log(user.name);
+    build(context);
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -12,19 +13,20 @@ class Gallery extends StatefulWidget {
 
 class _GalleryState extends State<Gallery> {
   final urlImages = [
-    'https://images.unsplash.com/photo-1580713898569-c1685b54dae2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    'https://images.unsplash.com/photo-1580713898728-9f4a236ec993?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
-    'https://images.unsplash.com/photo-1580713900010-973487638b75?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    'https://imageio.forbes.com/specials-images/imageserve/61499e784c9631d3af55ed22/Magnus-Carlsen-Mastercard-promotional-headshot/960x0.jpg?fit=bounds&format=jpg&width=960',
+    'https://upload.wikimedia.org/wikipedia/commons/e/ec/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped%29.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/a/aa/Carlsen_Magnus_%2830238051906%29.jpg',
+    'https://images.chesscomfiles.com/uploads/v1/news/895104.ba7ca489.668x375o.37bd1f5b4a08.jpeg',
   ];
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: InkWell(
-            child: Ink.image(
-              image: NetworkImage(urlImages.first),
-              height: 400,
-              width: 400,
+            child: CircleAvatar(
+              radius: 80,
+              backgroundColor: Colors.white,
+              backgroundImage: NetworkImage(urlImages.first),
             ),
             onTap: openGallery,
           ),
@@ -37,6 +39,10 @@ class _GalleryState extends State<Gallery> {
         ),
       ));
 }
+
+//class PickFromCameraRoll extends StatefulWidget{
+
+//}
 
 class GalleryWidget extends StatefulWidget {
   final PageController pageController;

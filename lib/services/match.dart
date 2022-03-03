@@ -1,3 +1,5 @@
+
+import 'package:checkmate/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,45 +11,53 @@ import '../ui/views/chatRoom.dart';
 import '../location.dart';
 
 class MatchServices {
-  static Future<void> swipeRight(
-      String userId, String username, context) async {
+
+  static Future<void> swipeRight(String? userId, String username, context) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     await FirebaseFirestore.instance
         .collection("user")
         .doc(myId)
         .collection("swipeRightMe")
         .doc(userId)
-        .set({'id': userId});
+        .set({
+          'id': userId
+        });
 
     await FirebaseFirestore.instance
         .collection("user")
         .doc(userId)
         .collection("swipeRightThem")
         .doc(myId)
-        .set({'id': myId});
+        .set({
+      'id': myId
+    });
     if (await checkIfMatch(userId)) {
       await uploadMatch(userId, username);
     }
   }
 
-  static Future<void> swipeLeft(String userId) async {
+  static Future<void> swipeLeft(String? userId) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     await FirebaseFirestore.instance
         .collection("user")
         .doc(myId)
         .collection("swipeLeftMe")
         .doc(userId)
-        .set({'id': userId});
+        .set({
+      'id': userId
+    });
 
     await FirebaseFirestore.instance
         .collection("user")
         .doc(userId)
         .collection("swipeLeftThem")
         .doc(myId)
-        .set({'id': myId});
+        .set({
+      'id': myId
+    });
   }
 
-  static Future<bool> checkIfMatch(String userId) async {
+  static Future<bool> checkIfMatch(String? userId) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     return FirebaseFirestore.instance
         .collection("user")
@@ -64,9 +74,9 @@ class MatchServices {
     });
   }
 
-  static Future<void> uploadMatch(String userId, String username) async {
+  static Future<void> uploadMatch(String? userId, String username) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
-    String name = "My Name";
+    String? name = DefaultFirebaseOptions.user?.name;
     var uuid = const Uuid();
     String chatId = uuid.v4();
 
@@ -165,15 +175,17 @@ class MatchServices {
                 showMatch(context, doc);
               }
             }
+
+
           }
         }
-        hasLoaded = true;
+
       }
+      hasLoaded = true;
     });
   }
 
   static void showMatch(context, data) {
-    print("Hi");
     showDialog(
         context: context,
         builder: (context) {

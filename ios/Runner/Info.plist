@@ -47,5 +47,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To select images for the profile</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To use camera to select profile</string> 
 </dict>
 </plist>

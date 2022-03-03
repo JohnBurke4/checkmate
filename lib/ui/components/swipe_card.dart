@@ -34,7 +34,7 @@ class _SwipeCardState extends State<SwipeCard> {
               height: MediaQuery.of(context).size.height*0.5,
               width: double.infinity,
               child: Image(
-                image: AssetImage(widget.user.imagePaths[i]),
+                image: NetworkImage(widget.user.imagePaths[i]),
                 fit: BoxFit.fill,
               ),
             )

@@ -85,7 +85,6 @@ class _ChatRoomState extends State<ChatRoom> {
                         valueColor: AlwaysStoppedAnimation<Color>(
                             Color.fromARGB(255, 23, 29, 43))));
               }
-
               if (snapshot.hasData) {
                 return SafeArea(
                   child: Column(
