@@ -10,17 +10,17 @@ class User{
   late String bio;
   late String email;
   late int age;
-  late List<String> imagePaths;
+  late List<dynamic> imagePaths;
   late String abilityLevel;
   late String location;
 
   User.fromJSON(Map<dynamic, dynamic> json):
-        id = json["id"] ?? "0",
-        name = json["name"] ?? "John Dow",
+        id = json["uid"] ?? "0",
+        name = json["username"] ?? "John Dow",
         bio = json["bio"] ?? "",
         email = json["email"] ?? "0",
         age = json["age"] ?? 0,
-        imagePaths = List<String>.from(json["imagePaths"]),
+        imagePaths = json["imagePaths"] ?? List.empty(),
         abilityLevel = json["abilityLevel"] ?? "beginner",
         location = json["location"] ?? "0";
 }

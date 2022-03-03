@@ -5,7 +5,7 @@ import 'dart:math';
 import 'dart:developer';
 
 class UserCoordinate<T1, T2> {
-  final String userId;
+  final String? userId;
   final T1 lat;
   final T2 lon;
 
@@ -25,7 +25,7 @@ class UserLocation {
     return coordinates;
   }
 
-  fetchLocation(String userId, bool isUserExist) async {
+  fetchLocation(String? userId, bool isUserExist) async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
@@ -64,7 +64,7 @@ class UserLocation {
             'lon': _currentPosition!.longitude,
           });
         }
-        print("User location updated.");
+        print("User location updated: $userId");
       }).catchError((error) => print("Failed to update user location: $error"));
     } else {
       // New User
@@ -78,12 +78,12 @@ class UserLocation {
             'lat': _currentPosition!.latitude,
             'lon': _currentPosition!.longitude,
           })
-          .then((value) => print("User Location Added"))
+          .then((value) => print("User Location Added: $userId"))
           .catchError((error) => print("Failed to add user location: $error"));
     }
   }
 
-  Future<UserCoordinate> loadCurrentUserLocation(String userId) async {
+  Future<UserCoordinate> loadCurrentUserLocation(String? userId) async {
     UserCoordinate currentUser = UserCoordinate(userId, 0, 0); // Default
     await FirebaseFirestore.instance
         .collection("location")
@@ -99,7 +99,7 @@ class UserLocation {
     return currentUser;
   }
 
-  Future<List> loadOtherUsersLocation(String userId) async {
+  Future<List> loadOtherUsersLocation(String? userId) async {
     List<UserCoordinate> data = [];
     await FirebaseFirestore.instance
         .collection("location")
@@ -116,7 +116,7 @@ class UserLocation {
     return data;
   }
 
-  Future<bool> isUserExists(String userId) async {
+  Future<bool> isUserExists(String? userId) async {
     print("Checking user existence.");
     return await FirebaseFirestore.instance
         .collection("location")

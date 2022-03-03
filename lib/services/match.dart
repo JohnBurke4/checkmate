@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:checkmate/models/user.dart' as customUser;
 
 import '../ui/views/chatRoom.dart';
 import '../location.dart';
@@ -91,7 +92,8 @@ class MatchServices {
         .set({"created": true});
   }
 
-  static Future<List<String>> getLocalUsers(String userId, double range) async {
+  static Future<List<customUser.User>> getLocalUsers(double range) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
     List<String> localUserId = [];
     UserLocation ul = UserLocation();
     await ul
@@ -101,19 +103,47 @@ class MatchServices {
       for (UserCoordinate next in otherUsersLocationList) {
         double d = ul.calculateDistance(currentUser, next);
         print("distance between " +
-            currentUser.userId +
+            currentUser.userId.toString() +
             " and " +
-            next.userId +
+            next.userId.toString() +
             " is " +
             d.toString() +
             "km.");
         if (d < range) {
-          localUserId.add(next.userId);
+          localUserId.add(next.userId.toString());
         }
       }
     });
+    print("Local Users: " + localUserId.length.toString());
+    return getUsersFromIds(localUserId);
+  }
 
-    return localUserId;
+  static Future<List<customUser.User>> getUsersFromIds(List<String> ids) async {
+    String? myId = FirebaseAuth.instance.currentUser?.uid;
+    List<customUser.User> users = List.empty(growable: true);
+    List<String> swipedLeft = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(myId)
+        .collection("swipeLeftMe")
+    .get().then((value) => value.docs.map((e) => e.id).toList());
+
+    List<String> swipedRight = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(myId)
+        .collection("swipeRightMe")
+        .get().then((value) => value.docs.map((e) => e.id).toList());
+
+    ids.removeWhere((element) => swipedRight.contains(element) || swipedLeft.contains(element));
+    var tenIds = (ids..shuffle()).take(10);
+    if (tenIds.isEmpty){
+      return users;
+    }
+
+    users = await FirebaseFirestore.instance
+        .collection("user")
+        .where('uid', whereIn: tenIds.toList() )
+        .get().then((value) => value.docs.map((e) => customUser.User.fromJSON(e.data())).toList());
+    return users;
   }
 
   static void getMatches(context) async {
