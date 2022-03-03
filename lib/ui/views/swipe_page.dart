@@ -36,20 +36,20 @@ class _SwipePageState extends State<SwipePage> with TickerProviderStateMixin {
                 accounts[i].name, context);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Liked " + accounts[i].name),
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
             ));
           },
           nopeAction: () async {
             await MatchServices.swipeLeft(accounts[i].id);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Disliked " + accounts[i].name),
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
             ));
           },
           superlikeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Superliked " + accounts[i].name),
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
             ));
           },
           onSlideUpdate: (SlideRegion? region) async {
@@ -70,7 +70,7 @@ class _SwipePageState extends State<SwipePage> with TickerProviderStateMixin {
         builder: (context, AsyncSnapshot<List<dynamic>> value) {
           if (value.hasData) {
             if (value.data?.isEmpty ?? true){
-              return Center(
+              return const Center(
                 child: Text(
                   "There are no users near you, please try again later.",
                   textAlign: TextAlign.center,
@@ -98,7 +98,7 @@ class _SwipePageState extends State<SwipePage> with TickerProviderStateMixin {
             }
 
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }

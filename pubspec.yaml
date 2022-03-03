@@ -51,6 +51,7 @@ dependencies:
   chat_bubbles: ^1.2.0
   cupertino_icons: ^1.0.4
   uuid: ^3.0.6
+  flutter_launcher_icons: ^0.9.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -79,6 +80,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
+    - assets/
     - assets/test/
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -106,3 +108,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "logo/Checkmate_logo_black.png"

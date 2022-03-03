@@ -153,6 +153,7 @@ class MatchServices {
         .collection("user")
         .where('uid', whereIn: tenIds.toList() )
         .get().then((value) => value.docs.map((e) => customUser.User.fromJSON(e.data())).toList());
+    users.removeWhere((element) => element.imagePaths.isEmpty);
     return users;
   }
 
@@ -184,6 +185,7 @@ class MatchServices {
   }
 
   static void showMatch(context, data) {
+    print("Hi");
     showDialog(
         context: context,
         builder: (context) {
