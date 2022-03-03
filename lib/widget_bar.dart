@@ -55,8 +55,6 @@ class _NavBarState extends State<NavBar> {
     MatchServices.getMatches(context);
   }
 
-
-
   String getUid() {
     return widget.uid;
   }

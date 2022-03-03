@@ -12,37 +12,39 @@ class SwipePage extends StatefulWidget {
   _SwipePageState createState() => _SwipePageState();
 }
 
-class _SwipePageState extends State<SwipePage>
-    with TickerProviderStateMixin {
-
-
-
+class _SwipePageState extends State<SwipePage> with TickerProviderStateMixin {
   List<SwipeItem> _swipeItems = List<SwipeItem>.empty(growable: true);
   MatchEngine _matchEngine = MatchEngine();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
+    String userId = "uqLZIXxtfLajyqWBcEyZoQVNSbN2";
+    double range = 20; // Get all userId which in 20km range
+    MatchServices.getLocalUsers(userId, range);
+    // Return type is a List but will need to put into an async function as below
+    // List<String> localUserIds = await MatchServices.getLocalUsers(userId, range);
     for (int i = 0; i < MockAccounts.accounts.length; i++) {
       _swipeItems.add(SwipeItem(
           content: SwipeCard(user: MockAccounts.accounts[i]),
           likeAction: () async {
-            await MatchServices.swipeRight(MockAccounts.accounts[i].id,MockAccounts.accounts[i].name, context);
+            await MatchServices.swipeRight(MockAccounts.accounts[i].id,
+                MockAccounts.accounts[i].name, context);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Liked " +  MockAccounts.accounts[i].name),
+              content: Text("Liked " + MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
           nopeAction: () async {
             await MatchServices.swipeLeft(MockAccounts.accounts[i].id);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Disliked " +  MockAccounts.accounts[i].name),
+              content: Text("Disliked " + MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
           superlikeAction: () {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Superliked " +  MockAccounts.accounts[i].name),
+              content: Text("Superliked " + MockAccounts.accounts[i].name),
               duration: Duration(milliseconds: 500),
             ));
           },
@@ -55,32 +57,30 @@ class _SwipePageState extends State<SwipePage>
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return Container(
-        height: MediaQuery.of(context).size.height*0.7,
-        alignment: Alignment.topCenter,
-        child: SwipeCards(
-          matchEngine: _matchEngine,
-          itemBuilder: (BuildContext context, int index) {
-            return _swipeItems[index].content;
-          },
-          onStackFinished: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Stack Finished"),
-              duration: Duration(milliseconds: 500),
-            ));
-          },
-          itemChanged: (SwipeItem item, int index) {
-            print("item: hello, index: $index");
-          },
-          upSwipeAllowed: true,
-          fillSpace: false,
-        ),
-      );
+      height: MediaQuery.of(context).size.height * 0.7,
+      alignment: Alignment.topCenter,
+      child: SwipeCards(
+        matchEngine: _matchEngine,
+        itemBuilder: (BuildContext context, int index) {
+          return _swipeItems[index].content;
+        },
+        onStackFinished: () {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Stack Finished"),
+            duration: Duration(milliseconds: 500),
+          ));
+        },
+        itemChanged: (SwipeItem item, int index) {
+          print("item: hello, index: $index");
+          // List<Coordinate> tmp = ul.getCoordinates();
+          // ul.startCalculate();
+        },
+        upSwipeAllowed: true,
+        fillSpace: false,
+      ),
+    );
   }
 }
-    
