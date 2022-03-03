@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_core/firebase_core.dart';
+import '../../firebase_options.dart';
+import '../models/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -17,6 +22,8 @@ List<String> urlImages = [
 ];
 
 List<File> _galleryImages = [];
+
+String? profileImage;
 
 class Gallery extends StatefulWidget {
   const Gallery({Key? key}) : super(key: key);
@@ -33,8 +40,14 @@ class _GalleryState extends State<Gallery> {
             child: CircleAvatar(
               radius: 80,
               backgroundColor: Colors.white,
-              backgroundImage: NetworkImage(urlImages.first),
-              //backgroundImage: (_galleryImages.first == null) ? Image.asset(assets\test\blank-profile-picture.png) : FileImage(_galleryImages.first),
+              //backgroundImage: NetworkImage(urlImages.first),
+              //backgroundImage:
+              //  AssetImage('assets/test/blank-profile-picture.png'),
+              //backgroundImage: NetworkImage(profileImage),
+              backgroundImage: (!_galleryImages.isEmpty)
+                  ? FileImage(_galleryImages.first)
+                  : AssetImage('assets/test/blank-profile-picture.png')
+                      as ImageProvider,
             ),
             onTap: openGallery,
           ),
@@ -43,19 +56,22 @@ class _GalleryState extends State<Gallery> {
 
   void openGallery() => Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => GalleryWidget(
-          urlImages: urlImages,
+          //urlImages: urlImages,
+          galleryImages: _galleryImages,
         ),
       ));
 }
 
 class GalleryWidget extends StatefulWidget {
   final PageController pageController;
-  final List<String> urlImages;
+  //final List<String> urlImages;
+  final List<File> galleryImages;
   final index;
 
   GalleryWidget({
     Key? key,
-    required this.urlImages,
+    //required this.urlImages,
+    required this.galleryImages,
     this.index = 0,
   })  : pageController = PageController(initialPage: index),
         super(key: key);
@@ -70,12 +86,15 @@ class _GalleryWidgetState extends State<GalleryWidget> {
         body: PhotoViewGallery.builder(
           pageController: widget.pageController,
           scrollDirection: Axis.horizontal,
-          itemCount: widget.urlImages.length,
+          //itemCount: widget.urlImages.length,
+          itemCount: widget.galleryImages.length,
           builder: (context, index) {
-            final urlImage = widget.urlImages[index];
+            //final urlImage = widget.urlImages[index];
+            final galleryImage = widget.galleryImages[index];
 
             return PhotoViewGalleryPageOptions(
-              imageProvider: NetworkImage(urlImage),
+              //imageProvider: NetworkImage(urlImage),
+              imageProvider: FileImage(galleryImage),
               minScale: PhotoViewComputedScale.contained,
               maxScale: PhotoViewComputedScale.contained * 2,
             );
@@ -110,12 +129,33 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
 
   Future _openGallery() async {
     final picture = await ImagePicker().pickImage(source: ImageSource.gallery);
-    this.setState(() {
+    setState(() {
       if (picture != null) {
-        imageFile = File(picture!.path);
-      } else {
-        print('No image selected');
+        imageFile = File(picture.path);
+        //_uploadFile();
+        _galleryImages.add(imageFile);
       }
     });
+  }
+
+  Future _uploadFile() async {
+    User user = User('', '');
+    user.id = auth.FirebaseAuth.instance.currentUser?.uid;
+    user.email = auth.FirebaseAuth.instance.currentUser?.email;
+
+    final fileName = path.basename(imageFile.path);
+    user.imagePaths.add(fileName);
+    DefaultFirebaseOptions.uploadUserDetails(user);
+
+    var ref = auth.FirebaseAuth.instance.currentUser?.uid;
+    getUserProfilePicture(ref);
+  }
+
+  static void getUserProfilePicture(String? userID) async {
+    print('FIREBASE IS THE BEST THING EVER HOLY SHIT');
+    var doc =
+        await FirebaseFirestore.instance.collection("user").doc(userID).get();
+    var data = doc.get('imagePath');
+    profileImage = data.getData();
   }
 }
