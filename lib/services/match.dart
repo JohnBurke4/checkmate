@@ -5,8 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:checkmate/models/user.dart' as customUser;
 
 import '../ui/views/chatRoom.dart';
+import '../location.dart';
 
 class MatchServices {
 
@@ -64,11 +66,11 @@ class MatchServices {
         .doc(userId)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            return true;
+      if (documentSnapshot.exists) {
+        return true;
       } else {
-            return false;
-          }
+        return false;
+      }
     });
   }
 
@@ -78,66 +80,97 @@ class MatchServices {
     var uuid = const Uuid();
     String chatId = uuid.v4();
 
-    var chatRoomMe = {
-      "name": username,
-      "roomID": chatId,
-      "uid": userId
-    };
+    var chatRoomMe = {"name": username, "roomID": chatId, "uid": userId};
 
-    var chatRoomThem = {
-      "name": name,
-      "roomID": chatId,
-      "uid": myId
-    };
+    var chatRoomThem = {"name": name, "roomID": chatId, "uid": myId};
 
     FirebaseFirestore.instance
         .collection("user")
         .doc(myId)
         .collection("friends")
-        .add(
-      chatRoomMe
-    );
+        .add(chatRoomMe);
 
     FirebaseFirestore.instance
         .collection("user")
-        .doc(userId).
-    collection("friends")
-        .add(
-        chatRoomThem
-    );
+        .doc(userId)
+        .collection("friends")
+        .add(chatRoomThem);
 
     FirebaseFirestore.instance
         .collection("messages")
         .doc(chatId)
-        .set({
-      "created": true
-    });
-
-
-
-
-
-
+        .set({"created": true});
   }
 
-  static Future<void> getLocalUsers() async {
+  static Future<List<customUser.User>> getLocalUsers(double range) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    List<String> localUserId = [];
+    UserLocation ul = UserLocation();
+    await ul
+        .loadOtherUsersLocation(userId)
+        .then((otherUsersLocationList) async {
+      UserCoordinate currentUser = await ul.loadCurrentUserLocation(userId);
+      for (UserCoordinate next in otherUsersLocationList) {
+        double d = ul.calculateDistance(currentUser, next);
+        print("distance between " +
+            currentUser.userId.toString() +
+            " and " +
+            next.userId.toString() +
+            " is " +
+            d.toString() +
+            "km.");
+        if (d < range) {
+          localUserId.add(next.userId.toString());
+        }
+      }
+    });
+    print("Local Users: " + localUserId.length.toString());
+    return getUsersFromIds(localUserId);
+  }
 
+  static Future<List<customUser.User>> getUsersFromIds(List<String> ids) async {
+    String? myId = FirebaseAuth.instance.currentUser?.uid;
+    List<customUser.User> users = List.empty(growable: true);
+    List<String> swipedLeft = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(myId)
+        .collection("swipeLeftMe")
+    .get().then((value) => value.docs.map((e) => e.id).toList());
+
+    List<String> swipedRight = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(myId)
+        .collection("swipeRightMe")
+        .get().then((value) => value.docs.map((e) => e.id).toList());
+
+    ids.removeWhere((element) => swipedRight.contains(element) || swipedLeft.contains(element));
+    var tenIds = (ids..shuffle()).take(10);
+    if (tenIds.isEmpty){
+      return users;
+    }
+
+    users = await FirebaseFirestore.instance
+        .collection("user")
+        .where('uid', whereIn: tenIds.toList() )
+        .get().then((value) => value.docs.map((e) => customUser.User.fromJSON(e.data())).toList());
+    return users;
   }
 
   static void getMatches(context) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     bool hasLoaded = false;
     FirebaseFirestore.instance
-    .collection("user")
-    .doc(myId)
-    .collection("friends")
-    .snapshots().listen((event) {
-      if (event.docChanges.isNotEmpty){
-        if (hasLoaded){
+        .collection("user")
+        .doc(myId)
+        .collection("friends")
+        .snapshots()
+        .listen((event) {
+      if (event.docChanges.isNotEmpty) {
+        if (hasLoaded) {
           for (var element in event.docChanges) {
-            if (element.type == DocumentChangeType.added){
+            if (element.type == DocumentChangeType.added) {
               var doc = element.doc.data();
-              if (doc != null && doc.containsKey("name")){
+              if (doc != null && doc.containsKey("name")) {
                 showMatch(context, doc);
               }
             }
@@ -150,7 +183,7 @@ class MatchServices {
     });
   }
 
-  static void showMatch(context, data){
+  static void showMatch(context, data) {
     showDialog(
         context: context,
         builder: (context) {
@@ -166,13 +199,11 @@ class MatchServices {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) {
-                        return SafeArea(
-                            child: ChatRoom(
-                                roomID: data["roomID"],
-                                uid: data["uid"]));
-                      }));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return SafeArea(
+                        child:
+                            ChatRoom(roomID: data["roomID"], uid: data["uid"]));
+                  }));
                 },
                 child: const Text('Send a Message'),
               )
