@@ -37,7 +37,14 @@ class FriendList extends StatelessWidget {
           // print(snapshot.data!.docs.length);
           if (snapshot.hasData) {
             if (snapshot.data!.docs.isEmpty) {
-              return Container();
+              return Container(
+                child: const Center(
+                  child: Text(
+                    "Get swiping and find your component!",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
             } else {
               // if (snapshot.data!.data().isEmpty) {
               //   return Container();
