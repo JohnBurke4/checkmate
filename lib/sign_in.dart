@@ -29,9 +29,24 @@ class _SignInScreenState extends State<SignInScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.2, 20, 0),
+                20, MediaQuery.of(context).size.height * 0.12, 20, 0),
             child: Column(
               children: <Widget>[
+                Image(
+
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  image: const AssetImage("assets/Checkmate_logo_white.png"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0,0,0,30),
+                  child: Center(
+
+                    child: Text("Check Mate",
+                      style: TextStyle(color: Colors.white.withOpacity(0.9),
+                      fontSize: 30),
+                    ),
+                  ),
+                ),
                 reusableTextField("Enter Email", Icons.person_outline, false,
                     _emailTextController),
                 const SizedBox(

@@ -38,11 +38,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Padding(
             padding: EdgeInsets.fromLTRB(20, 120, 20, 0),
             child: Column(
+
               children: <Widget>[
+                Image(
+
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  image: const AssetImage("assets/Checkmate_logo_white.png"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0,0,0,30),
+                  child: Center(
+
+                    child: Text("Check Mate",
+                      style: TextStyle(color: Colors.white.withOpacity(0.9),
+                          fontSize: 30),
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                reusableTextField("Enter User Name", Icons.person_outline,
+                reusableTextField("Enter Name", Icons.person_outline,
                     false, _userNameTextController),
                 const SizedBox(
                   height: 20,
