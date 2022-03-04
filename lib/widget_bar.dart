@@ -55,8 +55,6 @@ class _NavBarState extends State<NavBar> {
     MatchServices.getMatches(context);
   }
 
-
-
   String getUid() {
     return widget.uid;
   }
@@ -83,7 +81,7 @@ class _NavBarState extends State<NavBar> {
                 MaterialPageRoute(builder: (context) => SignInScreen()));
           },
         ),
-        title: Center(child: const Text('CheckMate')),
+        title: const Text('CheckMate'),
         automaticallyImplyLeading: false,
       ),
       body: <Widget>[

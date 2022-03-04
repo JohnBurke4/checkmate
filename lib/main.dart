@@ -9,6 +9,7 @@ import 'package:checkmate/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'location.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription<User?> user;
+  UserLocation ul = UserLocation();
+
+  @override
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -34,6 +38,10 @@ class _MyAppState extends State<MyApp> {
         print('User is currently signed out!');
       } else {
         print('User is signed in!');
+        // Once user is signed in, record the current location.
+        User? currentUser = FirebaseAuth.instance.currentUser;
+        String? uid = currentUser!.uid;
+        ul.isUserExists(uid).then((result) => ul.fetchLocation(uid, result));
       }
     });
   }
