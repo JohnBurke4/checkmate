@@ -35,13 +35,7 @@ class _NavBarState extends State<NavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  // static final List<Widget> _widgetOptions = <Widget>[
-  //   // Put your widgets in here
-  //   UserPage(),
-  //   SwipePage(),
-  //   FriendList(uid: getUid()),
-  //   MapPage(),
-  // ];
+
 
   LocationData? _currentPosition;
   Location location = new Location();
