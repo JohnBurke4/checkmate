@@ -79,10 +79,9 @@ class DefaultFirebaseOptions {
         .collection("user")
         .doc(userId)
         .update(userDetails.toJson());
-        .get();
-    var data = doc.data();
+    //     .get();
+    // var data = doc.data();
     // user = User.fromJSON(data.);
-
   }
 
   // static void getUserDetails() async {
