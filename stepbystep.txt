@@ -1,0 +1,5 @@
+- Sign up/Sign in using your unique identifiers (email, password)
+- Use the swiping feature to match with potential players
+- Start conversing with these players you matched with in the chatroom, picking which one to talk to from list of players matched 
+- Change elements of your profile using the edit feature
+- Use the map to ascertain your location
