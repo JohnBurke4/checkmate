@@ -45,14 +45,12 @@ class _NavBarState extends State<NavBar> {
 
   LocationData? _currentPosition;
   Location location = new Location();
-  String tmp_location_list_id = 'c09uTg5jASyKjdpCXS7f';
   String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
 
   @override
   void initState() {
     super.initState();
     // test = widget.uid ;
-    fetchLocation();
     MatchServices.getMatches(context);
   }
 
@@ -90,7 +88,7 @@ class _NavBarState extends State<NavBar> {
         UserPage(),
         SwipePage(),
         FriendList(uid: widget.uid),
-        MapPage(),
+        MapPage(uid: widget.uid),
       ].elementAt(_selectedIndex),
       //_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -119,46 +117,5 @@ class _NavBarState extends State<NavBar> {
         onTap: _onItemTapped,
       ),
     );
-  }
-
-  fetchLocation() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _currentPosition = await location.getLocation();
-    log('data: $_currentPosition');
-    FirebaseFirestore.instance
-        .collection("tmp_locationData")
-        .doc(tmp_location_list_id)
-        .collection("location_list")
-        .add({
-          'author': userId,
-          'createdAt': DateTime.now(),
-          'lat': _currentPosition!.latitude,
-          'lon': _currentPosition!.longitude,
-        })
-        .then((value) => print("Message Added"))
-        .catchError((error) => print("Failed to add message: $error"));
-    // location.onLocationChanged.listen((LocationData currentLocation) {
-    //   setState(() {
-    //     _currentPosition = currentLocation;
-    //   });
-    // });
   }
 }

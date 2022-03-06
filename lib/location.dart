@@ -15,7 +15,7 @@ class UserCoordinate<T1, T2> {
 class UserLocation {
   final List<UserCoordinate> coordinates = [];
 
-  LocationData? _currentPosition;
+  LocationData? currentPosition;
   Location location = new Location();
   String location_id = 'X722uMAdIefDkVj3nqam';
 
@@ -23,6 +23,10 @@ class UserLocation {
 
   List<UserCoordinate> getCoordinates() {
     return coordinates;
+  }
+
+  Future<LocationData> getCurrentLocation() async {
+    return await location.getLocation();
   }
 
   fetchLocation(String? userId, bool isUserExist) async {
@@ -45,7 +49,7 @@ class UserLocation {
       }
     }
 
-    _currentPosition = await location.getLocation();
+    currentPosition = await getCurrentLocation();
 
     if (isUserExist) {
       // Existed User
@@ -60,8 +64,8 @@ class UserLocation {
         for (var doc in querySnapshot.docs) {
           doc.reference.update({
             'createdAt': DateTime.now(),
-            'lat': _currentPosition!.latitude,
-            'lon': _currentPosition!.longitude,
+            'lat': currentPosition!.latitude,
+            'lon': currentPosition!.longitude,
           });
         }
         print("User location updated: $userId");
@@ -75,8 +79,8 @@ class UserLocation {
           .add({
             'author': userId,
             'createdAt': DateTime.now(),
-            'lat': _currentPosition!.latitude,
-            'lon': _currentPosition!.longitude,
+            'lat': currentPosition!.latitude,
+            'lon': currentPosition!.longitude,
           })
           .then((value) => print("User Location Added: $userId"))
           .catchError((error) => print("Failed to add user location: $error"));
