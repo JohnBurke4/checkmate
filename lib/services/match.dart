@@ -165,7 +165,9 @@ class MatchServices {
         .get()
         .then((value) =>
             value.docs.map((e) => customUser.User.fromJSON(e.data())).toList());
+
     users.removeWhere((element) => element.imagePaths.isEmpty);
+
     return users;
   }
 
@@ -184,7 +186,7 @@ class MatchServices {
             if (element.type == DocumentChangeType.added) {
               var doc = element.doc.data();
               if (doc != null && doc.containsKey("name")) {
-                showMatch(context, doc);
+                showMatch(context, doc, myId);
               }
             }
           }
@@ -194,7 +196,7 @@ class MatchServices {
     });
   }
 
-  static void showMatch(context, data) {
+  static void showMatch(context, data, myId) {
     showDialog(
         context: context,
         builder: (context) {
@@ -213,10 +215,10 @@ class MatchServices {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return SafeArea(
                         child: ChatRoom(
-                      roomID: data["roomID"],
-                      uid: data["uid"],
-                      name: data['name'],
-                    ));
+                            roomID: data["roomID"],
+                            uid: myId,
+                            name: data['name'],
+                            friendUid: data['uid']));
                   }));
                 },
                 child: const Text('Send a Message'),

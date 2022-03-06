@@ -1,19 +1,19 @@
 // ignore_for_file: avoid_print, invalid_return_type_for_catch_error, file_names
 
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
+import '../components/positiveFeadback.dart';
 
 class ChatRoom extends StatefulWidget {
   final String roomID;
   final String uid;
   final String name;
-
+  final String friendUid;
   const ChatRoom(
-      {Key? key, required this.roomID, required this.uid, required this.name})
+      {Key? key, required this.roomID, required this.uid, required this.name,required this.friendUid})
       : super(key: key);
 
   @override
@@ -65,7 +65,12 @@ class _ChatRoomState extends State<ChatRoom> {
             Padding(
                 padding: const EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return SafeArea(child: PositiveFeadback(uid: widget.uid, friendUid: widget.friendUid));
+                    }));
+                  },
                   child: const Icon(
                     Icons.account_box,
                     size: 30.0,

@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,15 +56,35 @@ class FriendList extends StatelessWidget {
     });
   }
 
-  Future<void> fileAComplaint(String targetUid) {
-    return FirebaseFirestore.instance
-        .collection('deviantBehaviorComplaints')
-        .add({
-      'originator': uid,
-      'target': targetUid,
-    }).then((value) {
-      print("Complaints Added");
-    }).catchError((error) => print("Failed to add complaints: $error"));
+  Future<void> fileAComplaint(String targetUid, String type) {
+    if (type == "harassment") {
+      return FirebaseFirestore.instance
+          .collection('deviantBehaviorComplaints')
+          .add({
+        'originator': uid,
+        'target': targetUid,
+        'type': "Harassment"
+      }).then((value) {
+        print("Complaints Added");
+      }).catchError((error) => print("Failed to add complaints: $error"));
+    } else if (type == "racism") {
+      return FirebaseFirestore.instance
+          .collection('deviantBehaviorComplaints')
+          .add({
+        'originator': uid,
+        'target': targetUid,
+        'type': "Racism Behavior"
+      }).then((value) {
+        print("Complaints Added");
+      }).catchError((error) => print("Failed to add complaints: $error"));
+    } else {
+      return FirebaseFirestore.instance
+          .collection('deviantBehaviorComplaints')
+          .add({'originator': uid, 'target': targetUid, "type": "other"}).then(
+              (value) {
+        print("Complaints Added");
+      }).catchError((error) => print("Failed to add complaints: $error"));
+    }
   }
 
   @override
@@ -113,73 +135,101 @@ class FriendList extends StatelessWidget {
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                        onTap: () => {
+                        onTapUp: (DetailsElement) => {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return SafeArea(
                                     child: ChatRoom(
                                         roomID: data[index]['roomID'],
                                         uid: uid,
+                                        friendUid : data[index]['uid'],
                                         name: data[index]['name']));
                               }))
                             },
-                        onLongPressDown: (DetailsElement) => {
-                              showMenu<String>(
-                                context: context,
-                                position: RelativeRect.fromLTRB(
-                                    DetailsElement.localPosition.dx / 2,
-                                    DetailsElement.globalPosition.dy,
-                                    0.0,
-                                    0.0), //position where you want to show the menu on screen
-                                items: [
-                                  PopupMenuItem<String>(
-                                      // unfriend means this person can still sometimes appear in your swiping page.
-                                      // You can swipe right again to add him back
-                                      child: const Text('Unfriend'),
-                                      onTap: () {
-                                        print("Unfriending");
-                                        removeTargetFromFriendList(
-                                            data[index]['uid']);
-                                        removeTargetFromSwipeRightMe(
-                                            data[index]['uid']);
-                                        removeMyselfFromTargetSwipeRgihtThemList(
-                                            data[index]['uid']);
-                                        // remove the current user's id from the other guy's swipeRight List
-                                      }),
-                                  PopupMenuItem<String>(
-                                      // You will never see this person again ever
-                                      child: const Text('Block'),
-                                      onTap: () {
-                                        print("Blocking");
-                                        removeTargetFromFriendList(
-                                            data[index]['uid']);
-                                        removeTargetFromSwipeRightMe(
-                                            data[index]['uid']);
-                                        removeMyselfFromTargetSwipeRgihtThemList(
-                                            data[index]['uid']);
-                                        addTargetOnBlockList(
-                                            data[index]['uid']);
-                                      }),
-                                  PopupMenuItem<String>(
-                                      // No only you will never see this person again, You will file a complain with this person's behavior to the app owner.
-                                      child:
-                                          const Text('Report Deviant Behavior'),
-                                      onTap: () {
-                                        print("Reporting");
-                                        removeTargetFromFriendList(
-                                            data[index]['uid']);
-                                        removeTargetFromSwipeRightMe(
-                                            data[index]['uid']);
-                                        removeMyselfFromTargetSwipeRgihtThemList(
-                                            data[index]['uid']);
-                                        addTargetOnBlockList(
-                                            data[index]['uid']);
-                                        fileAComplaint(data[index]['uid']);
-                                      }),
-                                ],
-                                elevation: 8.0,
-                              )
-                            },
+                        onLongPressStart: (DetailsElement) {
+                          showMenu<String>(
+                            context: context,
+                            position: RelativeRect.fromLTRB(
+                                DetailsElement.globalPosition.dx,
+                                DetailsElement.globalPosition.dy,
+                                0.0,
+                                0.0), //position where you want to show the menu on screen
+                            items: [
+                              PopupMenuItem<String>(
+                                  // unfriend means this person can still sometimes appear in your swiping page.
+                                  // You can swipe right again to add him back
+                                  child: const Text('Unfriend'),
+                                  onTap: () {
+                                    print("Unfriending");
+                                    removeTargetFromFriendList(
+                                        data[index]['uid']);
+                                    removeTargetFromSwipeRightMe(
+                                        data[index]['uid']);
+                                    removeMyselfFromTargetSwipeRgihtThemList(
+                                        data[index]['uid']);
+                                    // remove the current user's id from the other guy's swipeRight List
+                                  }),
+                              PopupMenuItem<String>(
+                                  // You will never see this person again ever
+                                  child: const Text('Block'),
+                                  onTap: () {
+                                    print("Blocking");
+                                    removeTargetFromFriendList(
+                                        data[index]['uid']);
+                                    removeTargetFromSwipeRightMe(
+                                        data[index]['uid']);
+                                    removeMyselfFromTargetSwipeRgihtThemList(
+                                        data[index]['uid']);
+                                    addTargetOnBlockList(data[index]['uid']);
+                                  }),
+                              PopupMenuItem<String>(
+                                  // No only you will never see this person again, You will file a complain with this person's behavior to the app owner.
+                                  child: const Text('Report Harassment'),
+                                  onTap: () {
+                                    print("Reporting");
+                                    removeTargetFromFriendList(
+                                        data[index]['uid']);
+                                    removeTargetFromSwipeRightMe(
+                                        data[index]['uid']);
+                                    removeMyselfFromTargetSwipeRgihtThemList(
+                                        data[index]['uid']);
+                                    addTargetOnBlockList(data[index]['uid']);
+                                    fileAComplaint(
+                                        data[index]['uid'], "Harassment");
+                                  }),
+                              PopupMenuItem<String>(
+                                  // No only you will never see this person again, You will file a complain with this person's behavior to the app owner.
+                                  child: const Text('Report Racism'),
+                                  onTap: () {
+                                    print("Reporting");
+                                    removeTargetFromFriendList(
+                                        data[index]['uid']);
+                                    removeTargetFromSwipeRightMe(
+                                        data[index]['uid']);
+                                    removeMyselfFromTargetSwipeRgihtThemList(
+                                        data[index]['uid']);
+                                    addTargetOnBlockList(data[index]['uid']);
+                                    fileAComplaint(
+                                        data[index]['uid'], "Racism");
+                                  }),
+                              PopupMenuItem<String>(
+                                  // No only you will never see this person again, You will file a complain with this person's behavior to the app owner.
+                                  child: const Text('Report Other'),
+                                  onTap: () {
+                                    print("Reporting");
+                                    removeTargetFromFriendList(
+                                        data[index]['uid']);
+                                    removeTargetFromSwipeRightMe(
+                                        data[index]['uid']);
+                                    removeMyselfFromTargetSwipeRgihtThemList(
+                                        data[index]['uid']);
+                                    addTargetOnBlockList(data[index]['uid']);
+                                    fileAComplaint(data[index]['uid'], "Other");
+                                  }),
+                            ],
+                            elevation: 8.0,
+                          );
+                        },
                         child: ListTile(
                           title: Text(data[index]['name']),
                           iconColor: const Color.fromARGB(255, 248, 244, 14),

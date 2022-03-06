@@ -111,4 +111,4 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "logo/Checkmate_logo_black.png"
+  image_path: "image/Checkmate_logo_black.png"
