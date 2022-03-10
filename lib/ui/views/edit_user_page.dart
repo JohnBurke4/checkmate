@@ -13,20 +13,26 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  User user = User('', '');
+  User user = User('', '', 0,chessAbility.Beginner);
   TextEditingController nameController = TextEditingController(text: "");
   TextEditingController bioController = TextEditingController(text: "");
+  TextEditingController ageController = TextEditingController(text: "");
+
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments != null) {
+    if (user.name == '') {
+      print("widget build");
       User temp = ModalRoute.of(context)!.settings.arguments as User;
       user.id = auth.FirebaseAuth.instance.currentUser?.uid;
       user.email = auth.FirebaseAuth.instance.currentUser?.email;
       user.name = temp.name;
       user.bio = temp.bio;
+      user.age = temp.age;
+      user.abilityLevel = temp.abilityLevel;
       nameController.text = user.name;
       bioController.text = user.bio;
+      ageController.text = user.age.toString();
     }
 
     return Scaffold(
@@ -76,10 +82,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
               padding: EdgeInsets.only(left: 10),
               width: 600,
               child: TextFormField(
-                initialValue: 'Experienced (1600+)',
+                controller: ageController,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Ability Level'),
+                    border: OutlineInputBorder(), labelText: 'Age'),
               ),
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: EdgeInsets.only(left: 10),
+              width: 600,
+              child: DropdownButton<String>(
+                value: user.abilityLevel.name,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                underline: Container(
+                  height: 2,
+                ),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    user.abilityLevel = GetEnum(newValue);
+                  });
+                },
+                items: <String>["Beginner", "Intermediate", "Advanced", "Master"]
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              )
             ),
             // TextFieldWidget(
             //   label: 'Email',
@@ -94,6 +125,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onPressed: () {
                 user.name = nameController.text;
                 user.bio = bioController.text;
+                user.age = int.parse(ageController.text);
+                print(user.abilityLevel);
                 DefaultFirebaseOptions.uploadUserDetails(user);
                 Navigator.pop(context, user);
               },
@@ -107,5 +140,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
             // ),
           ],
         ));
+  }
+
+  Enum GetEnum(String? val){
+    switch(val){
+      case 'Beginner':
+        return chessAbility.Beginner;
+      case 'Intermediate':
+        return chessAbility.Intermediate;
+      case 'Experienced':
+        return chessAbility.Experienced;
+      default:
+        return chessAbility.Master;
+    }
   }
 }

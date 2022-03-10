@@ -13,7 +13,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPage extends State<UserPage>{
-  User user = User("Magnus C", "My bio");
+  User user = User("Magnus C", "My bio", 31, chessAbility.Master);
 
   @override
   void initState() {
@@ -76,11 +76,20 @@ class _UserPage extends State<UserPage>{
                 )),
             ListTile(
                 title: Text(
+                  'Age',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  user.age.toString(),
+                  style: TextStyle(fontSize: 15),
+                )),
+            ListTile(
+                title: Text(
                   'Ability Level',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
-                  'Experienced (1600+)',
+                  user.abilityLevel.name,
                   style: TextStyle(fontSize: 15),
                 )),
             ElevatedButton(
@@ -100,11 +109,9 @@ class _UserPage extends State<UserPage>{
     setState(() {
       user.name = temp.name;
       user.bio = temp.bio;
+      user.age = temp.age;
+      user.abilityLevel = temp.abilityLevel;
+      print(temp.abilityLevel);
     });
-
-
-
-    log(user.name);
-    build(context);
   }
 }

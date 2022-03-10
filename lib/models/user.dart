@@ -3,17 +3,14 @@ import 'dart:convert';
 import 'package:location/location.dart';
 
 class User {
-  User(String name, String bio) {
-    this.name = name;
-    this.bio = bio;
-  }
+  User(this.name, this.bio, this.age, this.abilityLevel);
   late String? id;
   late String name;
   late String bio;
   late String? email;
   late int age;
   late List<dynamic> imagePaths;
-  late String abilityLevel;
+  late Enum abilityLevel;
   late String location;
 
   User.fromJSON(Map<dynamic, dynamic> json)
@@ -38,4 +35,4 @@ class User {
       };
 }
 
-enum chessAbility { beginner, intermediate, experienced }
+ enum chessAbility { Beginner, Intermediate, Experienced, Master }

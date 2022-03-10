@@ -139,7 +139,7 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
   }
 
   Future _uploadFile() async {
-    User user = User('', '');
+    User user = User('', '', 0, chessAbility.Beginner);
     user.id = auth.FirebaseAuth.instance.currentUser?.uid;
     user.email = auth.FirebaseAuth.instance.currentUser?.email;
 

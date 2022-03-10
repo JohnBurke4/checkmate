@@ -55,7 +55,7 @@ class _SwipeCardState extends State<SwipeCard> {
               ),
               Center(
                 child: Text(
-                  "Ability: " + widget.user.abilityLevel,
+                  "Ability: " + widget.user.abilityLevel.name,
                   style: const TextStyle(
                     fontSize: 20,
                   ),
