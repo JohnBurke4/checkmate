@@ -38,32 +38,6 @@ class _MapPageState extends State<MapPage> {
       markers: _markers,
     );
 
-    // return Scaffold(
-    //     body: FlutterMap(
-    //   options: MapOptions(
-    //     center: LatLng(0, 0),
-    //     zoom: 15.0,
-    //     plugins: [
-    //       UserLocationPlugin(),
-    //     ],
-    //   ),
-    //   layers: [
-    //     TileLayerOptions(
-    //       urlTemplate:
-    //           "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-    //       additionalOptions: {
-    //         // Paste the access token from the token.txt
-    //         'accessToken':
-    //             'pk.eyJ1IjoibmRray0wIiwiYSI6ImNremloa204cDFld3Uyd24yMjdxcTJlZjUifQ.3Di7cDFkBf-oKovlkYO_Tw',
-    //         'id': 'mapbox/streets-v11',
-    //       },
-    //     ),
-    //     // MarkerLayerOptions(markers: _markers),
-    //     userLocationOptions,
-    //   ],
-    //   mapController: mapController,
-    // ));
-
     return Scaffold(
         body: StreamBuilder(
       stream: FirebaseFirestore.instance.collection("tournaments").snapshots(),
@@ -95,14 +69,14 @@ class _MapPageState extends State<MapPage> {
                   UserLocationPlugin(),
                 ],
                 onLongPress: (latLng) {
-                  tour.createTournament(
-                      widget.uid, latLng.latitude, latLng.longitude);
+                  tour
+                      .isUserTournamentExistHere(
+                          widget.uid, latLng.latitude, latLng.longitude)
+                      .then((value) => tour.onLongPressFunc(context, widget.uid,
+                          latLng.latitude, latLng.longitude, value));
                   print('${latLng.latitude}, ${latLng.longitude}');
                 },
-                onTap: (latLng) {
-                  tour.deleteTournament(
-                      widget.uid, latLng.latitude, latLng.longitude);
-                }),
+                onTap: (latLng) {}),
             layers: [
               TileLayerOptions(
                 urlTemplate:
