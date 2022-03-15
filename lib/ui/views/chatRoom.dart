@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, invalid_return_type_for_catch_error, file_names
 
+import 'package:checkmate/services/match.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -37,6 +38,7 @@ class _ChatRoomState extends State<ChatRoom> {
     }).then((value) {
       _textController.text = '';
       print("Message Added");
+      MatchServices.sendMessageNotification(widget.friendUid, message);
     }).catchError((error) => print("Failed to add message: $error"));
   }
 

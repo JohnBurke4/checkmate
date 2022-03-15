@@ -1,5 +1,6 @@
 import 'package:checkmate/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +92,8 @@ class MatchServices {
         .collection("messages")
         .doc(chatId)
         .set({"created": true});
+    
+    sendMatchNotification(userId);
   }
 
   static Future<List<customUser.User>> getLocalUsers(double range) async {
@@ -226,5 +229,26 @@ class MatchServices {
             ],
           );
         });
+  }
+
+  static void sendMatchNotification(destId) async {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('matchNotification');
+    await callable
+        .call(
+        <String, dynamic>{
+          'destinationId': destId
+        }
+    );
+  }
+
+  static void sendMessageNotification(destId, message) async {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('messageNotification');
+    await callable
+        .call(
+        <String, dynamic>{
+          'destinationId': destId,
+          'message': message
+        }
+    );
   }
 }
