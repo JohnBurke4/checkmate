@@ -1,6 +1,6 @@
-
 import 'package:checkmate/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,26 +11,22 @@ import '../ui/views/chatRoom.dart';
 import '../location.dart';
 
 class MatchServices {
-
-  static Future<void> swipeRight(String? userId, String username, context) async {
+  static Future<void> swipeRight(
+      String? userId, String username, context) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     await FirebaseFirestore.instance
         .collection("user")
         .doc(myId)
         .collection("swipeRightMe")
         .doc(userId)
-        .set({
-          'id': userId
-        });
+        .set({'id': userId});
 
     await FirebaseFirestore.instance
         .collection("user")
         .doc(userId)
         .collection("swipeRightThem")
         .doc(myId)
-        .set({
-      'id': myId
-    });
+        .set({'id': myId});
     if (await checkIfMatch(userId)) {
       await uploadMatch(userId, username);
     }
@@ -43,18 +39,14 @@ class MatchServices {
         .doc(myId)
         .collection("swipeLeftMe")
         .doc(userId)
-        .set({
-      'id': userId
-    });
+        .set({'id': userId});
 
     await FirebaseFirestore.instance
         .collection("user")
         .doc(userId)
         .collection("swipeLeftThem")
         .doc(myId)
-        .set({
-      'id': myId
-    });
+        .set({'id': myId});
   }
 
   static Future<bool> checkIfMatch(String? userId) async {
@@ -100,6 +92,8 @@ class MatchServices {
         .collection("messages")
         .doc(chatId)
         .set({"created": true});
+    
+    sendMatchNotification(userId);
   }
 
   static Future<List<customUser.User>> getLocalUsers(double range) async {
@@ -131,29 +125,52 @@ class MatchServices {
   static Future<List<customUser.User>> getUsersFromIds(List<String> ids) async {
     String? myId = FirebaseAuth.instance.currentUser?.uid;
     List<customUser.User> users = List.empty(growable: true);
+
     List<String> swipedLeft = await FirebaseFirestore.instance
         .collection("user")
         .doc(myId)
         .collection("swipeLeftMe")
-    .get().then((value) => value.docs.map((e) => e.id).toList());
+        .get()
+        .then((value) => value.docs.map((e) => e.id).toList());
 
     List<String> swipedRight = await FirebaseFirestore.instance
         .collection("user")
         .doc(myId)
         .collection("swipeRightMe")
-        .get().then((value) => value.docs.map((e) => e.id).toList());
+        .get()
+        .then((value) => value.docs.map((e) => e.id).toList());
 
-    ids.removeWhere((element) => swipedRight.contains(element) || swipedLeft.contains(element));
+    // add by SiKai Lu
+    // fetch a list of blocked user id
+    // remove user whoever in that list
+    List<String> blockList = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(myId)
+        .collection("blockList")
+        .get()
+        .then((value) => value.docs.map((e) => e.id).toList());
+
+    print(blockList.toString());
+    ids.removeWhere((element) =>
+        swipedRight.contains(element) ||
+        swipedLeft.contains(element) ||
+        blockList.contains(element));
+
     var tenIds = (ids..shuffle()).take(10);
-    if (tenIds.isEmpty){
+
+    if (tenIds.isEmpty) {
       return users;
     }
 
     users = await FirebaseFirestore.instance
         .collection("user")
-        .where('uid', whereIn: tenIds.toList() )
-        .get().then((value) => value.docs.map((e) => customUser.User.fromJSON(e.data())).toList());
+        .where('uid', whereIn: tenIds.toList())
+        .get()
+        .then((value) =>
+            value.docs.map((e) => customUser.User.fromJSON(e.data())).toList());
+
     users.removeWhere((element) => element.imagePaths.isEmpty);
+
     return users;
   }
 
@@ -172,20 +189,17 @@ class MatchServices {
             if (element.type == DocumentChangeType.added) {
               var doc = element.doc.data();
               if (doc != null && doc.containsKey("name")) {
-                showMatch(context, doc);
+                showMatch(context, doc, myId);
               }
             }
-
-
           }
         }
-
       }
       hasLoaded = true;
     });
   }
 
-  static void showMatch(context, data) {
+  static void showMatch(context, data, myId) {
     showDialog(
         context: context,
         builder: (context) {
@@ -203,8 +217,11 @@ class MatchServices {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return SafeArea(
-                        child:
-                            ChatRoom(roomID: data["roomID"], uid: data["uid"]));
+                        child: ChatRoom(
+                            roomID: data["roomID"],
+                            uid: myId,
+                            name: data['name'],
+                            friendUid: data['uid']));
                   }));
                 },
                 child: const Text('Send a Message'),
@@ -212,5 +229,26 @@ class MatchServices {
             ],
           );
         });
+  }
+
+  static void sendMatchNotification(destId) async {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('matchNotification');
+    await callable
+        .call(
+        <String, dynamic>{
+          'destinationId': destId
+        }
+    );
+  }
+
+  static void sendMessageNotification(destId, message) async {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('messageNotification');
+    await callable
+        .call(
+        <String, dynamic>{
+          'destinationId': destId,
+          'message': message
+        }
+    );
   }
 }
