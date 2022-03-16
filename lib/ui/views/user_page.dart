@@ -13,7 +13,12 @@ class UserPage extends StatefulWidget {
   final String uid;
   final bool editable;
 
-  const UserPage({Key? key, required this.uid, required this.editable})
+  final String friendUid;
+  const UserPage(
+      {Key? key,
+      required this.uid,
+      required this.editable,
+      this.friendUid = "temp"})
       : super(key: key);
 
   @override
