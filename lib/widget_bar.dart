@@ -79,7 +79,7 @@ class _NavBarState extends State<NavBar> {
       ),
       body: <Widget>[
         // Put your widgets in here
-        UserPage(),
+        UserPage(uid: widget.uid,editable: true,),
         SwipePage(),
         FriendList(uid: widget.uid),
         MapPage(uid: widget.uid),
