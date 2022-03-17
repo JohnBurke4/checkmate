@@ -1,17 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // import 'package:geocoder/geocoder.dart';
-
+class Coordinates{
+  late double lat, lon;
+  Coordinates(this.lat, this.lon);
+}
 class Tournament {
   // TODO: add details to firebase
-  // final double lat - done;
-  // final double lon - done;
-  // final String userId - done;
-  // final String tournamentName;
-  // final int numPlayer;
-  // final String address;
 
-  Tournament();
+  late Coordinates coords;
+  late String creatorId;
+  late String tournamentName;
+  late String location;
+  late int maxPlayers;
+  late List<String> currentPlayers; //Not sure if should be list of user ids or User objects
+
+  Tournament(this.coords, this.creatorId, this.tournamentName, this.location, this.maxPlayers, this.currentPlayers);
 
   void onTapFunc() {
     //TODO:

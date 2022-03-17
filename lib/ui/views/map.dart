@@ -23,7 +23,8 @@ class _MapPageState extends State<MapPage> {
   Location location = Location();
   late UserLocationOptions userLocationOptions;
   String location_id = 'X722uMAdIefDkVj3nqam';
-  Tournament tour = Tournament();
+  var temp = [""];
+  Tournament tour = Tournament(Coordinates(0,0), "","","",0,[""]);
 
   @override
   void initState() {
