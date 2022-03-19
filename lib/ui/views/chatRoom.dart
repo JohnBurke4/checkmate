@@ -77,7 +77,9 @@ class _ChatRoomState extends State<ChatRoom> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return SafeArea(
-                          child: TargetPage(targetUid: widget.friendUid));
+                          child: TargetPage(
+                              uid: widget.uid, targetUid: widget.friendUid
+                              ));
                     }));
                   },
                   child: const Icon(
