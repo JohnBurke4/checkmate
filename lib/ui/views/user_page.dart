@@ -18,8 +18,6 @@ class _UserPage extends State<UserPage> {
 
   @override
   void initState() {
-
-
     super.initState;
   }
 
@@ -76,17 +74,22 @@ class _UserPage extends State<UserPage> {
                           user.bio,
                           style: TextStyle(fontSize: 15),
                         )),
-                    const ListTile(
-                        title: Text(
+                    ListTile(
+                        title: const Text(
                           'Ability Level',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          'Experienced (1600+)',
+                          user.abilityLevel,
                           style: TextStyle(fontSize: 15),
                         )),
-                    ElevatedButton(
+                    ElevatedButton.icon(
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 24.0,
+                      ),
+                      label: Text('Edit'),
                       style: ButtonStyle(
                         foregroundColor:
                             MaterialStateProperty.all<Color>(Colors.white),
@@ -94,7 +97,7 @@ class _UserPage extends State<UserPage> {
                       onPressed: () {
                         OpenEditPage(buildContext);
                       },
-                      child: Text('Edit Profile'),
+                      //child: Text('Edit Profile'),
                     )
                   ],
                 ));
