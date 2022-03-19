@@ -7,8 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'edit_user_page.dart';
 import 'package:checkmate/gallery.dart';
 import 'package:checkmate/models/user.dart';
+import '../components/viewPositiveFeadback.dart';
 
 class UserPage extends StatefulWidget {
+  final String uid;
+  final bool editable;
+
+  final String friendUid;
+  const UserPage(
+      {Key? key,
+      required this.uid,
+      required this.editable,
+      this.friendUid = "temp"})
+      : super(key: key);
+
   @override
   _UserPage createState() => _UserPage();
 }
@@ -18,8 +30,6 @@ class _UserPage extends State<UserPage> {
 
   @override
   void initState() {
-
-
     super.initState;
   }
 
@@ -86,16 +96,22 @@ class _UserPage extends State<UserPage> {
                           'Experienced (1600+)',
                           style: TextStyle(fontSize: 15),
                         )),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      onPressed: () {
-                        OpenEditPage(buildContext);
-                      },
-                      child: Text('Edit Profile'),
-                    )
+
+                    //LeavePositiveFeadback(uid: uid, friendUid: friendUid, editable: editable),
+                    widget.editable
+                        ? ElevatedButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                            ),
+                            onPressed: () {
+                              OpenEditPage(buildContext);
+                            },
+                            child: Text('Edit Profile'),
+                          )
+                        : Container(),
+
+                    Center(child: ViewPositiveFeadback(uid: widget.uid))
                   ],
                 ));
           } else {
