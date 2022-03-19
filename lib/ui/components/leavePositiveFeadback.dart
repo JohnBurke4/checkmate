@@ -10,14 +10,12 @@ class LeavePositiveFeadback extends StatelessWidget {
   final String uid;
   final String friendUid;
   // the value of editable depends on whether the current user is viewing his own score or others'.
-  final bool editable;
 
-  const LeavePositiveFeadback(
-      {Key? key,
-      required this.uid,
-      required this.friendUid,
-      required this.editable})
-      : super(key: key);
+  const LeavePositiveFeadback({
+    Key? key,
+    required this.uid,
+    required this.friendUid,
+  }) : super(key: key);
 
   Future<void> updatePositiveFeedback(String feadback) async {
     bool containCurrentUid = await FirebaseFirestore.instance
@@ -120,9 +118,7 @@ class LeavePositiveFeadback extends StatelessWidget {
                         color: Colors.blue,
                       ),
                       onTapUp: (_) async {
-                        if (editable) {
-                          updatePositiveFeedback("friendliness");
-                        }
+                        updatePositiveFeedback("friendliness");
                       },
                       onLongPressStart: (DetailsElement) {
                         showMenu<String>(
@@ -150,9 +146,7 @@ class LeavePositiveFeadback extends StatelessWidget {
                         color: Colors.blue,
                       ),
                       onTapUp: (_) async {
-                        if (editable) {
-                          updatePositiveFeedback("punctuality");
-                        }
+                        updatePositiveFeedback("punctuality");
                       },
                       onLongPressStart: (DetailsElement) {
                         showMenu<String>(
@@ -180,9 +174,7 @@ class LeavePositiveFeadback extends StatelessWidget {
                         color: Colors.blue,
                       ),
                       onTapUp: (_) async {
-                        if (editable) {
-                          updatePositiveFeedback("hangOutAgain");
-                        }
+                        updatePositiveFeedback("hangOutAgain");
                       },
                       onLongPressStart: (DetailsElement) {
                         showMenu<String>(
