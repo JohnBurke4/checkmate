@@ -1,7 +1,7 @@
 import 'package:checkmate/firebase_options.dart';
 import 'package:checkmate/services/match.dart';
 import 'package:checkmate/sign_in.dart';
-import 'package:checkmate/gallery.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/ui/views/user_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

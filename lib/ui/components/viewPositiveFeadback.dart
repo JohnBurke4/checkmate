@@ -28,6 +28,7 @@ class ViewPositiveFeadback extends StatelessWidget {
           if (snapshot.hasData) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
+
             return Row(
               children: <Widget>[
                 Expanded(

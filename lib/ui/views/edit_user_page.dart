@@ -1,4 +1,4 @@
-import 'package:checkmate/gallery.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/services/match.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';

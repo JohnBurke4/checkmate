@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'edit_user_page.dart';
-import 'package:checkmate/gallery.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/models/user.dart';
 import '../components/viewPositiveFeadback.dart';
 
@@ -97,7 +97,6 @@ class _UserPage extends State<UserPage> {
                           style: TextStyle(fontSize: 15),
                         )),
 
-                    //LeavePositiveFeadback(uid: uid, friendUid: friendUid, editable: editable),
                     widget.editable
                         ? ElevatedButton(
                             style: ButtonStyle(
