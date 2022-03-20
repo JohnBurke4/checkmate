@@ -33,17 +33,16 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               children: <Widget>[
                 Image(
-
                   height: MediaQuery.of(context).size.height * 0.25,
                   image: const AssetImage("assets/Checkmate_logo_white.png"),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0,0,0,30),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
                   child: Center(
-
-                    child: Text("Check Mate",
-                      style: TextStyle(color: Colors.white.withOpacity(0.9),
-                      fontSize: 30),
+                    child: Text(
+                      "Check Mate",
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.9), fontSize: 30),
                     ),
                   ),
                 ),
@@ -70,7 +69,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         MaterialPageRoute(
                             builder: (context) => NavBar(uid: uid!)));
                   }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
+                    if (error.toString() == error.toString()) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Credentials incorrect, try again!'),
+                      ));
+                    }
                   });
                 }),
                 signUpOption()
