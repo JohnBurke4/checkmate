@@ -1,8 +1,11 @@
+import 'package:checkmate/firebase_options.dart';
 import 'package:checkmate/services/match.dart';
 import 'package:checkmate/sign_in.dart';
-import 'package:checkmate/gallery.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/ui/views/user_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,29 +32,56 @@ class _NavBarState extends State<NavBar> {
   // _NavBarState() {};
 
   // late String test = widget.uid;
-
+  late final FirebaseMessaging _messaging;
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  // static final List<Widget> _widgetOptions = <Widget>[
-  //   // Put your widgets in here
-  //   UserPage(),
-  //   SwipePage(),
-  //   FriendList(uid: getUid()),
-  //   MapPage(),
-  // ];
+
 
   LocationData? _currentPosition;
   Location location = new Location();
-  String tmp_location_list_id = 'c09uTg5jASyKjdpCXS7f';
   String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
+  void registerNotification() async {
+    // 1. Initialize the Firebase app
+    await Firebase.initializeApp();
+
+    // 2. Instantiate Firebase Messaging
+    _messaging = FirebaseMessaging.instance;
+
+    // 3. On iOS, this helps to take the user permissions
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      var userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null){
+        return;
+      }
+      var token = await _messaging.getToken();
+      print(token);
+      await FirebaseFirestore.instance
+          .collection("user")
+          .doc(userId)
+          .update({'deviceToken' : token});
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        // Backround checking
+      });
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
+    registerNotification();
     // test = widget.uid ;
-    fetchLocation();
     MatchServices.getMatches(context);
   }
 
@@ -86,10 +116,10 @@ class _NavBarState extends State<NavBar> {
       ),
       body: <Widget>[
         // Put your widgets in here
-        UserPage(),
+        UserPage(uid: widget.uid,editable: true,),
         SwipePage(),
         FriendList(uid: widget.uid),
-        MapPage(),
+        MapPage(uid: widget.uid),
       ].elementAt(_selectedIndex),
       //_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -119,45 +149,40 @@ class _NavBarState extends State<NavBar> {
       ),
     );
   }
+}
 
-  fetchLocation() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+class NotificationBadge extends StatelessWidget {
+  final int totalNotifications;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
+  const NotificationBadge({required this.totalNotifications});
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _currentPosition = await location.getLocation();
-    log('data: $_currentPosition');
-    FirebaseFirestore.instance
-        .collection("tmp_locationData")
-        .doc(tmp_location_list_id)
-        .collection("location_list")
-        .add({
-          'author': userId,
-          'createdAt': DateTime.now(),
-          'lat': _currentPosition!.latitude,
-          'lon': _currentPosition!.longitude,
-        })
-        .then((value) => print("Message Added"))
-        .catchError((error) => print("Failed to add message: $error"));
-    // location.onLocationChanged.listen((LocationData currentLocation) {
-    //   setState(() {
-    //     _currentPosition = currentLocation;
-    //   });
-    // });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40.0,
+      height: 40.0,
+      decoration: new BoxDecoration(
+        color: Colors.red,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '$totalNotifications',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ),
+    );
   }
+}
+
+class PushNotification {
+  PushNotification({
+    this.title,
+    this.body,
+  });
+  String? title;
+  String? body;
 }

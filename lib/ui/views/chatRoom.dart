@@ -1,23 +1,26 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
+// ignore_for_file: avoid_print, invalid_return_type_for_catch_error, file_names
+
+import 'package:checkmate/services/match.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
-import 'dart:math';
-
 
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:checkmate/ui/views/user_page.dart';
 
-
+import 'targetPage.dart';
 
 class ChatRoom extends StatefulWidget {
   final String roomID;
   final String uid;
+  final String name;
+  final String friendUid;
   const ChatRoom(
       {Key? key,
       required this.roomID,
-      required this.uid})
+      required this.uid,
+      required this.name,
+      required this.friendUid})
       : super(key: key);
 
   @override
@@ -41,6 +44,7 @@ class _ChatRoomState extends State<ChatRoom> {
     }).then((value) {
       _textController.text = '';
       print("Message Added");
+      MatchServices.sendMessageNotification(widget.friendUid, message);
     }).catchError((error) => print("Failed to add message: $error"));
   }
 
@@ -64,18 +68,36 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('CheckMate')),
+          title: Center(child: Text(widget.name)),
+          actions: <Widget>[
+            Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return SafeArea(
+                          child: TargetPage(
+                              uid: widget.uid, targetUid: widget.friendUid
+                              ));
+                    }));
+                  },
+                  child: const Icon(
+                    Icons.account_box,
+                    size: 30.0,
+                  ),
+                )),
+          ],
         ),
         body: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('messages')
                 .doc(widget.roomID)
                 .collection('list')
-                .orderBy('createdAt',descending: true)
+                .orderBy('createdAt', descending: true)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              print("Yo");
               if (snapshot.hasError) {
                 return const Text('Something went wrong');
               }
@@ -85,7 +107,6 @@ class _ChatRoomState extends State<ChatRoom> {
                         valueColor: AlwaysStoppedAnimation<Color>(
                             Color.fromARGB(255, 23, 29, 43))));
               }
-
               if (snapshot.hasData) {
                 return SafeArea(
                   child: Column(
@@ -124,7 +145,7 @@ class _ChatRoomState extends State<ChatRoom> {
                               ),
                             ),
                             CupertinoButton(
-                                child: Icon(Icons.send_sharp),
+                                child: const Icon(Icons.send_sharp),
                                 onPressed: () =>
                                     _handleSendPressed(_textController.text))
                           ],

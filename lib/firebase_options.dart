@@ -72,16 +72,27 @@ class DefaultFirebaseOptions {
 
   static User? user;
 
-  static void uploadUserDetails(userDetails) async {
-    var userId = userDetails.id;
+  static Future uploadUserDetails(User? userDetails) async {
+    var userId = userDetails?.id;
+    if (userDetails == null) {
+      return;
+    }
     user = userDetails;
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection("user")
         .doc(userId)
         .update(userDetails.toJson());
-    //     .get();
-    // var data = doc.data();
-    // user = User.fromJSON(data.);
+  }
+
+  static Future<bool> getUserDetails() async {
+    var userId = auth.FirebaseAuth.instance.currentUser?.uid;
+    var doc =
+        await FirebaseFirestore.instance.collection("user").doc(userId).get();
+    if (doc.data() != null) {
+      var data = doc.data();
+      user = User.fromJSON(data!);
+    }
+    return true;
   }
 
   // static void getUserDetails() async {
