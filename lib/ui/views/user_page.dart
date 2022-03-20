@@ -86,14 +86,14 @@ class _UserPage extends State<UserPage> {
                           user.bio,
                           style: TextStyle(fontSize: 15),
                         )),
-                    const ListTile(
-                        title: Text(
+                    ListTile(
+                        title: const Text(
                           'Ability Level',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          'Experienced (1600+)',
+                          user.abilityLevel,
                           style: TextStyle(fontSize: 15),
                         )),
 
@@ -111,6 +111,7 @@ class _UserPage extends State<UserPage> {
                         : Container(),
 
                     Center(child: ViewPositiveFeadback(uid: widget.uid))
+
                   ],
                 ));
           } else {

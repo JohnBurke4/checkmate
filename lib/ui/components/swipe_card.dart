@@ -9,8 +9,6 @@ class SwipeCard extends StatefulWidget {
 
   @override
   _SwipeCardState createState() => _SwipeCardState();
-
-
 }
 
 class _SwipeCardState extends State<SwipeCard> {
@@ -21,28 +19,24 @@ class _SwipeCardState extends State<SwipeCard> {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            onTap: () {
-              if (widget.user.imagePaths.length > 1){
-                setState(() {
-
-                  i = (i + 1) % widget.user.imagePaths.length;
-                });
-              }
-
-            },
-            child: Container(
-              height: MediaQuery.of(context).size.height*0.5,
-              width: double.infinity,
-              child: Image(
-                image: NetworkImage(widget.user.imagePaths[i]),
-                fit: BoxFit.fill,
-              ),
-            )
-          ),
+              onTap: () {
+                if (widget.user.imagePaths.length > 1) {
+                  setState(() {
+                    i = (i + 1) % widget.user.imagePaths.length;
+                  });
+                }
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: double.infinity,
+                child: Image(
+                  image: NetworkImage(widget.user.imagePaths[i]),
+                  fit: BoxFit.fill,
+                ),
+              )),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-
             children: [
               Center(
                 child: Text(
@@ -55,20 +49,23 @@ class _SwipeCardState extends State<SwipeCard> {
               ),
               Center(
                 child: Text(
-                  "Ability: " + widget.user.abilityLevel,
+                  widget.user.abilityLevel,
                   style: const TextStyle(
                     fontSize: 20,
                   ),
                 ),
               ),
-              const Center(
-                child: Text(
-                  "Bio",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              // const Center(
+              //   child: Text(
+              //     "Bio",
+              //     style: TextStyle(
+              //       fontSize: 24,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
+              const SizedBox(
+                height: 20,
               ),
               Center(
                 child: Text(
@@ -80,7 +77,6 @@ class _SwipeCardState extends State<SwipeCard> {
               ),
             ],
           ),
-
         ],
       ),
     );
