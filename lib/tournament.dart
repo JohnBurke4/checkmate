@@ -1,4 +1,5 @@
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
+import 'package:checkmate/ui/views/create_tournament_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,8 @@ class Tournament {
   void onTapFunc(BuildContext context, String userId, double lat, double lon,
       String? userTournamentId) async {
     if (userTournamentId != null) {
+      int size = 0;
+      int players = 0;
       String name = await FirebaseFirestore.instance
           .collection("tournaments")
           .doc(userTournamentId)
@@ -26,12 +29,14 @@ class Tournament {
           .then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data() as Map<String, dynamic>;
+          size = data['size'] ?? 0;
+          players = data['players'] ?? 0;
           return data['name'] ?? "Tournament";
         } else {
           return "Tournament";
         }
       });
-      myTournamentDialog(context, name, userTournamentId);
+      myTournamentDialog(context, name, userTournamentId, size, players);
     }
   }
 
@@ -73,7 +78,7 @@ class Tournament {
     return false;
   }
 
-  void createTournament(String userId, double lat, double lon, String name, int size) {
+  static void createTournament(String userId, double lat, double lon, String name, int size) {
     FirebaseFirestore.instance
         .collection("tournaments")
         .add({
@@ -112,18 +117,10 @@ class Tournament {
     Widget yesButton = FlatButton(
       child: Text("Yes"),
       onPressed: () {
-        print(_tournamentNameController.text);
-        if (_tournamentNameController.text.isNotEmpty && _tournamentSizeController.text.isNotEmpty) {
-          var size = int.tryParse(_tournamentSizeController.text);
-          if (size == null || size < 1 || size > 32){
-
-          }
-          else{
-            createTournament(userId, lat, lon, _tournamentNameController.text, size);
-            Navigator.of(context).pop();
-          }
-
-        }
+        Navigator.of(context).pop();
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return SafeArea(child: CreateTournamentPage(lat: lat, lon: lon));
+        }));
       },
     );
     Widget noButton = FlatButton(
@@ -135,32 +132,7 @@ class Tournament {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("New Tournament"),
-      content: Container(
-        height: MediaQuery.of(context).size.height * 0.2,
-        child: Column(
-          children: [
-            Text("Would you like to start a new tournament?"),
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              controller: _tournamentNameController,
-              decoration: InputDecoration(hintText: "Tournament Name"),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-              controller: _tournamentSizeController,
-              decoration: InputDecoration(hintText: "Size"),
-            )
-          ],
-        ),
-      ),
+      content: Text("Would you like to start a new tournament at this location?"),
       actions: [
         yesButton,
         noButton,
@@ -210,7 +182,7 @@ class Tournament {
   }
 
   myTournamentDialog(
-      BuildContext context, String tournamentName, String tournamentId) {
+      BuildContext context, String tournamentName, String tournamentId, int size, int currentPlayers) {
     // set up the buttons
     Widget yesButton = FlatButton(
       child: Text("View"),
@@ -227,7 +199,18 @@ class Tournament {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(tournamentName),
-      content: Text("Would you like to view this tournament?"),
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.06,
+        child: Column(
+          children: [
+            Text("$currentPlayers / $size players"),
+            const SizedBox(
+              height: 14,
+            ),
+            Text("Would you like to view this tournament?"),
+          ],
+        ),
+      ),
       actions: [
         yesButton,
         noButton,
