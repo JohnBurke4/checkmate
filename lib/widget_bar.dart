@@ -1,7 +1,7 @@
 import 'package:checkmate/firebase_options.dart';
 import 'package:checkmate/services/match.dart';
 import 'package:checkmate/sign_in.dart';
-import 'package:checkmate/gallery.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/ui/views/user_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -116,7 +116,7 @@ class _NavBarState extends State<NavBar> {
       ),
       body: <Widget>[
         // Put your widgets in here
-        UserPage(),
+        UserPage(uid: widget.uid,editable: true,),
         SwipePage(),
         FriendList(uid: widget.uid),
         MapPage(uid: widget.uid),

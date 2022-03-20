@@ -4,25 +4,35 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
 
-class PositiveFeadback extends StatelessWidget {
+// This class is mainly used to let current user leave feadbacks for other users
+
+class LeavePositiveFeadback extends StatelessWidget {
   final String uid;
   final String friendUid;
+  // the value of editable depends on whether the current user is viewing his own score or others'.
 
-  const PositiveFeadback({Key? key, required this.uid, required this.friendUid})
-      : super(key: key);
+  const LeavePositiveFeadback({
+    Key? key,
+    required this.uid,
+    required this.friendUid,
+  }) : super(key: key);
 
   Future<void> updatePositiveFeedback(String feadback) async {
-    List<String> feadbacks = await FirebaseFirestore.instance
+    bool containCurrentUid = await FirebaseFirestore.instance
         .collection("user")
         .doc(friendUid)
         .collection(feadback)
+        .doc(uid)
         .get()
-        .then((value) => value.docs.map((e) => e.id).toList());
-
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection('user').doc(friendUid);
-
-    bool containCurrentUid = feadbacks.contains(uid);
 
     FirebaseFirestore.instance
         .runTransaction((transaction) async {

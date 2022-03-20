@@ -5,10 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'edit_user_page.dart';
-import 'package:checkmate/gallery.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/models/user.dart';
+import '../components/viewPositiveFeadback.dart';
 
 class UserPage extends StatefulWidget {
+  final String uid;
+  final bool editable;
+
+  final String friendUid;
+  const UserPage(
+      {Key? key,
+      required this.uid,
+      required this.editable,
+      this.friendUid = "temp"})
+      : super(key: key);
+
   @override
   _UserPage createState() => _UserPage();
 }
@@ -84,21 +96,22 @@ class _UserPage extends State<UserPage> {
                           user.abilityLevel,
                           style: TextStyle(fontSize: 15),
                         )),
-                    ElevatedButton.icon(
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 24.0,
-                      ),
-                      label: Text('Edit'),
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      onPressed: () {
-                        OpenEditPage(buildContext);
-                      },
-                      //child: Text('Edit Profile'),
-                    )
+
+                    widget.editable
+                        ? ElevatedButton(
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                            ),
+                            onPressed: () {
+                              OpenEditPage(buildContext);
+                            },
+                            child: Text('Edit Profile'),
+                          )
+                        : Container(),
+
+                    Center(child: ViewPositiveFeadback(uid: widget.uid))
+
                   ],
                 ));
           } else {

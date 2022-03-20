@@ -6,7 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
-import '../components/positiveFeadback.dart';
+import 'package:checkmate/ui/views/user_page.dart';
+
+import 'targetPage.dart';
 
 class ChatRoom extends StatefulWidget {
   final String roomID;
@@ -14,7 +16,11 @@ class ChatRoom extends StatefulWidget {
   final String name;
   final String friendUid;
   const ChatRoom(
-      {Key? key, required this.roomID, required this.uid, required this.name,required this.friendUid})
+      {Key? key,
+      required this.roomID,
+      required this.uid,
+      required this.name,
+      required this.friendUid})
       : super(key: key);
 
   @override
@@ -70,7 +76,10 @@ class _ChatRoomState extends State<ChatRoom> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return SafeArea(child: PositiveFeadback(uid: widget.uid, friendUid: widget.friendUid));
+                      return SafeArea(
+                          child: TargetPage(
+                              uid: widget.uid, targetUid: widget.friendUid
+                              ));
                     }));
                   },
                   child: const Icon(
