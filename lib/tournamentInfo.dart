@@ -44,21 +44,37 @@ class _tournamentInfoState extends State<tournamentInfo> {
                         title: const Text(
                           'Author ID',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         subtitle: Text(
                           res!.author_name,
-                          style: TextStyle(fontSize: 15),
+                          style: TextStyle(fontSize: 15, color: Colors.white),
                         )),
                     ListTile(
                         title: const Text(
                           'Tournament name',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         subtitle: Text(
                           res.tournamentName,
-                          style: TextStyle(fontSize: 15),
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                        )),
+                    ListTile(
+                        title: const Text(
+                          'Size',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          res.tournamentSize.toString(),
+                          style: TextStyle(fontSize: 15, color: Colors.white),
                         )),
                   ],
                 ),
@@ -73,8 +89,10 @@ class _tournamentInfoState extends State<tournamentInfo> {
   }
 
   Future<TourInfo> getTournamentInfo(String tournamentID) async {
-    TourInfo info =
-        TourInfo(author_name: 'nothing_now', tournamentName: 'nothing_now');
+    TourInfo info = TourInfo(
+        author_name: 'nothing_now',
+        tournamentName: 'nothing_now',
+        tournamentSize: 0);
     await FirebaseFirestore.instance
         .collection("tournaments")
         .doc(tournamentID)
@@ -82,7 +100,8 @@ class _tournamentInfoState extends State<tournamentInfo> {
         .then((DocumentSnapshot documentSnapshot) {
       info = TourInfo(
           author_name: documentSnapshot.get('author'),
-          tournamentName: documentSnapshot.get('name'));
+          tournamentName: documentSnapshot.get('name'),
+          tournamentSize: documentSnapshot.get('size'));
       //print(documentSnapshot.data().toString());
     });
     return info;
@@ -92,9 +111,16 @@ class _tournamentInfoState extends State<tournamentInfo> {
 class TourInfo {
   final String author_name;
   final String tournamentName;
-  const TourInfo({required this.author_name, required this.tournamentName});
+  final int tournamentSize;
+  const TourInfo(
+      {required this.author_name,
+      required this.tournamentName,
+      required this.tournamentSize});
 
   factory TourInfo.fromJson(Map<String, dynamic> json) {
-    return TourInfo(author_name: json['author'], tournamentName: json['name']);
+    return TourInfo(
+        author_name: json['author'],
+        tournamentName: json['name'],
+        tournamentSize: json['size']);
   }
 }
