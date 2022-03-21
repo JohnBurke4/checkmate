@@ -7,9 +7,11 @@ import 'package:checkmate/sign_up.dart';
 import 'package:flutter/material.dart';
 
 class CreateTournamentPage extends StatefulWidget {
-  const CreateTournamentPage({Key? key,
+  const CreateTournamentPage({
+    Key? key,
     required this.lat,
-    required this.lon,}) : super(key: key);
+    required this.lon,
+  }) : super(key: key);
   final double lat;
   final double lon;
   @override
@@ -22,18 +24,15 @@ class _CreateTournamentPageState extends State<CreateTournamentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-
-      ),
-
+      appBar: AppBar(),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              Color.fromARGB(255, 24, 65, 248),
-              Color.fromARGB(255, 0, 190, 248)
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          Color.fromARGB(255, 24, 65, 248),
+          Color.fromARGB(255, 0, 190, 248)
+        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -50,41 +49,51 @@ class _CreateTournamentPageState extends State<CreateTournamentPage> {
                     ),
                   ),
                 ),
-                reusableTextField("Tournament Name?", Icons.drive_file_rename_outline, false,
-                    _nameTextController, TextInputType.text),
+                reusableTextField(
+                    "Tournament Name?",
+                    Icons.drive_file_rename_outline,
+                    false,
+                    _nameTextController,
+                    TextInputType.text),
                 const SizedBox(
                   height: 20,
                 ),
-                reusableTextField("Number of players?", Icons.supervisor_account, false,
-                    _sizeTextController, TextInputType.number),
+                reusableTextField(
+                    "Number of players?",
+                    Icons.supervisor_account,
+                    false,
+                    _sizeTextController,
+                    TextInputType.number),
                 const SizedBox(
                   height: 5,
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.white),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
                   ),
                   onPressed: () {
-    if (_nameTextController.text.isNotEmpty && _sizeTextController.text.isNotEmpty) {
-      var size = int.tryParse(_sizeTextController.text);
-      if (size == null || size < 1 || size > 32){
-
-      }
-      else{
-        Tournament.createTournament(FirebaseAuth.instance.currentUser!.uid, widget.lat, widget.lon, _nameTextController.text, size);
-        Navigator.of(context).pop();
-      }
-
-    }
+                    if (_nameTextController.text.isNotEmpty &&
+                        _sizeTextController.text.isNotEmpty) {
+                      var size = int.tryParse(_sizeTextController.text);
+                      if (size == null || size < 1 || size > 32) {
+                      } else {
+                        Tournament.createTournament(
+                            FirebaseAuth.instance.currentUser!.uid,
+                            widget.lat,
+                            widget.lon,
+                            _nameTextController.text,
+                            size);
+                        Navigator.of(context).pop();
+                      }
+                    }
                   },
                   child: Text('Confirm'),
-
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.white),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();

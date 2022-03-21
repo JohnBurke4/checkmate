@@ -1,4 +1,6 @@
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
+import 'package:checkmate/sign_in.dart';
+import 'package:checkmate/tournamentInfo.dart';
 import 'package:checkmate/ui/views/create_tournament_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +51,23 @@ class Tournament {
     }
   }
 
+  Future<String?> isNotUserTournamentExistHere(
+      String userId, double lat, double lon) async {
+    return await FirebaseFirestore.instance
+        .collection("tournaments")
+        .where("author", isNotEqualTo: userId)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        if (isTournamentExistInRange(lat, lon, doc['lat'], doc['lon'])) {
+          return doc.id;
+        }
+      }
+      return null;
+    }).catchError(
+            (error) => print("Failed to check tournament existence: $error"));
+  }
+
   Future<String?> isUserTournamentExistHere(
       String userId, double lat, double lon) async {
     return await FirebaseFirestore.instance
@@ -78,7 +97,8 @@ class Tournament {
     return false;
   }
 
-  static void createTournament(String userId, double lat, double lon, String name, int size) {
+  static void createTournament(
+      String userId, double lat, double lon, String name, int size) {
     FirebaseFirestore.instance
         .collection("tournaments")
         .add({
@@ -87,7 +107,7 @@ class Tournament {
           'lat': lat,
           'lon': lon,
           'name': name,
-          'size' : size,
+          'size': size,
         })
         .then((value) => print("Tournaments Location Added: $userId"))
         .catchError(
@@ -132,7 +152,8 @@ class Tournament {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("New Tournament"),
-      content: Text("Would you like to start a new tournament at this location?"),
+      content:
+          Text("Would you like to start a new tournament at this location?"),
       actions: [
         yesButton,
         noButton,
@@ -181,13 +202,17 @@ class Tournament {
     );
   }
 
-  myTournamentDialog(
-      BuildContext context, String tournamentName, String tournamentId, int size, int currentPlayers) {
+  myTournamentDialog(BuildContext context, String tournamentName,
+      String tournamentId, int size, int currentPlayers) {
     // set up the buttons
     Widget yesButton = FlatButton(
       child: Text("View"),
       onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => tournamentInfo(tournamentId: tournamentId)),
+        );
       },
     );
     Widget noButton = FlatButton(

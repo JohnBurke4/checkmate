@@ -56,7 +56,7 @@ class _MapPageState extends State<MapPage> {
         if (snapshot.hasData) {
           List<Marker> curMarkers = [];
           snapshot.data!.docs.forEach((result) {
-            if (result['author'] == FirebaseAuth.instance.currentUser?.uid){
+            if (result['author'] == FirebaseAuth.instance.currentUser?.uid) {
               curMarkers.add(Marker(
                   point: LatLng(result['lat'], result['lon']),
                   builder: (ctx) => const Icon(Icons.emoji_events_outlined,
@@ -67,7 +67,6 @@ class _MapPageState extends State<MapPage> {
                   builder: (ctx) => const Icon(Icons.emoji_events_outlined,
                       color: Color.fromARGB(255, 37, 30, 172), size: 30)));
             }
-
           });
 
           return FlutterMap(
@@ -88,9 +87,16 @@ class _MapPageState extends State<MapPage> {
                 onTap: (latLng) {
                   tour
                       .isUserTournamentExistHere(
-                      widget.uid, latLng.latitude, latLng.longitude)
+                          widget.uid, latLng.latitude, latLng.longitude)
                       .then((value) => tour.onTapFunc(context, widget.uid,
-                      latLng.latitude, latLng.longitude, value));
+                          latLng.latitude, latLng.longitude, value));
+                  print('${latLng.latitude}, ${latLng.longitude}');
+
+                  tour
+                      .isNotUserTournamentExistHere(
+                          widget.uid, latLng.latitude, latLng.longitude)
+                      .then((value) => tour.onTapFunc(context, widget.uid,
+                          latLng.latitude, latLng.longitude, value));
                   print('${latLng.latitude}, ${latLng.longitude}');
                 }),
             layers: [
