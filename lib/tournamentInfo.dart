@@ -20,57 +20,81 @@ class tournamentInfo extends StatefulWidget {
 class _tournamentInfoState extends State<tournamentInfo> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Color.fromARGB(255, 24, 65, 248),
-          Color.fromARGB(255, 0, 190, 248)
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.10, 20, 0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-                  child: Center(
-                    child: Text(
-                      "Tournament info",
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.9), fontSize: 30),
-                    ),
-                  ),
+    return FutureBuilder(
+        future: getTournamentInfo(widget.tournamentId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            TourInfo? res = snapshot.data as TourInfo?;
+            if (res != null) {
+              //print(res);
+            }
+            return Scaffold(
+              appBar: AppBar(),
+              body: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                  Color.fromARGB(255, 24, 65, 248),
+                  Color.fromARGB(255, 0, 190, 248)
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                child: Column(
+                  children: [
+                    ListTile(
+                        title: const Text(
+                          'Author ID',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          res!.author_name,
+                          style: TextStyle(fontSize: 15),
+                        )),
+                    ListTile(
+                        title: const Text(
+                          'Tournament name',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          res.tournamentName,
+                          style: TextStyle(fontSize: 15),
+                        )),
+                  ],
                 ),
-                getTournamentInfo(widget.tournamentId).then((value) => print(value));
-                ElevatedButton(
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                  ),
-                  onPressed: () {},
-                  child: Text('Join'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getTournamentInfo(String tournamentID) async {
-    return await FirebaseFirestore.instance
+  Future<TourInfo> getTournamentInfo(String tournamentID) async {
+    TourInfo info =
+        TourInfo(author_name: 'nothing_now', tournamentName: 'nothing_now');
+    await FirebaseFirestore.instance
         .collection("tournaments")
         .doc(tournamentID)
         .get()
-        .then((querySnapshot) {
-      print(querySnapshot);
-      return querySnapshot;
+        .then((DocumentSnapshot documentSnapshot) {
+      info = TourInfo(
+          author_name: documentSnapshot.get('author'),
+          tournamentName: documentSnapshot.get('name'));
+      //print(documentSnapshot.data().toString());
     });
+    return info;
+  }
+}
+
+class TourInfo {
+  final String author_name;
+  final String tournamentName;
+  const TourInfo({required this.author_name, required this.tournamentName});
+
+  factory TourInfo.fromJson(Map<String, dynamic> json) {
+    return TourInfo(author_name: json['author'], tournamentName: json['name']);
   }
 }
