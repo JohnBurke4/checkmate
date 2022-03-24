@@ -117,13 +117,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onPressed: () async {
                 user?.name = nameController.text;
                 user?.bio = bioController.text;
-                user?.imagePaths = [
-                  'https://imageio.forbes.com/specials-images/imageserve/61499e784c9631d3af55ed22/Magnus-Carlsen-Mastercard-promotional-headshot/960x0.jpg?fit=bounds&format=jpg&width=960',
-                  'https://upload.wikimedia.org/wikipedia/commons/e/ec/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped%29.jpg',
-                  'https://upload.wikimedia.org/wikipedia/commons/a/aa/Carlsen_Magnus_%2830238051906%29.jpg',
-                  'https://images.chesscomfiles.com/uploads/v1/news/895104.ba7ca489.668x375o.37bd1f5b4a08.jpeg',
-                ];
-                //user?.imagePaths = [galleryImages];
+                // user?.imagePaths = [
+                //   'https://imageio.forbes.com/specials-images/imageserve/61499e784c9631d3af55ed22/Magnus-Carlsen-Mastercard-promotional-headshot/960x0.jpg?fit=bounds&format=jpg&width=960',
+                //   'https://upload.wikimedia.org/wikipedia/commons/e/ec/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped%29.jpg',
+                //   'https://upload.wikimedia.org/wikipedia/commons/a/aa/Carlsen_Magnus_%2830238051906%29.jpg',
+                //   'https://images.chesscomfiles.com/uploads/v1/news/895104.ba7ca489.668x375o.37bd1f5b4a08.jpeg',
+                // ];
+                // if (galleryImages.isEmpty) {
+                //   user?.imagePaths = galleryImages;
+                // }
                 if (nameController.text == "" || bioController.text == "") {
                 } else {
                   await DefaultFirebaseOptions.uploadUserDetails(user);

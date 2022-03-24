@@ -61,8 +61,8 @@ class _GalleryState extends State<Gallery> {
               //backgroundImage:
               //  AssetImage('assets/test/blank-profile-picture.png'),
               //backgroundImage: NetworkImage(profileImage),
-              backgroundImage: (!firebaseImages.isEmpty)
-                  ? NetworkImage(firebaseImages.first)
+              backgroundImage: (!galleryImages.isEmpty)
+                  ? FileImage(galleryImages.first)
                   : AssetImage('assets/test/blank-profile-picture.png')
                       as ImageProvider,
             ),
@@ -74,8 +74,8 @@ class _GalleryState extends State<Gallery> {
   void openGallery() => Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => GalleryWidget(
           //urlImages: urlImages,
-          //galleryImages: galleryImages,
-          firebaseImages: firebaseImages,
+          galleryImages: galleryImages,
+          //firebaseImages: firebaseImages,
         ),
       ));
 }
@@ -83,15 +83,15 @@ class _GalleryState extends State<Gallery> {
 class GalleryWidget extends StatefulWidget {
   final PageController pageController;
   //final List<String> urlImages;
-  //final List<File> galleryImages;
-  final List firebaseImages;
+  final List<File> galleryImages;
+  //final List firebaseImages;
   final index;
 
   GalleryWidget({
     Key? key,
     //required this.urlImages,
-    //required this.galleryImages,
-    required this.firebaseImages,
+    required this.galleryImages,
+    //required this.firebaseImages,
     this.index = 0,
   })  : pageController = PageController(initialPage: index),
         super(key: key);
@@ -107,17 +107,17 @@ class _GalleryWidgetState extends State<GalleryWidget> {
           pageController: widget.pageController,
           scrollDirection: Axis.horizontal,
           //itemCount: widget.urlImages.length,
-          //itemCount: widget.galleryImages.length,
-          itemCount: widget.firebaseImages.length,
+          itemCount: widget.galleryImages.length,
+          //itemCount: widget.firebaseImages.length,
           builder: (context, index) {
             //final urlImage = widget.urlImages[index];
-            //final galleryImage = widget.galleryImages[index];
-            final firebaseImage = widget.firebaseImages[index];
+            final galleryImage = widget.galleryImages[index];
+            //final firebaseImage = widget.firebaseImages[index];
 
             return PhotoViewGalleryPageOptions(
               //imageProvider: NetworkImage(urlImage),
-              //imageProvider: FileImage(galleryImage),
-              imageProvider: NetworkImage(firebaseImage),
+              imageProvider: FileImage(galleryImage),
+              //imageProvider: NetworkImage(firebaseImage),
               minScale: PhotoViewComputedScale.contained,
               maxScale: PhotoViewComputedScale.contained * 2,
             );
