@@ -49,7 +49,7 @@ class _SwipeCardState extends State<SwipeCard> {
                       }
                     },
                     child: Container(
-                      // height: MediaQuery.of(context).size.height * 0.5,
+                      height: MediaQuery.of(context).size.height * 0.4,
                       width: double.infinity,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
