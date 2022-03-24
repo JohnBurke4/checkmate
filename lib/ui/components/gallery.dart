@@ -10,7 +10,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import '../../firebase_options.dart';
-import '../models/user.dart';
+import '../../models/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -21,9 +21,26 @@ List<String> urlImages = [
   'https://images.chesscomfiles.com/uploads/v1/news/895104.ba7ca489.668x375o.37bd1f5b4a08.jpeg',
 ];
 
-List<File> _galleryImages = [];
+List<File> galleryImages = [];
+List<String> firebaseNetworkImages = [];
+
+User user = User("", "");
+User username = DefaultFirebaseOptions.getUserDetailsAsUser(user) as User;
+//List firebaseImages = username!.imagePaths;
+var firebaseImages = [];
 
 String? profileImage;
+
+// Future<void> getFirebaseImages() async {
+//   User? username =
+//       await DefaultFirebaseOptions.getUserDetailsAsUser(user) as User;
+//   firebaseImages = username.imagePaths;
+//   print(firebaseImages);
+// }
+
+// void profilePics() async {
+//   await getFirebaseImages();
+// }
 
 class Gallery extends StatefulWidget {
   const Gallery({Key? key}) : super(key: key);
@@ -44,8 +61,8 @@ class _GalleryState extends State<Gallery> {
               //backgroundImage:
               //  AssetImage('assets/test/blank-profile-picture.png'),
               //backgroundImage: NetworkImage(profileImage),
-              backgroundImage: (!_galleryImages.isEmpty)
-                  ? FileImage(_galleryImages.first)
+              backgroundImage: (!firebaseImages.isEmpty)
+                  ? NetworkImage(firebaseImages.first)
                   : AssetImage('assets/test/blank-profile-picture.png')
                       as ImageProvider,
             ),
@@ -57,7 +74,8 @@ class _GalleryState extends State<Gallery> {
   void openGallery() => Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => GalleryWidget(
           //urlImages: urlImages,
-          galleryImages: _galleryImages,
+          //galleryImages: galleryImages,
+          firebaseImages: firebaseImages,
         ),
       ));
 }
@@ -65,13 +83,15 @@ class _GalleryState extends State<Gallery> {
 class GalleryWidget extends StatefulWidget {
   final PageController pageController;
   //final List<String> urlImages;
-  final List<File> galleryImages;
+  //final List<File> galleryImages;
+  final List firebaseImages;
   final index;
 
   GalleryWidget({
     Key? key,
     //required this.urlImages,
-    required this.galleryImages,
+    //required this.galleryImages,
+    required this.firebaseImages,
     this.index = 0,
   })  : pageController = PageController(initialPage: index),
         super(key: key);
@@ -87,14 +107,17 @@ class _GalleryWidgetState extends State<GalleryWidget> {
           pageController: widget.pageController,
           scrollDirection: Axis.horizontal,
           //itemCount: widget.urlImages.length,
-          itemCount: widget.galleryImages.length,
+          //itemCount: widget.galleryImages.length,
+          itemCount: widget.firebaseImages.length,
           builder: (context, index) {
             //final urlImage = widget.urlImages[index];
-            final galleryImage = widget.galleryImages[index];
+            //final galleryImage = widget.galleryImages[index];
+            final firebaseImage = widget.firebaseImages[index];
 
             return PhotoViewGalleryPageOptions(
               //imageProvider: NetworkImage(urlImage),
-              imageProvider: FileImage(galleryImage),
+              //imageProvider: FileImage(galleryImage),
+              imageProvider: NetworkImage(firebaseImage),
               minScale: PhotoViewComputedScale.contained,
               maxScale: PhotoViewComputedScale.contained * 2,
             );
@@ -132,30 +155,31 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
     setState(() {
       if (picture != null) {
         imageFile = File(picture.path);
-        //_uploadFile();
-        _galleryImages.add(imageFile);
+        print(imageFile);
+        //await uploadFile(imageFile);
+        galleryImages.add(imageFile);
       }
     });
   }
 
-  Future _uploadFile() async {
-    User user = User('', '', 0, chessAbility.Beginner);
+  Future uploadFile(File file) async {
+    User user = User('', '');
     user.id = auth.FirebaseAuth.instance.currentUser?.uid;
     user.email = auth.FirebaseAuth.instance.currentUser?.email;
 
-    final fileName = path.basename(imageFile.path);
+    final fileName = path.basename(file.path);
     user.imagePaths.add(fileName);
     DefaultFirebaseOptions.uploadUserDetails(user);
 
-    var ref = auth.FirebaseAuth.instance.currentUser?.uid;
-    getUserProfilePicture(ref);
+    // var ref = auth.FirebaseAuth.instance.currentUser?.uid;
+    // getUserProfilePicture(ref);
   }
 
-  static void getUserProfilePicture(String? userID) async {
-    print('FIREBASE IS THE BEST THING EVER HOLY SHIT');
-    var doc =
-        await FirebaseFirestore.instance.collection("user").doc(userID).get();
-    var data = doc.get('imagePath');
-    profileImage = data.getData();
-  }
+  // static void getUserProfilePicture(String? userID) async {
+  //   print('FIREBASE IS THE BEST THING EVER HOLY SHIT');
+  //   var doc =
+  //       await FirebaseFirestore.instance.collection("user").doc(userID).get();
+  //   var data = doc.get('imagePath');
+  //   profileImage = data.getData();
+  // }
 }

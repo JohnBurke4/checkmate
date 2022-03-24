@@ -95,13 +95,12 @@ class DefaultFirebaseOptions {
     return true;
   }
 
-  // static void getUserDetails() async {
-  //   var userId = auth.FirebaseAuth.instance.currentUser?.uid;
-  //   var doc = await FirebaseFirestore.instance
-  //       .collection("user")
-  //       .doc(userId)
-  //       .get();
-  //   var data = doc.data();
-  //   user = User.fromJSON(data);
-  // }
+  static Future<User?> getUserDetailsAsUser(User username) async {
+    var userId = auth.FirebaseAuth.instance.currentUser?.uid;
+    var doc =
+        await FirebaseFirestore.instance.collection("user").doc(userId).get();
+    var data = doc.data();
+    username = User.fromJSON(data!);
+    return username;
+  }
 }

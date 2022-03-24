@@ -17,6 +17,7 @@ class User {
   late int age;
   late List<dynamic> imagePaths;
   late String abilityLevel;
+  late String chessDotComELO;
 
   User.fromJSON(Map<dynamic, dynamic> json)
       : id = json["uid"] ?? "0",
@@ -25,7 +26,8 @@ class User {
         email = json["email"] ?? "0",
         age = json["age"] ?? 0,
         imagePaths = json["imagePaths"] ?? List.empty(),
-        abilityLevel = json["abilityLevel"] ?? "beginner";
+        abilityLevel = json["abilityLevel"] ?? "beginner",
+        chessDotComELO = json["chessDotComELO"] ?? "Not Available";
 
   Map<String, Object?> toJson() => {
         'uid': id,
@@ -34,7 +36,8 @@ class User {
         'email': email,
         'age': age,
         'imagePaths': imagePaths,
-        'abilityLevel': abilityLevel
+        'abilityLevel': abilityLevel,
+        'chessDotComELO': chessDotComELO
       };
 }
 
