@@ -1,3 +1,4 @@
+import 'package:checkmate/firebase_options.dart';
 import 'package:checkmate/tournament.dart';
 import 'package:checkmate/widget_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,6 +81,7 @@ class _CreateTournamentPageState extends State<CreateTournamentPage> {
                       } else {
                         Tournament.createTournament(
                             FirebaseAuth.instance.currentUser!.uid,
+                            DefaultFirebaseOptions.user?.name ?? "Hidden",
                             widget.lat,
                             widget.lon,
                             _nameTextController.text,

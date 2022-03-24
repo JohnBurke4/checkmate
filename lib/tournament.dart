@@ -1,8 +1,10 @@
+import 'package:checkmate/firebase_options.dart';
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
 import 'package:checkmate/sign_in.dart';
 import 'package:checkmate/tournamentInfo.dart';
 import 'package:checkmate/ui/views/create_tournament_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:geocoder/geocoder.dart';
@@ -23,6 +25,7 @@ class Tournament {
       String? userTournamentId) async {
     if (userTournamentId != null) {
       int size = 0;
+      String authorId = "";
       int players = 0;
       String name = await FirebaseFirestore.instance
           .collection("tournaments")
@@ -31,6 +34,7 @@ class Tournament {
           .then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
           var data = documentSnapshot.data() as Map<String, dynamic>;
+          authorId = data['author'] ?? "Empty";
           size = data['size'] ?? 0;
           players = data['players'] ?? 0;
           return data['name'] ?? "Tournament";
@@ -38,7 +42,7 @@ class Tournament {
           return "Tournament";
         }
       });
-      myTournamentDialog(context, name, userTournamentId, size, players);
+      myTournamentDialog(context, name, userTournamentId, size, players, authorId);
     }
   }
 
@@ -98,11 +102,12 @@ class Tournament {
   }
 
   static void createTournament(
-      String userId, double lat, double lon, String name, int size) {
+      String userId, String userName, double lat, double lon, String name, int size) {
     FirebaseFirestore.instance
         .collection("tournaments")
         .add({
           'author': userId,
+          'authorName': userName,
           'createdAt': DateTime.now(),
           'lat': lat,
           'lon': lon,
@@ -203,7 +208,7 @@ class Tournament {
   }
 
   myTournamentDialog(BuildContext context, String tournamentName,
-      String tournamentId, int size, int currentPlayers) {
+      String tournamentId, int size, int currentPlayers, String authorId) {
     // set up the buttons
     Widget yesButton = FlatButton(
       child: Text("View"),
@@ -211,7 +216,7 @@ class Tournament {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => tournamentInfo(tournamentId: tournamentId)),
+              builder: (context) => tournamentInfo(tournamentId: tournamentId, isCreator: (authorId == FirebaseAuth.instance.currentUser?.uid))),
         );
       },
     );

@@ -11,8 +11,10 @@ class tournamentInfo extends StatefulWidget {
   const tournamentInfo({
     Key? key,
     required this.tournamentId,
+    required this.isCreator
   }) : super(key: key);
   final String tournamentId;
+  final bool isCreator;
   @override
   _tournamentInfoState createState() => _tournamentInfoState();
 }
@@ -28,6 +30,8 @@ class _tournamentInfoState extends State<tournamentInfo> {
             if (res != null) {
               //print(res);
             }
+
+            int currentPlayers = res!.tournamentSize;
             return Scaffold(
               appBar: AppBar(),
               body: Container(
@@ -42,14 +46,14 @@ class _tournamentInfoState extends State<tournamentInfo> {
                   children: [
                     ListTile(
                         title: const Text(
-                          'Author ID',
+                          'Hosted By',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),
                         subtitle: Text(
-                          res!.author_name,
+                          widget.isCreator ? "Me!" : res!.author_name,
                           style: TextStyle(fontSize: 15, color: Colors.white),
                         )),
                     ListTile(
@@ -76,6 +80,30 @@ class _tournamentInfoState extends State<tournamentInfo> {
                           res.tournamentSize.toString(),
                           style: TextStyle(fontSize: 15, color: Colors.white),
                         )),
+                    FutureBuilder(
+                        builder: (context, snapshot) {
+                      return ListTile(
+                          title: const Text(
+                            'Current Players',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            currentPlayers.toString(),
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ));
+                    }),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      onPressed: () {
+                      },
+                      child: Text(res!.tournamentSize > currentPlayers? 'Join Tournament' : "Tournament is full"),
+                    )
                   ],
                 ),
               ),
@@ -90,6 +118,7 @@ class _tournamentInfoState extends State<tournamentInfo> {
 
   Future<TourInfo> getTournamentInfo(String tournamentID) async {
     TourInfo info = TourInfo(
+      author_id: "nothing now",
         author_name: 'nothing_now',
         tournamentName: 'nothing_now',
         tournamentSize: 0);
@@ -97,11 +126,16 @@ class _tournamentInfoState extends State<tournamentInfo> {
         .collection("tournaments")
         .doc(tournamentID)
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
+        .then((DocumentSnapshot documentSnapshot) async {
+
+            var data = documentSnapshot.data() as Map<String, dynamic>;
+
       info = TourInfo(
-          author_name: documentSnapshot.get('author'),
-          tournamentName: documentSnapshot.get('name'),
-          tournamentSize: documentSnapshot.get('size'));
+          author_id: data['author'],
+          author_name: data['authorName'] ?? "Unknown",
+          tournamentName: data['name'],
+          tournamentSize: data['size']
+      );
       //print(documentSnapshot.data().toString());
     });
     return info;
@@ -109,17 +143,20 @@ class _tournamentInfoState extends State<tournamentInfo> {
 }
 
 class TourInfo {
+  final String author_id;
   final String author_name;
   final String tournamentName;
   final int tournamentSize;
   const TourInfo(
       {required this.author_name,
+        required this.author_id,
       required this.tournamentName,
       required this.tournamentSize});
 
   factory TourInfo.fromJson(Map<String, dynamic> json) {
     return TourInfo(
-        author_name: json['author'],
+      author_name: json['authorName'],
+        author_id: json['author'],
         tournamentName: json['name'],
         tournamentSize: json['size']);
   }
