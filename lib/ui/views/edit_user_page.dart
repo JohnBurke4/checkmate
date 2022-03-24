@@ -1,9 +1,12 @@
+import 'package:checkmate/getChessELO.dart';
 import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/services/match.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../firebase_options.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'user_page.dart';
 import 'package:checkmate/models/user.dart';
 
@@ -51,20 +54,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
             //   isEdit: true,
             //   onClicked: () async {},
             // ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             SizedBox(
               height: 160,
               child: Gallery(),
             ),
             SizedBox(height: 2),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 20),
-              ),
-              onPressed: () {},
-              child: const Text('Edit Photos'),
-            ),
-            SizedBox(height: 24),
+            ImageFromGallery(),
+            SizedBox(height: 2),
             Container(
               //alignment: Alignment.topRight,
               padding: EdgeInsets.only(left: 10),
@@ -76,18 +73,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     border: OutlineInputBorder(), labelText: 'Full Name'),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 14),
             Container(
               padding: EdgeInsets.only(left: 10),
               width: 600,
               child: TextFormField(
                 controller: bioController,
-                maxLines: 4,
+                maxLines: 2,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(), labelText: 'Bio'),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 14),
             Container(
               padding: EdgeInsets.only(left: 10),
               width: 600,
@@ -102,7 +99,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
             //   text: user.email,
             //   onChanged: (email) {},
             // ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 14),
+            SizedBox(
+              height: 25,
+              child: ELOButton(),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton.icon(
               icon: Icon(
                 Icons.save_alt,
@@ -121,9 +123,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   'https://upload.wikimedia.org/wikipedia/commons/a/aa/Carlsen_Magnus_%2830238051906%29.jpg',
                   'https://images.chesscomfiles.com/uploads/v1/news/895104.ba7ca489.668x375o.37bd1f5b4a08.jpeg',
                 ];
+                //user?.imagePaths = [galleryImages];
                 if (nameController.text == "" || bioController.text == "") {
                 } else {
                   await DefaultFirebaseOptions.uploadUserDetails(user);
+
                   Navigator.pop(context);
                 }
               },

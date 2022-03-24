@@ -52,15 +52,13 @@ class _UserPage extends State<UserPage> {
                 body: Column(
                   children: <Widget>[
                     const SizedBox(
-                      height: 30,
+                      height: 2,
                     ),
                     const SizedBox(
                       height: 160,
                       child: Gallery(),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 6),
                     ListTile(
                         title: Text(
                           user.name,
@@ -73,9 +71,7 @@ class _UserPage extends State<UserPage> {
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 20),
                         )),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 6),
                     ListTile(
                         title: const Text(
                           'Bio',
@@ -94,6 +90,16 @@ class _UserPage extends State<UserPage> {
                         ),
                         subtitle: Text(
                           user.abilityLevel,
+                          style: TextStyle(fontSize: 15),
+                        )),
+                    ListTile(
+                        title: const Text(
+                          'Chess.com Blitz Rating',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          user.chessDotComELO,
                           style: TextStyle(fontSize: 15),
                         )),
                     widget.editable
