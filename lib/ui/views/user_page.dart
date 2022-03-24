@@ -126,11 +126,10 @@ class _UserPage extends State<UserPage> {
   }
 
   void OpenEditPage(BuildContext context) async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
+    user = await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return const SafeArea(child: EditProfilePage());
-    }));
-    user = DefaultFirebaseOptions.user ?? User("My Name", "My bio");
-    setState(() {});
+    })) as User;
+    setState(() {log("set state");});
     //User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
     // setState(() {
     //   user.name = temp.name;

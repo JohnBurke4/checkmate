@@ -130,7 +130,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 } else {
                   await DefaultFirebaseOptions.uploadUserDetails(user);
 
-                  Navigator.pop(context);
+                  Navigator.pop(context, user);
                 }
               },
               //child: Text('Confirm Changes'),
