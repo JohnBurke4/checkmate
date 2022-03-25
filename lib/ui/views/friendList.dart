@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +15,21 @@ class FriendList extends StatelessWidget {
         .doc(uid)
         .collection("friends")
         .where('uid', isEqualTo: targetUid)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
+
+  Future<void> removeCurrentUserEntryInTargetFriendList(
+      String targetUid, String uid) {
+    return FirebaseFirestore.instance
+        .collection('user')
+        .doc(targetUid)
+        .collection("friends")
+        .where('uid', isEqualTo: uid)
         .get()
         .then((querySnapshot) {
       for (var doc in querySnapshot.docs) {
@@ -142,7 +155,7 @@ class FriendList extends StatelessWidget {
                                     child: ChatRoom(
                                         roomID: data[index]['roomID'],
                                         uid: uid,
-                                        friendUid : data[index]['uid'],
+                                        friendUid: data[index]['uid'],
                                         name: data[index]['name']));
                               }))
                             },
@@ -161,6 +174,8 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Unfriend'),
                                   onTap: () {
                                     print("Unfriending");
+                                    removeCurrentUserEntryInTargetFriendList(
+                                        data[index]['uid'], uid);
                                     removeTargetFromFriendList(
                                         data[index]['uid']);
                                     removeTargetFromSwipeRightMe(
@@ -176,6 +191,8 @@ class FriendList extends StatelessWidget {
                                     print("Blocking");
                                     removeTargetFromFriendList(
                                         data[index]['uid']);
+                                    removeCurrentUserEntryInTargetFriendList(
+                                        data[index]['uid'], uid);
                                     removeTargetFromSwipeRightMe(
                                         data[index]['uid']);
                                     removeMyselfFromTargetSwipeRgihtThemList(
@@ -187,6 +204,8 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Report Harassment'),
                                   onTap: () {
                                     print("Reporting");
+                                    removeCurrentUserEntryInTargetFriendList(
+                                        data[index]['uid'], uid);
                                     removeTargetFromFriendList(
                                         data[index]['uid']);
                                     removeTargetFromSwipeRightMe(
@@ -202,6 +221,8 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Report Racism'),
                                   onTap: () {
                                     print("Reporting");
+                                    removeCurrentUserEntryInTargetFriendList(
+                                        data[index]['uid'], uid);
                                     removeTargetFromFriendList(
                                         data[index]['uid']);
                                     removeTargetFromSwipeRightMe(
@@ -217,6 +238,8 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Report Other'),
                                   onTap: () {
                                     print("Reporting");
+                                    removeCurrentUserEntryInTargetFriendList(
+                                        data[index]['uid'], uid);
                                     removeTargetFromFriendList(
                                         data[index]['uid']);
                                     removeTargetFromSwipeRightMe(
