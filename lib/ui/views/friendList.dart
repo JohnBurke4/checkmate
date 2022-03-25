@@ -23,6 +23,27 @@ class FriendList extends StatelessWidget {
     });
   }
 
+  Future<void> clearPastMessages(String targetUid) {
+    return FirebaseFirestore.instance
+        .collection('user')
+        .doc(uid)
+        .collection("friends")
+        .where('uid', isEqualTo: targetUid)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data();
+        FirebaseFirestore.instance
+            .collection('messages')
+            .doc(data['roomID'])
+            .get()
+            .then((messagesQuerySnapshot) {
+          messagesQuerySnapshot.reference.delete();
+        });
+      }
+    });
+  }
+
   Future<void> removeCurrentUserEntryFromTargetFriendList(
       String targetUid, String uid) {
     return FirebaseFirestore.instance
@@ -174,6 +195,7 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Unfriend'),
                                   onTap: () {
                                     print("Unfriending");
+                                    clearPastMessages(data[index]['uid']);
                                     removeCurrentUserEntryFromTargetFriendList(
                                         data[index]['uid'], uid);
                                     removeTargetFromFriendList(
@@ -189,6 +211,7 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Block'),
                                   onTap: () {
                                     print("Blocking");
+                                    clearPastMessages(data[index]['uid']);
                                     removeTargetFromFriendList(
                                         data[index]['uid']);
                                     removeCurrentUserEntryFromTargetFriendList(
@@ -204,6 +227,7 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Report Harassment'),
                                   onTap: () {
                                     print("Reporting");
+                                    clearPastMessages(data[index]['uid']);
                                     removeCurrentUserEntryFromTargetFriendList(
                                         data[index]['uid'], uid);
                                     removeTargetFromFriendList(
@@ -221,6 +245,7 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Report Racism'),
                                   onTap: () {
                                     print("Reporting");
+                                    clearPastMessages(data[index]['uid']);
                                     removeCurrentUserEntryFromTargetFriendList(
                                         data[index]['uid'], uid);
                                     removeTargetFromFriendList(
@@ -238,6 +263,7 @@ class FriendList extends StatelessWidget {
                                   child: const Text('Report Other'),
                                   onTap: () {
                                     print("Reporting");
+                                    clearPastMessages(data[index]['uid']);
                                     removeCurrentUserEntryFromTargetFriendList(
                                         data[index]['uid'], uid);
                                     removeTargetFromFriendList(
