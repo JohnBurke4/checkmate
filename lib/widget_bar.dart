@@ -37,8 +37,6 @@ class _NavBarState extends State<NavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-
-
   LocationData? _currentPosition;
   Location location = new Location();
   String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
@@ -59,7 +57,7 @@ class _NavBarState extends State<NavBar> {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       var userId = FirebaseAuth.instance.currentUser?.uid;
-      if (userId == null){
+      if (userId == null) {
         return;
       }
       var token = await _messaging.getToken();
@@ -67,7 +65,7 @@ class _NavBarState extends State<NavBar> {
       await FirebaseFirestore.instance
           .collection("user")
           .doc(userId)
-          .update({'deviceToken' : token});
+          .update({'deviceToken': token});
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         // Backround checking
       });
@@ -75,7 +73,6 @@ class _NavBarState extends State<NavBar> {
       print('User declined or has not accepted permission');
     }
   }
-
 
   @override
   void initState() {
@@ -116,7 +113,10 @@ class _NavBarState extends State<NavBar> {
       ),
       body: <Widget>[
         // Put your widgets in here
-        UserPage(uid: widget.uid,editable: true,),
+        UserPage(
+          uid: widget.uid,
+          editable: true,
+        ),
         SwipePage(),
         FriendList(uid: widget.uid),
         MapPage(uid: widget.uid),

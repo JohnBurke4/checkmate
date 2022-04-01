@@ -169,7 +169,7 @@ class LeavePositiveFeadback extends StatelessWidget {
                     child: Row(children: <Widget>[
                   GestureDetector(
                       child: const Icon(
-                        Icons.calendar_month,
+                        Icons.calendar_today_rounded,
                         size: 30.0,
                         color: Colors.blue,
                       ),
