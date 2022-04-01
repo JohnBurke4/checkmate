@@ -65,7 +65,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1032385783471',
     projectId: 'checkmate-d6c0d',
     storageBucket: 'checkmate-d6c0d.appspot.com',
-    iosClientId: '1032385783471-utlt5cqetsgt7m1rube28403smt5cvrt.apps.googleusercontent.com',
+    iosClientId:
+        '1032385783471-utlt5cqetsgt7m1rube28403smt5cvrt.apps.googleusercontent.com',
     iosBundleId: 'com.checkmate.app',
   );
 
@@ -73,28 +74,33 @@ class DefaultFirebaseOptions {
 
   static Future uploadUserDetails(User? userDetails) async {
     var userId = userDetails?.id;
-    if (userDetails == null){
+    if (userDetails == null) {
       return;
     }
     user = userDetails;
     await FirebaseFirestore.instance
-    .collection("user")
-    .doc(userId)
-    .update(userDetails.toJson());
+        .collection("user")
+        .doc(userId)
+        .update(userDetails.toJson());
   }
 
   static Future<bool> getUserDetails() async {
     var userId = auth.FirebaseAuth.instance.currentUser?.uid;
-    var doc = await FirebaseFirestore.instance
-        .collection("user")
-        .doc(userId)
-        .get();
-    if (doc.data() != null){
+    var doc =
+        await FirebaseFirestore.instance.collection("user").doc(userId).get();
+    if (doc.data() != null) {
       var data = doc.data();
       user = User.fromJSON(data!);
     }
     return true;
+  }
 
-
+  static Future<User?> getUserDetailsAsUser(User username) async {
+    var userId = auth.FirebaseAuth.instance.currentUser?.uid;
+    var doc =
+        await FirebaseFirestore.instance.collection("user").doc(userId).get();
+    var data = doc.data();
+    username = User.fromJSON(data!);
+    return username;
   }
 }

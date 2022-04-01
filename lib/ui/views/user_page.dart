@@ -52,15 +52,13 @@ class _UserPage extends State<UserPage> {
                 body: Column(
                   children: <Widget>[
                     const SizedBox(
-                      height: 30,
+                      height: 2,
                     ),
                     const SizedBox(
                       height: 160,
                       child: Gallery(),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 6),
                     ListTile(
                         title: Text(
                           user.name,
@@ -73,9 +71,7 @@ class _UserPage extends State<UserPage> {
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 20),
                         )),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 6),
                     ListTile(
                         title: const Text(
                           'Bio',
@@ -96,7 +92,16 @@ class _UserPage extends State<UserPage> {
                           user.abilityLevel,
                           style: TextStyle(fontSize: 15),
                         )),
-
+                    ListTile(
+                        title: const Text(
+                          'Chess.com Blitz Rating',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          user.chessDotComELO,
+                          style: TextStyle(fontSize: 15),
+                        )),
                     widget.editable
                         ? ElevatedButton(
                             style: ButtonStyle(
@@ -109,9 +114,7 @@ class _UserPage extends State<UserPage> {
                             child: Text('Edit Profile'),
                           )
                         : Container(),
-
                     Center(child: ViewPositiveFeadback(uid: widget.uid))
-
                   ],
                 ));
           } else {
@@ -123,11 +126,10 @@ class _UserPage extends State<UserPage> {
   }
 
   void OpenEditPage(BuildContext context) async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
+    user = await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return const SafeArea(child: EditProfilePage());
-    }));
-    user = DefaultFirebaseOptions.user ?? User("My Name", "My bio");
-    setState(() {});
+    })) as User;
+    setState(() {log("set state");});
     //User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
     // setState(() {
     //   user.name = temp.name;
