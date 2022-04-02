@@ -40,5 +40,3 @@ class User {
         'chessDotComELO': chessDotComELO
       };
 }
-
-enum chessAbility { beginner, intermediate, experienced }

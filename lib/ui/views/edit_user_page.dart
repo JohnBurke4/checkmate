@@ -30,6 +30,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     user = currentUser ?? User("", "");
     user?.id = auth.FirebaseAuth.instance.currentUser?.uid;
     user?.email = auth.FirebaseAuth.instance.currentUser?.email;
+    if(user?.abilityLevel == "beginner")
+      user?.abilityLevel = "Beginner";
     nameController.text = user?.name ?? "Enter your name";
     bioController.text = user?.bio ?? "Enter your bio";
     super.initState();
@@ -85,14 +87,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             const SizedBox(height: 14),
+            Container(alignment: Alignment.centerLeft,padding: EdgeInsets.only(left: 310),
+                child:Text("Ability Level", textAlign: TextAlign.right)
+            ),
             Container(
-              padding: EdgeInsets.only(left: 10),
-              width: 600,
-              child: TextFormField(
-                initialValue: 'Beginner',
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Ability Level'),
-              ),
+                padding: EdgeInsets.only(left: 10),
+                width: 600,
+                child: DropdownButton<String>(
+                  value: user?.abilityLevel,
+                  icon: const Icon(Icons.arrow_downward),
+                  elevation: 16,
+                  underline: Container(
+                    height: 2,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      user?.abilityLevel = newValue!;
+                    });
+                  },
+                  items: <String>["Beginner", "Intermediate", "Advanced", "Master"]
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                )
             ),
             // TextFieldWidget(
             //   label: 'Email',
@@ -111,12 +131,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 size: 24.0,
               ),
               label: Text('Confirm'),
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-              ),
+              // style: ButtonStyle(
+              //   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              // ),
               onPressed: () async {
                 user?.name = nameController.text;
                 user?.bio = bioController.text;
+                //user?.abilityLevel = ability
                 // user?.imagePaths = [
                 //   'https://imageio.forbes.com/specials-images/imageserve/61499e784c9631d3af55ed22/Magnus-Carlsen-Mastercard-promotional-headshot/960x0.jpg?fit=bounds&format=jpg&width=960',
                 //   'https://upload.wikimedia.org/wikipedia/commons/e/ec/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped%29.jpg',
@@ -145,3 +166,5 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ));
   }
 }
+
+
