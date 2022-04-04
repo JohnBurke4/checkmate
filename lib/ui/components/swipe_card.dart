@@ -54,7 +54,7 @@ class _SwipeCardState extends State<SwipeCard> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image(
-                            image: NetworkImage(widget.user.imagePaths[i]),
+                            image: NetworkImage((widget.user.imagePaths.isNotEmpty ? widget.user.imagePaths[i] : "https://wpstorelocator.co/wp-content/uploads/2016/07/settings-gmap-api-error-2.gif")),
                             fit: BoxFit.fill,
                           )),
                     )),

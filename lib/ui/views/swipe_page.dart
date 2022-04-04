@@ -66,8 +66,13 @@ class _SwipePageState extends State<SwipePage> with TickerProviderStateMixin {
       height: MediaQuery.of(context).size.height * 0.7,
       alignment: Alignment.topCenter,
       child: FutureBuilder(
-        future: MatchServices.getLocalUsers(10000000000000),
+        future: MatchServices.getLocalUsers(200),
         builder: (context, AsyncSnapshot<List<dynamic>> value) {
+          if (value.connectionState == ConnectionState.waiting){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           if (value.hasData) {
             if (value.data?.isEmpty ?? true){
               return const Center(
@@ -85,12 +90,11 @@ class _SwipePageState extends State<SwipePage> with TickerProviderStateMixin {
                   return _swipeItems[index].content;
                 },
                 onStackFinished: () {
+                  _matchEngine = MatchEngine();
+                  _swipeItems.clear();
                   setState(() {});
                 },
                 itemChanged: (SwipeItem item, int index) {
-                  print("item: hello, index: $index");
-                  // List<Coordinate> tmp = ul.getCoordinates();
-                  // ul.startCalculate();
                 },
                 upSwipeAllowed: true,
                 fillSpace: false,
