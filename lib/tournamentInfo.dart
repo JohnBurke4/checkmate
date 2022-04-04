@@ -8,11 +8,9 @@ import 'package:checkmate/sign_up.dart';
 import 'package:flutter/material.dart';
 
 class tournamentInfo extends StatefulWidget {
-  const tournamentInfo({
-    Key? key,
-    required this.tournamentId,
-    required this.isCreator
-  }) : super(key: key);
+  const tournamentInfo(
+      {Key? key, required this.tournamentId, required this.isCreator})
+      : super(key: key);
   final String tournamentId;
   final bool isCreator;
   @override
@@ -31,7 +29,7 @@ class _tournamentInfoState extends State<tournamentInfo> {
               //print(res);
             }
 
-            int currentPlayers = res!.tournamentSize;
+            int currentPlayers = res!.players.length;
             return Scaffold(
               appBar: AppBar(),
               body: Container(
@@ -80,8 +78,7 @@ class _tournamentInfoState extends State<tournamentInfo> {
                           res.tournamentSize.toString(),
                           style: TextStyle(fontSize: 15, color: Colors.white),
                         )),
-                    FutureBuilder(
-                        builder: (context, snapshot) {
+                    FutureBuilder(builder: (context, snapshot) {
                       return ListTile(
                           title: const Text(
                             'Current Players',
@@ -98,11 +95,18 @@ class _tournamentInfoState extends State<tournamentInfo> {
                     ElevatedButton(
                       style: ButtonStyle(
                         foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
+                            MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () {
+                        if (!widget.isCreator &&
+                            currentPlayers < res!.tournamentSize) {
+                          addPlayer(widget.tournamentId, res.players,
+                              FirebaseAuth.instance.currentUser!.uid);
+                        }
                       },
-                      child: Text(res!.tournamentSize > currentPlayers? 'Join Tournament' : "Tournament is full"),
+                      child: Text(res!.tournamentSize > currentPlayers
+                          ? 'Join Tournament'
+                          : "Tournament is full"),
                     )
                   ],
                 ),
@@ -116,28 +120,86 @@ class _tournamentInfoState extends State<tournamentInfo> {
         });
   }
 
+  void addPlayer(
+      String tournamentId, List<dynamic> playersArray, String userId) {
+    if (!playersArray.contains(userId)) {
+      playersArray.add(userId);
+      FirebaseFirestore.instance
+          .collection("tournaments")
+          .doc(tournamentId)
+          .update({'players': playersArray})
+          .then((value) => print("Player Added"))
+          .catchError((error) => print("Failed to add player: $error"));
+
+      myTournamentDialog("User Added successfully!");
+    } else {
+      myTournamentDialog("You have already joined");
+    }
+  }
+
+  void myTournamentDialog(String displayText) {
+    // set up the buttons
+    Widget noButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Alert"),
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.06,
+        child: Column(
+          children: [
+            Text(displayText),
+            const SizedBox(
+              height: 14,
+            )
+          ],
+        ),
+      ),
+      actions: [
+        noButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future<TourInfo> getTournamentInfo(String tournamentID) async {
     TourInfo info = TourInfo(
-      author_id: "nothing now",
+        author_id: "nothing now",
         author_name: 'nothing_now',
         tournamentName: 'nothing_now',
-        tournamentSize: 0);
+        tournamentSize: 0,
+        players: []);
     await FirebaseFirestore.instance
         .collection("tournaments")
         .doc(tournamentID)
         .get()
         .then((DocumentSnapshot documentSnapshot) async {
-
-            var data = documentSnapshot.data() as Map<String, dynamic>;
+      var data = documentSnapshot.data() as Map<String, dynamic>;
 
       info = TourInfo(
           author_id: data['author'],
           author_name: data['authorName'] ?? "Unknown",
           tournamentName: data['name'],
-          tournamentSize: data['size']
-      );
+          tournamentSize: data['size'],
+          players: data['players']);
       //print(documentSnapshot.data().toString());
     });
+
+    if (info.players.isEmpty == false) {
+      info.players.forEach((element) {
+        if (element == info.author_id) {}
+      });
+    }
     return info;
   }
 }
@@ -147,17 +209,20 @@ class TourInfo {
   final String author_name;
   final String tournamentName;
   final int tournamentSize;
+  final List<dynamic> players;
   const TourInfo(
       {required this.author_name,
-        required this.author_id,
+      required this.author_id,
       required this.tournamentName,
-      required this.tournamentSize});
+      required this.tournamentSize,
+      required this.players});
 
   factory TourInfo.fromJson(Map<String, dynamic> json) {
     return TourInfo(
-      author_name: json['authorName'],
+        author_name: json['authorName'],
         author_id: json['author'],
         tournamentName: json['name'],
-        tournamentSize: json['size']);
+        tournamentSize: json['size'],
+        players: json['players']);
   }
 }

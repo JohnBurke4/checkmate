@@ -26,7 +26,7 @@ class Tournament {
     if (userTournamentId != null) {
       int size = 0;
       String authorId = "";
-      int players = 0;
+      List<dynamic> players = [];
       String name = await FirebaseFirestore.instance
           .collection("tournaments")
           .doc(userTournamentId)
@@ -36,13 +36,14 @@ class Tournament {
           var data = documentSnapshot.data() as Map<String, dynamic>;
           authorId = data['author'] ?? "Empty";
           size = data['size'] ?? 0;
-          players = data['players'] ?? 0;
+          players = data['players'] ?? '';
           return data['name'] ?? "Tournament";
         } else {
           return "Tournament";
         }
       });
-      myTournamentDialog(context, name, userTournamentId, size, players, authorId);
+      myTournamentDialog(
+          context, name, userTournamentId, size, players, authorId);
     }
   }
 
@@ -101,8 +102,8 @@ class Tournament {
     return false;
   }
 
-  static void createTournament(
-      String userId, String userName, double lat, double lon, String name, int size) {
+  static void createTournament(String userId, String userName, double lat,
+      double lon, String name, int size) {
     FirebaseFirestore.instance
         .collection("tournaments")
         .add({
@@ -113,6 +114,7 @@ class Tournament {
           'lon': lon,
           'name': name,
           'size': size,
+          'players': []
         })
         .then((value) => print("Tournaments Location Added: $userId"))
         .catchError(
@@ -207,8 +209,13 @@ class Tournament {
     );
   }
 
-  myTournamentDialog(BuildContext context, String tournamentName,
-      String tournamentId, int size, int currentPlayers, String authorId) {
+  myTournamentDialog(
+      BuildContext context,
+      String tournamentName,
+      String tournamentId,
+      int size,
+      List<dynamic> currentPlayers,
+      String authorId) {
     // set up the buttons
     Widget yesButton = FlatButton(
       child: Text("View"),
@@ -216,7 +223,10 @@ class Tournament {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => tournamentInfo(tournamentId: tournamentId, isCreator: (authorId == FirebaseAuth.instance.currentUser?.uid))),
+              builder: (context) => tournamentInfo(
+                  tournamentId: tournamentId,
+                  isCreator:
+                      (authorId == FirebaseAuth.instance.currentUser?.uid))),
         );
       },
     );
@@ -233,7 +243,7 @@ class Tournament {
         height: MediaQuery.of(context).size.height * 0.06,
         child: Column(
           children: [
-            Text("$currentPlayers / $size players"),
+            Text(currentPlayers.length.toString() + " / $size players"),
             const SizedBox(
               height: 14,
             ),
