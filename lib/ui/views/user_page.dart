@@ -66,11 +66,7 @@ class _UserPage extends State<UserPage> {
                           style: TextStyle(
                               fontSize: 35, fontWeight: FontWeight.bold),
                         ),
-                        subtitle: const Text(
-                          'The King in The North',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20),
-                        )),
+                        ),
                     const SizedBox(height: 6),
                     ListTile(
                         title: const Text(
