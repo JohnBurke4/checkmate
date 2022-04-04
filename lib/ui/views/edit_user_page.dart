@@ -87,12 +87,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             const SizedBox(height: 14),
-            Container(alignment: Alignment.centerLeft,padding: EdgeInsets.only(left: 310),
+            Container(alignment: Alignment.centerLeft,padding: EdgeInsets.only(left: 25),
                 child:Text("Ability Level", textAlign: TextAlign.right)
             ),
-            Container(
-                padding: EdgeInsets.only(left: 10),
-                width: 600,
+            Container(alignment: Alignment.centerLeft, padding: EdgeInsets.only(left: 15),
                 child: DropdownButton<String>(
                   value: user?.abilityLevel,
                   icon: const Icon(Icons.arrow_downward),
