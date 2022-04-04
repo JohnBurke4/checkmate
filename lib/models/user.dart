@@ -9,6 +9,7 @@ class User {
     this.imagePaths = List.empty();
     this.age = 0;
     this.abilityLevel = "Beginner";
+    searchRange = 30;
   }
   late String? id;
   late String name;
@@ -18,6 +19,7 @@ class User {
   late List<dynamic> imagePaths;
   late String abilityLevel;
   late String chessDotComELO;
+  late int searchRange;
 
   User.fromJSON(Map<dynamic, dynamic> json)
       : id = json["uid"] ?? "0",
@@ -40,5 +42,3 @@ class User {
         'chessDotComELO': chessDotComELO
       };
 }
-
-enum chessAbility { beginner, intermediate, experienced }
