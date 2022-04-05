@@ -34,6 +34,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (user?.abilityLevel == "beginner") user?.abilityLevel = "Beginner";
     nameController.text = user?.name ?? "Enter your name";
     bioController.text = user?.bio ?? "Enter your bio";
+    getProfilePics();
     super.initState();
   }
 
@@ -142,8 +143,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 user?.name = nameController.text;
                 user?.bio = bioController.text;
                 getProfilePics();
-                //user?.abilityLevel = ability
-
+                //user?.imagePaths = [];
                 if (nameController.text == "" || bioController.text == "") {
                 } else {
                   await DefaultFirebaseOptions.uploadUserDetails(user);

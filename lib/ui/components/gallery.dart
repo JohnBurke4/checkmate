@@ -56,8 +56,6 @@ class _GalleryState extends State<Gallery> {
 
   void openGallery() => Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => GalleryWidget(
-          //urlImages: urlImages,
-          //galleryImages: galleryImages,
           firebaseImages: firebaseImages,
         ),
       ));
@@ -126,6 +124,16 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
         height: 45,
         child: InkWell(
           child: TextButton(
+            // children: <Widget>[
+            //     SimpleDialogOption(
+            //       onPressed: () { Navigator.pop(context, Choose.profile);},
+            //       child: const Text('Select Display Picture'),
+            //     ),
+            //     SimpleDialogOption(
+            //       onPressed: () { Navigator.pop(context, Choose.image);},
+            //       child: const Text('Add to Your Images'),
+            //     ),
+            // ],
             child: const Text('Edit Photos'),
             style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20),
@@ -145,5 +153,6 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
         storage.uploadFile(imagePath, imageName);
       }
     });
+    getProfilePics();
   }
 }

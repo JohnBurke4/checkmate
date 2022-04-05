@@ -24,15 +24,4 @@ class StoreImage {
     user.imagePaths.add(url);
     await DefaultFirebaseOptions.uploadUserDetails(user);
   }
-
-  Future<List> getFirebaseImages() async {
-    User? currentUser = DefaultFirebaseOptions.user;
-    User user = currentUser ?? User("", "");
-    user.id = auth.FirebaseAuth.instance.currentUser?.uid;
-    user.email = auth.FirebaseAuth.instance.currentUser?.email;
-    User? username =
-        await DefaultFirebaseOptions.getUserDetailsAsUser(user) as User;
-    List firebaseImages = username.imagePaths;
-    return firebaseImages;
-  }
 }
