@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:location/location.dart';
 
@@ -6,7 +7,7 @@ class User {
   User(String name, String bio) {
     this.name = name;
     this.bio = bio;
-    this.imagePaths = List.empty();
+    this.imagePaths = <String>[];
     this.age = 0;
     this.abilityLevel = "Beginner";
     searchRange = 30;
@@ -23,11 +24,11 @@ class User {
 
   User.fromJSON(Map<dynamic, dynamic> json)
       : id = json["uid"] ?? "0",
-        name = json["username"] ?? "John Dow",
+        name = json["username"] ?? "John Doe",
         bio = json["bio"] ?? "",
         email = json["email"] ?? "0",
         age = json["age"] ?? 0,
-        imagePaths = json["imagePaths"] ?? List.empty(),
+        imagePaths = json["imagePaths"] ?? <String>[],
         abilityLevel = json["abilityLevel"] ?? "beginner",
         chessDotComELO = json["chessDotComELO"] ?? "Not Available";
 

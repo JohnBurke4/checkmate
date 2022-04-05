@@ -60,13 +60,13 @@ class _UserPage extends State<UserPage> {
                     ),
                     const SizedBox(height: 6),
                     ListTile(
-                        title: Text(
-                          user.name,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 35, fontWeight: FontWeight.bold),
-                        ),
-                        ),
+                      title: Text(
+                        user.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 35, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     ListTile(
                         title: const Text(
@@ -125,7 +125,9 @@ class _UserPage extends State<UserPage> {
     user = await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return const SafeArea(child: EditProfilePage());
     })) as User;
-    setState(() {log("set state");});
+    setState(() {
+      log("set state");
+    });
     //User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
     // setState(() {
     //   user.name = temp.name;

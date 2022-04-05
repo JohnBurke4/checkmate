@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../firebase_options.dart';
 import 'package:checkmate/ui/components/gallery.dart';
 import 'user_page.dart';
+import 'dart:io';
 import 'package:checkmate/models/user.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -30,8 +31,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     user = currentUser ?? User("", "");
     user?.id = auth.FirebaseAuth.instance.currentUser?.uid;
     user?.email = auth.FirebaseAuth.instance.currentUser?.email;
-    if(user?.abilityLevel == "beginner")
-      user?.abilityLevel = "Beginner";
+    if (user?.abilityLevel == "beginner") user?.abilityLevel = "Beginner";
     nameController.text = user?.name ?? "Enter your name";
     bioController.text = user?.bio ?? "Enter your bio";
     super.initState();
@@ -87,10 +87,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             const SizedBox(height: 14),
-            Container(alignment: Alignment.centerLeft,padding: EdgeInsets.only(left: 25),
-                child:Text("Ability Level", textAlign: TextAlign.right)
-            ),
-            Container(alignment: Alignment.centerLeft, padding: EdgeInsets.only(left: 15),
+            Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 25),
+                child: Text("Ability Level", textAlign: TextAlign.right)),
+            Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 15),
                 child: DropdownButton<String>(
                   value: user?.abilityLevel,
                   icon: const Icon(Icons.arrow_downward),
@@ -103,15 +106,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       user?.abilityLevel = newValue!;
                     });
                   },
-                  items: <String>["Beginner", "Intermediate", "Advanced", "Master"]
-                      .map<DropdownMenuItem<String>>((String value) {
+                  items: <String>[
+                    "Beginner",
+                    "Intermediate",
+                    "Advanced",
+                    "Master"
+                  ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
                   }).toList(),
-                )
-            ),
+                )),
             // TextFieldWidget(
             //   label: 'Email',
             //   text: user.email,
@@ -136,19 +142,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 user?.name = nameController.text;
                 user?.bio = bioController.text;
                 //user?.abilityLevel = ability
-                // user?.imagePaths = [
-                //   'https://imageio.forbes.com/specials-images/imageserve/61499e784c9631d3af55ed22/Magnus-Carlsen-Mastercard-promotional-headshot/960x0.jpg?fit=bounds&format=jpg&width=960',
-                //   'https://upload.wikimedia.org/wikipedia/commons/e/ec/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped%29.jpg',
-                //   'https://upload.wikimedia.org/wikipedia/commons/a/aa/Carlsen_Magnus_%2830238051906%29.jpg',
-                //   'https://images.chesscomfiles.com/uploads/v1/news/895104.ba7ca489.668x375o.37bd1f5b4a08.jpeg',
-                // ];
-                // if (galleryImages.isEmpty) {
-                //   user?.imagePaths = galleryImages;
-                // }
+
                 if (nameController.text == "" || bioController.text == "") {
                 } else {
                   await DefaultFirebaseOptions.uploadUserDetails(user);
-
                   Navigator.pop(context, user);
                 }
               },
@@ -164,5 +161,3 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ));
   }
 }
-
-
