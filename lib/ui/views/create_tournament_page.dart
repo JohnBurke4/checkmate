@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
 import 'package:checkmate/reset_password.dart';
 import 'package:checkmate/sign_up.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CreateTournamentPage extends StatefulWidget {
@@ -22,6 +23,8 @@ class CreateTournamentPage extends StatefulWidget {
 class _CreateTournamentPageState extends State<CreateTournamentPage> {
   TextEditingController _nameTextController = TextEditingController();
   TextEditingController _sizeTextController = TextEditingController();
+  TextEditingController _detailsTextController = TextEditingController();
+  TextEditingController _dateTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +67,28 @@ class _CreateTournamentPageState extends State<CreateTournamentPage> {
                     Icons.supervisor_account,
                     false,
                     _sizeTextController,
-                    TextInputType.number),
+                    TextInputType.number
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                reusableTextField(
+                    "Time and Date",
+                    Icons.calendar_today,
+                    false,
+                    _dateTextController,
+                    TextInputType.multiline
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                reusableTextField(
+                    "Other details",
+                    Icons.details,
+                    false,
+                    _detailsTextController,
+                    TextInputType.multiline
+                ),
                 const SizedBox(
                   height: 5,
                 ),
@@ -75,7 +99,9 @@ class _CreateTournamentPageState extends State<CreateTournamentPage> {
                   ),
                   onPressed: () {
                     if (_nameTextController.text.isNotEmpty &&
-                        _sizeTextController.text.isNotEmpty) {
+                        _sizeTextController.text.isNotEmpty &&
+                        _dateTextController.text.isNotEmpty &&
+                        _detailsTextController.text.isNotEmpty) {
                       var size = int.tryParse(_sizeTextController.text);
                       if (size == null || size < 1 || size > 32) {
                       } else {
@@ -85,7 +111,9 @@ class _CreateTournamentPageState extends State<CreateTournamentPage> {
                             widget.lat,
                             widget.lon,
                             _nameTextController.text,
-                            size);
+                            size,
+                        _dateTextController.text,
+                        _detailsTextController.text);
                         Navigator.of(context).pop();
                       }
                     }

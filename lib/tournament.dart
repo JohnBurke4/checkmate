@@ -103,7 +103,7 @@ class Tournament {
   }
 
   static void createTournament(String userId, String userName, double lat,
-      double lon, String name, int size) {
+      double lon, String name, int size, String date, String details) {
     FirebaseFirestore.instance
         .collection("tournaments")
         .add({
@@ -114,7 +114,9 @@ class Tournament {
           'lon': lon,
           'name': name,
           'size': size,
-          'players': []
+          'players': [],
+          'date' : date,
+          'details' : details
         })
         .then((value) => print("Tournaments Location Added: $userId"))
         .catchError(
