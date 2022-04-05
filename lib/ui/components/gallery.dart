@@ -152,7 +152,7 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: const Text('Select assignment'),
+            title: const Text('Image Options'),
             children: <Widget>[
               SimpleDialogOption(
                 onPressed: () {
