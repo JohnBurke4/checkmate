@@ -124,21 +124,11 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
         height: 45,
         child: InkWell(
           child: TextButton(
-            // children: <Widget>[
-            //     SimpleDialogOption(
-            //       onPressed: () { Navigator.pop(context, Choose.profile);},
-            //       child: const Text('Select Display Picture'),
-            //     ),
-            //     SimpleDialogOption(
-            //       onPressed: () { Navigator.pop(context, Choose.image);},
-            //       child: const Text('Add to Your Images'),
-            //     ),
-            // ],
             child: const Text('Edit Photos'),
             style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20),
             ),
-            onPressed: () => _openGallery(),
+            onPressed: () => _pictureOptions(),
           ),
         ),
       );
@@ -150,7 +140,47 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
         imageFile = File(picture.path);
         imagePath = picture.path;
         imageName = picture.name;
+
         storage.uploadFile(imagePath, imageName);
+      }
+    });
+    getProfilePics();
+  }
+
+  Future<void> _pictureOptions() async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Select assignment'),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  _chooseProfile();
+                  Navigator.pop(context);
+                },
+                child: const Text('Select Display Picture'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  _openGallery();
+                  Navigator.pop(context);
+                },
+                child: const Text('Add to Your Images'),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future _chooseProfile() async {
+    final picture = await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (picture != null) {
+        imageFile = File(picture.path);
+        imagePath = picture.path;
+        imageName = picture.name;
+        storage.uploadFileToFirst(imagePath, imageName);
       }
     });
     getProfilePics();

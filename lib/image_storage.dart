@@ -24,4 +24,20 @@ class StoreImage {
     user.imagePaths.add(url);
     await DefaultFirebaseOptions.uploadUserDetails(user);
   }
+
+  Future<void> uploadFileToFirst(String filePath, String fileName) async {
+    File file = File(filePath);
+    try {
+      await storage.ref('pics/$fileName').putFile(file);
+    } on firebase_core.FirebaseException catch (e) {
+      print(e);
+    }
+    String url = await storage.ref('pics/$fileName').getDownloadURL();
+    User? currentUser = DefaultFirebaseOptions.user;
+    User user = currentUser ?? User("", "");
+    user.id = auth.FirebaseAuth.instance.currentUser?.uid;
+    user.email = auth.FirebaseAuth.instance.currentUser?.email;
+    user.imagePaths.insert(0, url);
+    await DefaultFirebaseOptions.uploadUserDetails(user);
+  }
 }
