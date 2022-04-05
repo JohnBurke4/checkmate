@@ -141,6 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onPressed: () async {
                 user?.name = nameController.text;
                 user?.bio = bioController.text;
+                getProfilePics();
                 //user?.abilityLevel = ability
 
                 if (nameController.text == "" || bioController.text == "") {
