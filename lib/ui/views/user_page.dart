@@ -173,6 +173,10 @@ class _UserPage extends State<UserPage> {
                                 ),
                                 child: ElevatedButton(
                                   style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      Theme.of(context).primaryColorDark,
+                                    ),
                                     foregroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.white),
@@ -227,7 +231,7 @@ class _UserPage extends State<UserPage> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).primaryColorDark,
               ),
             ),
           ),

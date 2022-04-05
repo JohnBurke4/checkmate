@@ -24,11 +24,15 @@ class MyApp extends StatefulWidget {
 
   @override
   _MyAppState createState() => _MyAppState();
+
+  static _MyAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
 }
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription<User?> user;
   UserLocation ul = UserLocation();
+  ThemeMode _themeMode = ThemeMode.system;
 
   @override
   void initState() {
@@ -62,22 +66,24 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  void changeTheme(ThemeMode themeMode) {
+    setState(() {
+      _themeMode = themeMode;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: _themeMode,
+      // ThemeData(
+      //   primarySwatch: Colors.amber,
+      //   primaryColorLight: ThemeData.dark()
+      // ),
       home: nextScreen(),
       // routes: {
       //   '/user_page': (context) => UserPage(),

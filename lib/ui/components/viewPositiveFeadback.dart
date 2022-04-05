@@ -34,10 +34,10 @@ class ViewPositiveFeadback extends StatelessWidget {
                 Expanded(
                     child: Row(children: <Widget>[
                   GestureDetector(
-                      child: const Icon(
+                      child: Icon(
                         Icons.tag_faces_sharp,
                         size: 30.0,
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColorDark,
                       ),
                       onLongPressStart: (DetailsElement) {
                         showMenu<String>(
@@ -54,15 +54,20 @@ class ViewPositiveFeadback extends StatelessWidget {
                               )
                             ]);
                       }),
-                  Text(data['friendliness'].toString())
+                  Text(
+                    data['friendliness'].toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
                 ])),
                 Expanded(
                     child: Row(children: <Widget>[
                   GestureDetector(
-                      child: const Icon(
+                      child: Icon(
                         Icons.access_time,
                         size: 30.0,
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColorDark,
                       ),
                       onLongPressStart: (DetailsElement) {
                         showMenu<String>(
@@ -79,15 +84,20 @@ class ViewPositiveFeadback extends StatelessWidget {
                               )
                             ]);
                       }),
-                  Text(data['punctuality'].toString())
+                  Text(
+                    data['punctuality'].toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
                 ])),
                 Expanded(
                     child: Row(children: <Widget>[
                   GestureDetector(
-                      child: const Icon(
+                      child: Icon(
                         Icons.calendar_today_rounded,
                         size: 30.0,
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColorDark,
                       ),
                       onLongPressStart: (DetailsElement) {
                         showMenu<String>(
@@ -104,7 +114,12 @@ class ViewPositiveFeadback extends StatelessWidget {
                               )
                             ]);
                       }),
-                  Text(data['hangOutAgain'].toString())
+                  Text(
+                    data['hangOutAgain'].toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
                 ])),
               ],
             );

@@ -23,6 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
+          Color.fromARGB(255, 0, 190, 248),
           Color.fromARGB(255, 24, 65, 248),
           Color.fromARGB(255, 0, 190, 248)
         ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
