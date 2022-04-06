@@ -46,9 +46,9 @@ class TargetPage extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           height: 120,
-                          child: FriendGallery(),
+                          child: FriendGallery(uid: targetUid),
                         ),
                         const SizedBox(height: 6),
                         ListTile(
