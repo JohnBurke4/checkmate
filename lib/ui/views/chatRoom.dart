@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, invalid_return_type_for_catch_error, file_names
 
 import 'package:checkmate/services/match.dart';
+import 'package:checkmate/ui/components/friend_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -74,12 +75,12 @@ class _ChatRoomState extends State<ChatRoom> {
                 padding: const EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                   onTap: () {
+                    getFriendProfilePics(widget.friendUid);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return SafeArea(
                           child: TargetPage(
-                              uid: widget.uid, targetUid: widget.friendUid
-                              ));
+                              uid: widget.uid, targetUid: widget.friendUid));
                     }));
                   },
                   child: const Icon(
