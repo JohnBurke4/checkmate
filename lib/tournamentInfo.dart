@@ -62,6 +62,15 @@ class _tournamentInfoState extends State<tournamentInfo> {
                 child: Column(
                   children: [
                     ListTile(
+                      title: Text(
+                        res?.tournamentName ?? "Tournament",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    ListTile(
                         title: const Text(
                           'Hosted By',
                           style: TextStyle(
