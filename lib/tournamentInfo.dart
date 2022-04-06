@@ -34,7 +34,23 @@ class _tournamentInfoState extends State<tournamentInfo> {
 
             int currentPlayers = res!.players.length;
             return Scaffold(
-              appBar: AppBar(),
+              appBar: AppBar(
+                title: Center(child: Text(res?.tournamentName ?? "Tournament")),
+                actions: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: (widget.isCreator) ? GestureDetector(
+                        onTap: ()  async {
+                          await deleteTournamentDialog(widget.tournamentId);
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          size: 30.0,
+                        ),
+                      ) : Text("")
+                  ),
+                ],
+              ),
               body: Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
@@ -270,7 +286,7 @@ class _tournamentInfoState extends State<tournamentInfo> {
     Widget noButton = FlatButton(
       child: Text("OK"),
       onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.pop(context);
       },
     );
     // set up the AlertDialog
@@ -379,6 +395,67 @@ class _tournamentInfoState extends State<tournamentInfo> {
       });
     }
     return info;
+  }
+
+  Future<bool> deleteTournament(String tournamentId) async {
+    bool result = true;
+    await FirebaseFirestore.instance
+        .collection("tournaments")
+        .doc(tournamentId)
+        .delete().catchError((error) {
+      result = false;
+      print("Failed to delete tournamet: $error");
+    } );
+    return result;
+  }
+
+  Future deleteTournamentDialog(String tournamentId) async {
+    // set up the buttons
+    Widget noButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    Widget yesButton = FlatButton(
+      child: Text("Confirm"),
+      onPressed: () async  {
+
+        Navigator.of(context).pop();
+        bool res = await deleteTournament(tournamentId);
+        if (res){
+          Navigator.of(context).pop();
+        }
+
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Are you sure?"),
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.06,
+        child: Column(
+          children: const [
+            Text("Are you sure you that wish to delete this tournament?" ),
+            SizedBox(
+              height: 14,
+            )
+          ],
+        ),
+      ),
+      actions: [
+        noButton,
+        yesButton
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
 

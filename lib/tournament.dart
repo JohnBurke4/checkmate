@@ -222,6 +222,7 @@ class Tournament {
     Widget yesButton = FlatButton(
       child: Text("View"),
       onPressed: () {
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(
