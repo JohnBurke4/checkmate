@@ -34,6 +34,7 @@ class _SwipeCardState extends State<SwipeCard> {
             height: 10,
           ),
           Card(
+            color: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
@@ -74,6 +75,7 @@ class _SwipeCardState extends State<SwipeCard> {
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                       Text(
@@ -100,7 +102,9 @@ class _SwipeCardState extends State<SwipeCard> {
                       Text(
                         widget.user.bio,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                     ],
                   ),

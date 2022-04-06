@@ -1,4 +1,5 @@
 import 'package:checkmate/firebase_options.dart';
+import 'package:checkmate/main.dart';
 import 'package:checkmate/services/match.dart';
 import 'package:checkmate/sign_in.dart';
 import 'package:checkmate/ui/components/gallery.dart';
@@ -40,6 +41,7 @@ class _NavBarState extends State<NavBar> {
   LocationData? _currentPosition;
   Location location = new Location();
   String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
+  bool lightTheme = false;
   void registerNotification() async {
     // 1. Initialize the Firebase app
     await Firebase.initializeApp();
@@ -97,6 +99,22 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColorDark,
+        actions: <Widget>[
+          Switch(
+            value: lightTheme,
+            onChanged: (value) {
+              setState(() {
+                lightTheme = value;
+                if (lightTheme) {
+                  MyApp.of(context)!.changeTheme(ThemeMode.dark);
+                } else {
+                  MyApp.of(context)!.changeTheme(ThemeMode.light);
+                }
+              });
+            },
+          ),
+        ],
         leading: IconButton(
           icon: const Icon(
             Icons.logout,
@@ -123,23 +141,36 @@ class _NavBarState extends State<NavBar> {
       ].elementAt(_selectedIndex),
       //_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         unselectedItemColor: Colors.black,
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(
+              Icons.account_circle,
+              color: Theme.of(context).primaryColorDark,
+            ),
             label: 'Me',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.swipe),
+            icon: Icon(
+              Icons.swipe,
+              color: Theme.of(context).primaryColorDark,
+            ),
             label: 'Swipe',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(
+              Icons.chat,
+              color: Theme.of(context).primaryColorDark,
+            ),
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
+            icon: Icon(
+              Icons.map,
+              color: Theme.of(context).primaryColorDark,
+            ),
             label: 'Map',
           ),
         ],

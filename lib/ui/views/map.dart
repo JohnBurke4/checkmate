@@ -8,27 +8,17 @@ import 'package:location/location.dart';
 import '../../location.dart';
 import '../../tournament.dart';
 
-class MapPage extends StatefulWidget {
+class MapPage extends StatelessWidget {
   final String uid;
 
-  const MapPage({Key? key, required this.uid}) : super(key: key);
+  MapPage({Key? key, required this.uid}) : super(key: key);
 
-  @override
-  _MapPageState createState() => _MapPageState();
-}
-
-class _MapPageState extends State<MapPage> {
   MapController mapController = MapController();
   final List<Marker> _markers = [];
   Location location = Location();
   late UserLocationOptions userLocationOptions;
   String location_id = 'X722uMAdIefDkVj3nqam';
   Tournament tour = Tournament();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +61,8 @@ class _MapPageState extends State<MapPage> {
                 onLongPress: (latLng) {
                   tour
                       .isUserTournamentExistHere(
-                          widget.uid, latLng.latitude, latLng.longitude)
-                      .then((value) => tour.onLongPressFunc(context, widget.uid,
+                          this.uid, latLng.latitude, latLng.longitude)
+                      .then((value) => tour.onLongPressFunc(context, this.uid,
                           latLng.latitude, latLng.longitude, value));
                   print('${latLng.latitude}, ${latLng.longitude}');
                 },
