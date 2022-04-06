@@ -45,7 +45,7 @@ class _NavBarState extends State<NavBar> {
   void registerNotification() async {
     // 1. Initialize the Firebase app
     await Firebase.initializeApp();
-
+    getProfilePics();
     // 2. Instantiate Firebase Messaging
     _messaging = FirebaseMessaging.instance;
 
