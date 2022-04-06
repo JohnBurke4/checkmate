@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../components/friend_gallery.dart';
 import '../components/leavePositiveFeadback.dart';
 import '../components/gallery.dart';
 
@@ -47,7 +48,7 @@ class TargetPage extends StatelessWidget {
                         ),
                         const SizedBox(
                           height: 120,
-                          child: Gallery(),
+                          child: FriendGallery(),
                         ),
                         const SizedBox(height: 6),
                         ListTile(
