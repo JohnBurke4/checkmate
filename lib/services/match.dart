@@ -106,13 +106,13 @@ class MatchServices {
       UserCoordinate currentUser = await ul.loadCurrentUserLocation(userId);
       for (UserCoordinate next in otherUsersLocationList) {
         double d = ul.calculateDistance(currentUser, next);
-        print("distance between " +
-            currentUser.userId.toString() +
-            " and " +
-            next.userId.toString() +
-            " is " +
-            d.toString() +
-            "km.");
+        // print("distance between " +
+        //     currentUser.userId.toString() +
+        //     " and " +
+        //     next.userId.toString() +
+        //     " is " +
+        //     d.toString() +
+        //     "km.");
         if (d < range) {
           localUserId.add(next.userId.toString());
         }
@@ -149,13 +149,10 @@ class MatchServices {
         .collection("blockList")
         .get()
         .then((value) => value.docs.map((e) => e.id).toList());
-
-    print(blockList.toString());
     ids.removeWhere((element) =>
         swipedRight.contains(element) ||
         swipedLeft.contains(element) ||
         blockList.contains(element));
-
     var tenIds = (ids..shuffle()).take(10);
 
     if (tenIds.isEmpty) {
@@ -169,8 +166,7 @@ class MatchServices {
         .then((value) =>
             value.docs.map((e) => customUser.User.fromJSON(e.data())).toList());
 
-    users.removeWhere((element) => element.imagePaths.isEmpty);
-
+    //users.removeWhere((element) => element.imagePaths.isEmpty);
     return users;
   }
 

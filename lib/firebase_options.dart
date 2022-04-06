@@ -95,6 +95,8 @@ class DefaultFirebaseOptions {
     return true;
   }
 
+
+
   static Future<User?> getUserDetailsAsUser(User username) async {
     var userId = auth.FirebaseAuth.instance.currentUser?.uid;
     var doc =
@@ -102,5 +104,12 @@ class DefaultFirebaseOptions {
     var data = doc.data();
     username = User.fromJSON(data!);
     return username;
+  }
+
+  static Future<User?> getOtherUserDetails(id) async {
+    var doc =
+    await FirebaseFirestore.instance.collection("user").doc(id).get();
+    var data = doc.data();
+    return User.fromJSON(data!);
   }
 }

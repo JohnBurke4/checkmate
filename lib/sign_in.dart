@@ -23,6 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
+          Color.fromARGB(255, 0, 190, 248),
           Color.fromARGB(255, 24, 65, 248),
           Color.fromARGB(255, 0, 190, 248)
         ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
@@ -47,12 +48,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 reusableTextField("Enter Email", Icons.person_outline, false,
-                    _emailTextController),
+                    _emailTextController, TextInputType.emailAddress),
                 const SizedBox(
                   height: 20,
                 ),
                 reusableTextField("Enter Password", Icons.lock_outline, true,
-                    _passwordTextController),
+                    _passwordTextController, TextInputType.visiblePassword),
                 const SizedBox(
                   height: 5,
                 ),

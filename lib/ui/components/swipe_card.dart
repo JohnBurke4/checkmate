@@ -21,7 +21,7 @@ class _SwipeCardState extends State<SwipeCard> {
             BoxShadow(
               color: Colors.grey.withOpacity(.5),
               blurRadius: 20.0, // soften the shadow
-              spreadRadius: 0.0, //extend the shadow
+              spreadRadius: -30.0, //extend the shadow
               offset: Offset(
                 0.0, // Move horizontally
                 -5.0, // Move vertically
@@ -34,6 +34,7 @@ class _SwipeCardState extends State<SwipeCard> {
             height: 10,
           ),
           Card(
+            color: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
@@ -54,7 +55,10 @@ class _SwipeCardState extends State<SwipeCard> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image(
-                            image: NetworkImage(widget.user.imagePaths[i]),
+                            image: NetworkImage((widget
+                                    .user.imagePaths.isNotEmpty
+                                ? widget.user.imagePaths[i]
+                                : "https://wpstorelocator.co/wp-content/uploads/2016/07/settings-gmap-api-error-2.gif")),
                             fit: BoxFit.fill,
                           )),
                     )),
@@ -71,6 +75,7 @@ class _SwipeCardState extends State<SwipeCard> {
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                       Text(
@@ -97,7 +102,9 @@ class _SwipeCardState extends State<SwipeCard> {
                       Text(
                         widget.user.bio,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                     ],
                   ),
