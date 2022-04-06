@@ -52,65 +52,137 @@ class _UserPage extends State<UserPage> {
                 body: Column(
                   children: <Widget>[
                     const SizedBox(
-                      height: 2,
+                      height: 10,
                     ),
                     const SizedBox(
-                      height: 160,
+                      height: 120,
                       child: Gallery(),
                     ),
                     const SizedBox(height: 6),
                     ListTile(
-                        title: Text(
-                          user.name,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 35, fontWeight: FontWeight.bold),
-                        ),
-                        ),
+                      title: Text(
+                        user.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     const SizedBox(height: 6),
-                    ListTile(
-                        title: const Text(
-                          'Bio',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                    Container(
+                        margin: const EdgeInsets.only(
+                          left: 10.0,
+                          right: 10.0,
                         ),
-                        subtitle: Text(
-                          user.bio,
-                          style: TextStyle(fontSize: 15),
-                        )),
-                    ListTile(
-                        title: const Text(
-                          'Ability Level',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.black12,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
+                        child: Column(children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                              margin: const EdgeInsets.only(
+                                left: 15.0,
+                                right: 10.0,
+                              ),
+                              child: ViewPositiveFeadback(uid: widget.uid)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ])),
+                    const SizedBox(height: 10),
+                    Container(
+                        margin: const EdgeInsets.only(
+                          left: 10.0,
+                          right: 10.0,
                         ),
-                        subtitle: Text(
-                          user.abilityLevel,
-                          style: TextStyle(fontSize: 15),
-                        )),
-                    ListTile(
-                        title: const Text(
-                          'Chess.com Blitz Rating',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          user.chessDotComELO,
-                          style: TextStyle(fontSize: 15),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.black12,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
+                        child: Column(
+                          children: [
+                            sectionTitle(context, 'Biography'),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                left: 20.0,
+                                right: 20.0,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  user.bio,
+                                  style: TextStyle(
+                                    color: Color(0xFF9f9f9f),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            sectionTitle(context, 'Ability Level'),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                left: 20.0,
+                                right: 20.0,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  user.abilityLevel,
+                                  style: TextStyle(
+                                    color: Color(0xFF9f9f9f),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            sectionTitle(context, 'Chess.com Blitz Rating'),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                left: 20.0,
+                                right: 20.0,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  user.chessDotComELO,
+                                  style: TextStyle(
+                                    color: Color(0xFF9f9f9f),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
                         )),
                     widget.editable
-                        ? ElevatedButton(
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                            ),
-                            onPressed: () {
-                              OpenEditPage(buildContext);
-                            },
-                            child: Text('Edit Profile'),
-                          )
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 8,
+                                  left: 10.0,
+                                  right: 20.0,
+                                ),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    OpenEditPage(buildContext);
+                                  },
+                                  child: Text('Edit Profile'),
+                                )))
                         : Container(),
-                    Center(child: ViewPositiveFeadback(uid: widget.uid))
                   ],
                 ));
           } else {
@@ -125,7 +197,9 @@ class _UserPage extends State<UserPage> {
     user = await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return const SafeArea(child: EditProfilePage());
     })) as User;
-    setState(() {log("set state");});
+    setState(() {
+      log("set state");
+    });
     //User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
     // setState(() {
     //   user.name = temp.name;
@@ -134,5 +208,41 @@ class _UserPage extends State<UserPage> {
 
     log(user.name);
     build(context);
+  }
+
+  Widget sectionTitle(context, String title) {
+    return Container(
+      margin: const EdgeInsets.only(
+        top: 20.0,
+        left: 20.0,
+        right: 20.0,
+        bottom: 20.0,
+      ),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 10,
+            ),
+            child: Divider(
+              color: Colors.black12,
+              height: 1,
+              thickness: 1,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
