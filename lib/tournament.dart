@@ -247,9 +247,6 @@ class Tournament {
         child: Column(
           children: [
             Text(currentPlayers.length.toString() + " / $size players"),
-            const SizedBox(
-              height: 14,
-            ),
             Text("Would you like to view this tournament?"),
           ],
         ),

@@ -33,17 +33,30 @@ class FriendGallery extends StatefulWidget {
 class _FriendGalleryState extends State<FriendGallery> {
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: InkWell(
-              child: CircleAvatar(
-                radius: 80,
-                backgroundColor: Colors.white,
-                backgroundImage: (friendFirebaseImages.isNotEmpty)
-                    ? NetworkImage(friendFirebaseImages.first)
-                    : AssetImage('assets/test/blank-profile-picture.png')
-                        as ImageProvider,
-              ),
-              onTap: openFriendGallery),
+        body: FutureBuilder<void>(
+          future: getFirebaseImagesForFriend(widget.uid),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done){
+              return Center(
+                child: InkWell(
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundColor: Colors.white,
+                      backgroundImage: (friendFirebaseImages.isNotEmpty)
+                          ? NetworkImage(friendFirebaseImages.first)
+                          : const AssetImage('assets/test/blank-profile-picture.png')
+                      as ImageProvider,
+                    ),
+                    onTap: openFriendGallery),
+              );
+            }
+            else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+          }
         ),
       );
 
@@ -71,6 +84,9 @@ Future<void> getFirebaseImagesForFriend(String? uid) async {
   var data = doc.data();
   User username = User.fromJSON(data!);
   friendFirebaseImages = username.imagePaths;
+
+  print(friendFirebaseImages);
+
 }
 
 void getFriendProfilePics(String? uid) async {

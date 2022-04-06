@@ -63,6 +63,7 @@ class MapPage extends StatelessWidget {
             options: MapOptions(
                 center: LatLng(0, 0),
                 zoom: 15.0,
+                interactiveFlags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
                 plugins: [
                   UserLocationPlugin(),
                 ],
