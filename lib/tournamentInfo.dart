@@ -1,6 +1,7 @@
 import 'package:checkmate/firebase_options.dart';
 import 'package:checkmate/models/user.dart' as customUser;
 import 'package:checkmate/tournament.dart';
+import 'package:checkmate/ui/views/create_tournament_page.dart';
 import 'package:checkmate/ui/views/targetPage.dart';
 import 'package:checkmate/widget_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,7 +53,29 @@ class _tournamentInfoState extends State<tournamentInfo> {
                               ),
                             )
                           : Text("")),
+                  Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: (widget.isCreator)
+                          ? GestureDetector(
+                        onTap: () async {
+                          await Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return SafeArea(
+                                    child: CreateTournamentPage(
+                                        lat: 0, lon: 0, tournamentId: widget.tournamentId));
+                              }));
+                          setState(() {
+
+                          });
+                        },
+                        child: const Icon(
+                          Icons.edit,
+                          size: 30.0,
+                        ),
+                      )
+                          : Text("")),
                 ],
+
               ),
               body: Container(
                 width: MediaQuery.of(context).size.width,
@@ -270,14 +293,24 @@ class _tournamentInfoState extends State<tournamentInfo> {
                               MaterialStateProperty.all<Color>(Colors.white),
                         ),
                         onPressed: () {
-                          if (currentPlayers < res!.tournamentSize) {
+                          if (res.players.contains(
+                              FirebaseAuth.instance.currentUser?.uid)){
+                            removePlayer(widget.tournamentId, res.players,
+                                FirebaseAuth.instance.currentUser!.uid);
+                          }
+                          else if (currentPlayers < res!.tournamentSize) {
                             addPlayer(widget.tournamentId, res.players,
                                 FirebaseAuth.instance.currentUser!.uid);
                           }
                         },
-                        child: Text(res!.tournamentSize > currentPlayers
+                        child: Text(
+                            ((res.players.contains(
+                                FirebaseAuth.instance.currentUser?.uid)) ?
+                                'Leave Tournament'
+                                :
+                                (res!.tournamentSize > currentPlayers)
                             ? 'Join Tournament'
-                            : "Tournament is full"),
+                            : "Tournament is full")),
                       ),
                     )
                   ],
@@ -312,8 +345,6 @@ class _tournamentInfoState extends State<tournamentInfo> {
 
   void removePlayer(
       String tournamentId, List<dynamic> playersArray, String userId) {
-    print(playersArray);
-    print(userId);
     if (playersArray.contains(userId)) {
       playersArray.remove(userId);
       FirebaseFirestore.instance
@@ -527,4 +558,14 @@ class TourInfo {
         date: json['date'] ?? "TBD",
         players: json['players']);
   }
+
+  Map<String, Object?> toJson() => {
+    'authorName': author_name,
+    'name': tournamentName,
+    'author': author_id,
+    'size': tournamentSize,
+    'details': details,
+    'date': date,
+    'players': players,
+  };
 }
