@@ -34,8 +34,65 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (user?.abilityLevel == "beginner") user?.abilityLevel = "Beginner";
     nameController.text = user?.name ?? "Enter your name";
     bioController.text = user?.bio ?? "Enter your bio";
+    //String? uid = currentUser?.id;
     getProfilePics();
     super.initState();
+  }
+
+  Future<void> _showImageDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Warning!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('You Must Have A Profile Picture.'),
+                Text('\nPlease add at least one image to your profile.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showBioNameDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Warning!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('You Must Have A Bio and a Name.'),
+                Text('\nPlease add these to your profile before exiting.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -142,9 +199,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onPressed: () async {
                 user?.name = nameController.text;
                 user?.bio = bioController.text;
+                String? images = user?.imagePaths.toString();
+                print(images);
+                //String? uid = user?.id;
                 getProfilePics();
                 //user?.imagePaths = [];
-                if (nameController.text == "" || bioController.text == "") {
+                if (user?.name == "" || user?.bio == "") {
+                  _showBioNameDialog();
+                } else if (images == '[]') {
+                  _showImageDialog();
                 } else {
                   await DefaultFirebaseOptions.uploadUserDetails(user);
                   Navigator.pop(context, user);
