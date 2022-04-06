@@ -281,16 +281,59 @@ class FriendList extends StatelessWidget {
                         },
                         child: ListTile(
                           title: Text(data[index]['name']),
-                          iconColor: const Color.fromARGB(255, 248, 244, 14),
-                          leading: const Icon(
-                            Icons.audiotrack,
-                            color: Colors.green,
-                            size: 30.0,
-                          ), // a placeholder for user avator
+                          leading: Container(
+                              height: 50,
+                              width: 50,
+                              child: Avatar(targetUid: data[index]['uid'])),
                           subtitle: LastMessage(roomID: data[index]['roomID']),
                         ));
                   });
             }
+          }
+          return Container();
+        });
+  }
+}
+
+class Avatar extends StatelessWidget {
+  final String targetUid;
+
+  const Avatar({Key? key, required this.targetUid}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('user')
+            .doc(targetUid)
+            .snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Color.fromARGB(255, 23, 29, 43))));
+          }
+
+          if (snapshot.hasData) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+
+            return Image(
+                image: NetworkImage(data['imagePaths'][0]),
+                fit: BoxFit.cover,
+                width: 50,
+                height: 50,
+                color: null // this is the work around
+                );
+            // return ImageIcon(
+            //   NetworkImage(data['imagePaths'][0]),
+            //   size: 50,
+            // );
           }
           return Container();
         });
