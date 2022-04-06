@@ -77,15 +77,15 @@ class MapPage extends StatelessWidget {
                 onTap: (latLng) {
                   tour
                       .isUserTournamentExistHere(
-                          widget.uid, latLng.latitude, latLng.longitude)
-                      .then((value) => tour.onTapFunc(context, widget.uid,
+                          uid, latLng.latitude, latLng.longitude)
+                      .then((value) => tour.onTapFunc(context, uid,
                           latLng.latitude, latLng.longitude, value));
                   print('${latLng.latitude}, ${latLng.longitude}');
 
                   tour
                       .isNotUserTournamentExistHere(
-                          widget.uid, latLng.latitude, latLng.longitude)
-                      .then((value) => tour.onTapFunc(context, widget.uid,
+                          uid, latLng.latitude, latLng.longitude)
+                      .then((value) => tour.onTapFunc(context, uid,
                           latLng.latitude, latLng.longitude, value));
                   print('${latLng.latitude}, ${latLng.longitude}');
                 }),
