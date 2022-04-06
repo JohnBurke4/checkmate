@@ -61,87 +61,93 @@ class _tournamentInfoState extends State<tournamentInfo> {
                 ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
                 child: Column(
                   children: [
-                    ListTile(
-                      title: Text(
-                        res?.tournamentName ?? "Tournament",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                    Column(
+                    children: [
+                    sectionTitle(context, 'Tournament'),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      res?.tournamentName ?? "Tournament",
+                      style: TextStyle(
+                        color: Color(0xFF9f9f9f),
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    ListTile(
-                        title: const Text(
-                          'Hosted By',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          widget.isCreator ? "Me!" : res!.author_name,
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )),
-                    ListTile(
-                        title: const Text(
-                          'Tournament name',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          res.tournamentName,
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )),
-                    ListTile(
-                        title: const Text(
-                          'Date',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          res.date.toString(),
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )),
-                    ListTile(
-                        title: const Text(
-                          'Other Details',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          res.details.toString(),
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )),
-                    ListTile(
-                        title: const Text(
-                          'Size',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          res.tournamentSize.toString(),
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )),
-                    ListTile(
-                        title: const Text(
-                          'Current Players',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          currentPlayers.toString(),
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                        )),
+                  ),
+                ),
+                sectionTitle(context, 'Host'),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      res!.author_name,
+                      style: TextStyle(
+                        color: Color(0xFF9f9f9f),
+                      ),
+                    ),
+                  ),
+                ),
+                sectionTitle(context, 'Max Players'),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      res.tournamentSize.toString(),
+                      style: TextStyle(
+                        color: Color(0xFF9f9f9f),
+                      ),
+                    ),
+                  ),
+                ),
+                sectionTitle(context, 'Current Players'),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      currentPlayers.toString(),
+                      style: TextStyle(
+                        color: Color(0xFF9f9f9f),
+                      ),
+                    ),
+                  ),
+                ),
+                sectionTitle(context, 'Date'),
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      res.date.toString(),
+                      style: TextStyle(
+                        color: Color(0xFF9f9f9f),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ],
+              ),
 
                     Expanded(
                       child: ListView.builder(
