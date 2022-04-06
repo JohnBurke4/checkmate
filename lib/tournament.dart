@@ -242,7 +242,9 @@ class Tournament {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(tournamentName),
-      content: Container(
+      content: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body:Container(
         height: MediaQuery.of(context).size.height * 0.06,
         child: Column(
           children: [
@@ -253,7 +255,7 @@ class Tournament {
             Text("Would you like to view this tournament?"),
           ],
         ),
-      ),
+      )),
       actions: [
         yesButton,
         noButton,
