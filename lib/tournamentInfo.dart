@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:checkmate/reusable_widgets/reusable_widget.dart';
 import 'package:checkmate/reset_password.dart';
 import 'package:checkmate/sign_up.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class tournamentInfo extends StatefulWidget {
@@ -35,125 +36,153 @@ class _tournamentInfoState extends State<tournamentInfo> {
             int currentPlayers = res!.players.length;
             return Scaffold(
               appBar: AppBar(
-                title: Center(child: Text(res?.tournamentName ?? "Tournament")),
+                title: Center(child: Text("Tournament")),
                 actions: <Widget>[
                   Padding(
                       padding: const EdgeInsets.only(right: 20.0),
-                      child: (widget.isCreator) ? GestureDetector(
-                        onTap: ()  async {
-                          await deleteTournamentDialog(widget.tournamentId);
-                        },
-                        child: const Icon(
-                          Icons.delete,
-                          size: 30.0,
-                        ),
-                      ) : Text("")
-                  ),
+                      child: (widget.isCreator)
+                          ? GestureDetector(
+                              onTap: () async {
+                                await deleteTournamentDialog(
+                                    widget.tournamentId);
+                              },
+                              child: const Icon(
+                                Icons.delete,
+                                size: 30.0,
+                              ),
+                            )
+                          : Text("")),
                 ],
               ),
               body: Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                  Color.fromARGB(255, 24, 65, 248),
-                  Color.fromARGB(255, 0, 190, 248)
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                decoration: BoxDecoration(),
                 child: Column(
                   children: [
-                    Column(
-                    children: [
-                    sectionTitle(context, 'Tournament'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      res?.tournamentName ?? "Tournament",
-                      style: TextStyle(
-                        color: Color(0xFF9f9f9f),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        title: Text(
+                          res.tournamentName,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                sectionTitle(context, 'Host'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      res!.author_name,
-                      style: TextStyle(
-                        color: Color(0xFF9f9f9f),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        left: 10.0,
+                        right: 10.0,
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: Colors.black12,
+                          ),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      child: Column(
+                        children: [
+                          sectionTitle(context, 'Host'),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                res!.author_name,
+                                style: TextStyle(
+                                  color: Color(0xFF9f9f9f),
+                                ),
+                              ),
+                            ),
+                          ),
+                          sectionTitle(context, 'Max Players'),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                res.tournamentSize.toString(),
+                                style: TextStyle(
+                                  color: Color(0xFF9f9f9f),
+                                ),
+                              ),
+                            ),
+                          ),
+                          sectionTitle(context, 'Current Players'),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                currentPlayers.toString(),
+                                style: TextStyle(
+                                  color: Color(0xFF9f9f9f),
+                                ),
+                              ),
+                            ),
+                          ),
+                          sectionTitle(context, 'Date'),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                res.date.toString(),
+                                style: TextStyle(
+                                  color: Color(0xFF9f9f9f),
+                                ),
+                              ),
+                            ),
+                          ),
+                          sectionTitle(context, 'Other Details'),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                res.details.toString(),
+                                style: TextStyle(
+                                  color: Color(0xFF9f9f9f),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                sectionTitle(context, 'Max Players'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      res.tournamentSize.toString(),
-                      style: TextStyle(
-                        color: Color(0xFF9f9f9f),
-                      ),
-                    ),
-                  ),
-                ),
-                sectionTitle(context, 'Current Players'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      currentPlayers.toString(),
-                      style: TextStyle(
-                        color: Color(0xFF9f9f9f),
-                      ),
-                    ),
-                  ),
-                ),
-                sectionTitle(context, 'Date'),
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      res.date.toString(),
-                      style: TextStyle(
-                        color: Color(0xFF9f9f9f),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ],
-              ),
-
+                    sectionTitle(context, (res.players.contains(
+                        FirebaseAuth.instance.currentUser?.uid) ||
+                        widget.isCreator)
+                        ? "Current Players"
+                        : "Join to find the current players"),
                     Expanded(
                       child: ListView.builder(
+                        padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
                         // Let the ListView know how many items it needs to build.
                         itemCount: (res.players.contains(
-                                FirebaseAuth.instance.currentUser?.uid) || widget.isCreator)
+                                    FirebaseAuth.instance.currentUser?.uid) ||
+                                widget.isCreator)
                             ? res.players.length
                             : 0,
                         // Provide a builder function. This is where the magic happens.
@@ -181,12 +210,18 @@ class _tournamentInfoState extends State<tournamentInfo> {
                                       Text(
                                         data != null ? data.name : "Hidden",
                                         style: TextStyle(
-                                            fontSize: 15, color: Colors.white),
+                                            fontSize: 15,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       GestureDetector(
                                         onLongPress: () {
-                                          if (widget.isCreator){
-                                            removeFromTournamentDialog(data?.name ?? "Error", data?.id ?? "Error", widget.tournamentId ?? "Error", res.players );
+                                          if (widget.isCreator) {
+                                            removeFromTournamentDialog(
+                                                data?.name ?? "Error",
+                                                data?.id ?? "Error",
+                                                widget.tournamentId ?? "Error",
+                                                res.players);
                                           }
                                         },
                                         onTap: () {
@@ -211,7 +246,7 @@ class _tournamentInfoState extends State<tournamentInfo> {
                                         child: const Icon(
                                           Icons.account_box,
                                           size: 30.0,
-                                          color: Colors.white,
+                                          color: Colors.blue,
                                         ),
                                       )
                                     ],
@@ -235,8 +270,7 @@ class _tournamentInfoState extends State<tournamentInfo> {
                               MaterialStateProperty.all<Color>(Colors.white),
                         ),
                         onPressed: () {
-                          if (
-                              currentPlayers < res!.tournamentSize) {
+                          if (currentPlayers < res!.tournamentSize) {
                             addPlayer(widget.tournamentId, res.players,
                                 FirebaseAuth.instance.currentUser!.uid);
                           }
@@ -331,7 +365,8 @@ class _tournamentInfoState extends State<tournamentInfo> {
     );
   }
 
-  void removeFromTournamentDialog(String username, String userId, String tournamentId, List<dynamic> playersArray ) async {
+  void removeFromTournamentDialog(String username, String userId,
+      String tournamentId, List<dynamic> playersArray) async {
     // set up the buttons
     Widget noButton = FlatButton(
       child: Text("Cancel"),
@@ -343,10 +378,8 @@ class _tournamentInfoState extends State<tournamentInfo> {
     Widget yesButton = FlatButton(
       child: Text("Confirm"),
       onPressed: () {
-
         Navigator.of(context).pop();
         removePlayer(tournamentId, playersArray, userId);
-
       },
     );
     // set up the AlertDialog
@@ -356,17 +389,14 @@ class _tournamentInfoState extends State<tournamentInfo> {
         height: MediaQuery.of(context).size.height * 0.06,
         child: Column(
           children: [
-            Text("Are you sure you wish to remove " + username + "?" ),
+            Text("Are you sure you wish to remove " + username + "?"),
             const SizedBox(
               height: 14,
             )
           ],
         ),
       ),
-      actions: [
-        noButton,
-        yesButton
-      ],
+      actions: [noButton, yesButton],
     );
     // show the dialog
     showDialog(
@@ -417,10 +447,11 @@ class _tournamentInfoState extends State<tournamentInfo> {
     await FirebaseFirestore.instance
         .collection("tournaments")
         .doc(tournamentId)
-        .delete().catchError((error) {
+        .delete()
+        .catchError((error) {
       result = false;
       print("Failed to delete tournamet: $error");
-    } );
+    });
     return result;
   }
 
@@ -435,14 +466,12 @@ class _tournamentInfoState extends State<tournamentInfo> {
 
     Widget yesButton = FlatButton(
       child: Text("Confirm"),
-      onPressed: () async  {
-
+      onPressed: () async {
         Navigator.of(context).pop();
         bool res = await deleteTournament(tournamentId);
-        if (res){
+        if (res) {
           Navigator.of(context).pop();
         }
-
       },
     );
     // set up the AlertDialog
@@ -452,17 +481,14 @@ class _tournamentInfoState extends State<tournamentInfo> {
         height: MediaQuery.of(context).size.height * 0.06,
         child: Column(
           children: const [
-            Text("Are you sure you that wish to delete this tournament?" ),
+            Text("Are you sure you that wish to delete this tournament?"),
             SizedBox(
               height: 14,
             )
           ],
         ),
       ),
-      actions: [
-        noButton,
-        yesButton
-      ],
+      actions: [noButton, yesButton],
     );
     // show the dialog
     showDialog(
