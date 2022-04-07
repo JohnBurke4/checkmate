@@ -125,8 +125,8 @@ class _ChatRoomState extends State<ChatRoom> {
                                     text: data['text'],
                                     isSender: isSender(data['author']),
                                     color: isSender(data['author'])
-                                        ? const Color(0xFF1B97F3)
-                                        : const Color(0xFFE8E8EE),
+                                        ? Theme.of(context).primaryColorLight
+                                        : Theme.of(context).primaryColor,
                                     tail: false,
                                     textStyle: const TextStyle(
                                       fontSize: 25,
@@ -141,6 +141,8 @@ class _ChatRoomState extends State<ChatRoom> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 18.0),
                                 child: CupertinoTextField(
+                                  decoration:
+                                      new BoxDecoration(color: Colors.white),
                                   controller: _textController,
                                 ),
                               ),
