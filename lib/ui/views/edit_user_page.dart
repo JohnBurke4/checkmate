@@ -95,6 +95,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  void _update(test) {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     // if (ModalRoute.of(context)!.settings.arguments != null) {
@@ -120,7 +124,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: Gallery(),
             ),
             SizedBox(height: 2),
-            ImageFromGallery(),
+            ImageFromGallery(update: _update),
             SizedBox(height: 2),
             Container(
               //alignment: Alignment.topRight,

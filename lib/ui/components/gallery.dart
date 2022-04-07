@@ -41,16 +41,17 @@ class _GalleryState extends State<Gallery> {
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: InkWell(
-            child: CircleAvatar(
-              radius: 80,
-              backgroundColor: Colors.white,
-              backgroundImage: (firebaseImages.isNotEmpty)
-                  ? NetworkImage(firebaseImages.first)
-                  : AssetImage('assets/test/blank-profile-picture.png')
-                      as ImageProvider,
-            ),
-            onTap: openGallery,
-          ),
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundColor: Colors.white,
+                      backgroundImage: (firebaseImages.isNotEmpty)
+                          ? NetworkImage(firebaseImages.first)
+                          : AssetImage('assets/test/blank-profile-picture.png')
+                              as ImageProvider,
+                    ),
+                    onTap: openGallery,
+                  ),
+
         ),
       );
 
@@ -69,7 +70,7 @@ Future<void> getFirebaseImages() async {
   firebaseImages = username.imagePaths;
 }
 
-void getProfilePics() async {
+Future getProfilePics() async {
   await getFirebaseImages();
 }
 
@@ -109,7 +110,9 @@ class _GalleryWidgetState extends State<GalleryWidget> {
 }
 
 class ImageFromGallery extends StatefulWidget {
-  ImageFromGallery({Key? key}) : super(key: key);
+  final ValueChanged update;
+  ImageFromGallery({Key? key,  required this.update}) : super(key: key);
+
 
   @override
   _ImageFromGalleryState createState() => _ImageFromGalleryState();
@@ -128,7 +131,7 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
             style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 20),
             ),
-            onPressed: () => _pictureOptions(),
+            onPressed: () async => await _pictureOptions(),
           ),
         ),
       );
@@ -144,7 +147,8 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
         storage.uploadFile(imagePath, imageName);
       }
     });
-    getProfilePics();
+    await getProfilePics();
+    setState(() {});
   }
 
   Future<void> _pictureOptions() async {
@@ -155,7 +159,7 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
             title: const Text('Image Options'),
             children: <Widget>[
               SimpleDialogOption(
-                onPressed: () {
+                onPressed: () async {
                   _chooseProfile();
                   Navigator.pop(context);
                 },
@@ -174,15 +178,15 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
   }
 
   Future _chooseProfile() async {
+    print("Before");
     final picture = await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (picture != null) {
-        imageFile = File(picture.path);
-        imagePath = picture.path;
-        imageName = picture.name;
-        storage.uploadFileToFirst(imagePath, imageName);
-      }
-    });
-    getProfilePics();
+    if (picture != null) {
+      imageFile = File(picture.path);
+      imagePath = picture.path;
+      imageName = picture.name;
+      await storage.uploadFileToFirst(imagePath, imageName);
+    }
+    await getProfilePics();
+    widget.update(1);
   }
 }
