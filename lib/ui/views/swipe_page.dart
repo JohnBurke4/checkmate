@@ -66,7 +66,7 @@ class _SwipePageState extends State<SwipePage> with TickerProviderStateMixin {
       height: MediaQuery.of(context).size.height * 0.7,
       alignment: Alignment.topCenter,
       child: FutureBuilder(
-        future: MatchServices.getLocalUsers(200),
+        future: MatchServices.getLocalUsers(20),
         builder: (context, AsyncSnapshot<List<dynamic>> value) {
           if (value.connectionState == ConnectionState.waiting){
             return const Center(
