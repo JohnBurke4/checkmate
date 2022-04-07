@@ -13,3 +13,4 @@
 - Can join a tournament if it is not full.
 - Can view the other members of a tournament if you created it or have joined it.
 - Can remove other members from your own tournament by long pressing their names.
+- Ability to change the theme of the app between light and darkmode
