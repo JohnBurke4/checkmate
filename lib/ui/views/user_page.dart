@@ -56,7 +56,7 @@ class _UserPage extends State<UserPage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 120,
                       child: Gallery(),
                     ),
@@ -204,7 +204,6 @@ class _UserPage extends State<UserPage> {
       return const SafeArea(child: EditProfilePage());
     })) as User;
     setState(() {
-      log("set state");
     });
     //User temp = await Navigator.pushNamed(context, '/edit_user_page', arguments: user) as User;
     // setState(() {
@@ -212,8 +211,8 @@ class _UserPage extends State<UserPage> {
     //   user.bio = temp.bio;
     // });
 
-    log(user.name);
-    build(context);
+    // log(user.name);
+    // build(context);
   }
 
   Widget sectionTitle(context, String title) {

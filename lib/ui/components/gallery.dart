@@ -44,7 +44,6 @@ class _GalleryState extends State<Gallery> {
               future: getProfilePics(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  print("firebaseImages.first");
                   return InkWell(
                     child: CircleAvatar(
                       radius: 80,
