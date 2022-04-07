@@ -171,7 +171,7 @@ class _NavBarState extends State<NavBar> {
               Icons.map,
               color: Theme.of(context).primaryColorDark,
             ),
-            label: 'Map',
+            label: 'Tournaments',
           ),
         ],
         currentIndex: _selectedIndex,

@@ -1,3 +1,4 @@
+import 'package:checkmate/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,8 @@ class MapPage extends StatelessWidget {
       mapController: mapController,
       markers: _markers,
     );
+
+    DefaultFirebaseOptions.showDialogIfFirstLoaded(context, "MapPage", "Welcome to Tournaments", "Tap on a tournament to view and join. Long tap to create a new one.");
 
     return Scaffold(
         body: StreamBuilder(

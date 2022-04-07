@@ -44,9 +44,12 @@ class _UserPage extends State<UserPage> {
             user = DefaultFirebaseOptions.user ?? User("My Name", "My bio");
             if (DefaultFirebaseOptions.user?.imagePaths.isEmpty ?? true) {
               WidgetsBinding.instance?.addPostFrameCallback((_) async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                await Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return const SafeArea(child: EditProfilePage());
                 }));
+                setState(() {
+
+                });
               });
             }
             return Scaffold(
@@ -212,7 +215,7 @@ class _UserPage extends State<UserPage> {
     // });
 
     // log(user.name);
-    // build(context);
+    build(context);
   }
 
   Widget sectionTitle(context, String title) {

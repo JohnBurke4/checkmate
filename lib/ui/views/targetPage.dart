@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../firebase_options.dart';
 import '../components/friend_gallery.dart';
 import '../components/leavePositiveFeadback.dart';
 import '../components/gallery.dart';
@@ -17,6 +18,7 @@ class TargetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DefaultFirebaseOptions.showDialogIfFirstLoaded(context, "OtherUserPage", "Player Profile", "Welcome! You can review a players conduct by tapping on one of the icons. Long tap to see what it means");
     return Scaffold(
         appBar: AppBar(),
         body: StreamBuilder(

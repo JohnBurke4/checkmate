@@ -172,14 +172,14 @@ class _ImageFromGalleryState extends State<ImageFromGallery> {
                   _chooseProfile();
                   Navigator.pop(context);
                 },
-                child: const Text('Select Display Picture'),
+                child: const Text('Select Profile Picture'),
               ),
               SimpleDialogOption(
                 onPressed: () {
                   _openGallery();
                   Navigator.pop(context);
                 },
-                child: const Text('Add to Your Images'),
+                child: const Text('Add other images'),
               ),
             ],
           );

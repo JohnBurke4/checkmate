@@ -25,6 +25,13 @@ class tournamentInfo extends StatefulWidget {
 class _tournamentInfoState extends State<tournamentInfo> {
   @override
   Widget build(BuildContext context) {
+    if (widget.isCreator){
+      DefaultFirebaseOptions.showDialogIfFirstLoaded(context, "TournamentCreator", "Congratulations!", "Congratulations on creating your first tournament! When people join, you can view their profiles or long press to remove them.");
+    }
+    else{
+      DefaultFirebaseOptions.showDialogIfFirstLoaded(context, "Tournament", "Welcome to your first tournament!", "If it is not full, you can tap below to join!");
+    }
+
     return FutureBuilder(
         future: getTournamentInfo(widget.tournamentId),
         builder: (context, snapshot) {

@@ -24,7 +24,7 @@ class User {
 
   User.fromJSON(Map<dynamic, dynamic> json)
       : id = json["uid"] ?? "0",
-        name = json["username"] ?? "John Doe",
+        name = json["username"] ?? "",
         bio = json["bio"] ?? "",
         email = json["email"] ?? "0",
         age = json["age"] ?? 0,

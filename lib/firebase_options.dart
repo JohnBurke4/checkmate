@@ -3,8 +3,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/user.dart';
 
@@ -111,5 +114,33 @@ class DefaultFirebaseOptions {
     await FirebaseFirestore.instance.collection("user").doc(id).get();
     var data = doc.data();
     return User.fromJSON(data!);
+  }
+
+  static showDialogIfFirstLoaded(BuildContext context, String keyIsFirstLoaded, String title, String text) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isFirstLoaded = prefs.getBool(keyIsFirstLoaded);
+    if (isFirstLoaded == null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: new Text(title),
+            content: new Text(text),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("Dismiss"),
+                onPressed: () {
+                  // Close the dialog
+                  Navigator.of(context).pop();
+                  prefs.setBool(keyIsFirstLoaded, false);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }
