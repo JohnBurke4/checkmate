@@ -96,6 +96,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void _update(test) {
+    print("Hello");
     setState(() {});
   }
 

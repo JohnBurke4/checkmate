@@ -40,7 +40,12 @@ class _GalleryState extends State<Gallery> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
-          child: InkWell(
+          child: FutureBuilder<void>(
+              future: getProfilePics(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  print("firebaseImages.first");
+                  return InkWell(
                     child: CircleAvatar(
                       radius: 80,
                       backgroundColor: Colors.white,
@@ -50,8 +55,13 @@ class _GalleryState extends State<Gallery> {
                               as ImageProvider,
                     ),
                     onTap: openGallery,
-                  ),
-
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
         ),
       );
 
