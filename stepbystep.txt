@@ -2,6 +2,7 @@
 - Create and change your profile with your name, bio, profile pictures, chess rating and Chess.com rating
 - Can view potential matches bio, pictures and chess rating.
 - Use the swiping feature to match with potential players.
+- Get a notification when you get a new match or new message.
 - View matches trustworthy rating when matching, by viewing their 'trustworthy rating' on their profile. Can tap on one of the icons to rate them. Long press on an icon to see what it means.
 - The ability to unmatch, block and report any player by long pressing their profile in your match list.
 - Start conversing with these players you matched with in the chatroom, picking which one to talk to from list of players matched.
