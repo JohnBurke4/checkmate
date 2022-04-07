@@ -123,6 +123,13 @@ class Tournament {
             (error) => print("Failed to add tournaments location: $error"));
   }
 
+  static Future UpdateTournament(TourInfo tour, tournamentId) async {
+    await FirebaseFirestore.instance
+        .collection("tournaments")
+        .doc(tournamentId)
+        .update(tour.toJson());
+  }
+
   void deleteTournament(String userId, double lat, double lon) {
     FirebaseFirestore.instance
         .collection("tournaments")
