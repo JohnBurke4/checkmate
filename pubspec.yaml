@@ -27,25 +27,41 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  location: ^4.2.0
-  photo_view: ^0.13.0
+  location: ^4.3.0
   flutter:
     sdk: flutter
-  flutter_map: any
+  flutter_map: ^0.13.1
   user_location:
     git:
       url: https://github.com/igaurab/user_location_plugin.git
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  firebase_core: ^1.12.0
+  
+
+  image_picker: ^0.8.4+11 
+  firebase_analytics: ^9.1.2
+  firebase_core: ^1.13.1
+
   swipe_cards: ^1.0.0
   carousel_slider: ^4.0.0
-  firebase_storage: ^10.2.6
-  flutter_chat_ui: ^1.5.5
-  cloud_firestore: ^3.1.8
+  firebase_storage: ^10.2.9
+  cloud_firestore: ^3.1.10
+  photo_view: ^0.13.0
 
+  http: ^0.13.4
+
+
+  firebase_auth: ^3.3.11
+
+  chat_bubbles: ^1.2.0
+  cupertino_icons: ^1.0.4
+  path_provider: ^2.0.9
+  uuid: ^3.0.6
+  flutter_launcher_icons: ^0.9.2
+  firebase_messaging: ^11.2.11
+  cloud_functions: ^3.2.10
+  shared_preferences: ^2.0.13
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -55,7 +71,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+  flutter_lints: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -74,6 +90,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
+    - assets/
     - assets/test/
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -101,3 +118,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "image/Checkmate_logo_black.png"

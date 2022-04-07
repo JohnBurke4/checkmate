@@ -1,4 +1,12 @@
+import 'package:checkmate/firebase_options.dart';
+import 'package:checkmate/main.dart';
+import 'package:checkmate/services/match.dart';
+import 'package:checkmate/sign_in.dart';
+import 'package:checkmate/ui/components/gallery.dart';
 import 'package:checkmate/ui/views/user_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,34 +21,71 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
 
 class NavBar extends StatefulWidget {
+  final String uid;
+
+  const NavBar({Key? key, required this.uid}) : super(key: key);
+
   @override
   _NavBarState createState() => _NavBarState();
 }
 
 class _NavBarState extends State<NavBar> {
-  _NavBarState() {}
+  // _NavBarState() {};
 
+  // late String test = widget.uid;
+  late final FirebaseMessaging _messaging;
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static List<Widget> _widgetOptions = <Widget>[
-    // Put your widgets in here
-    UserPage(),
-    SwipePage(),
-    FriendList(),
-    MapPage(),
-  ];
-
   LocationData? _currentPosition;
   Location location = new Location();
-  String tmp_location_list_id = 'c09uTg5jASyKjdpCXS7f';
   String userId = 'vcCXf1YI85Nq5Op2PWMOMbu3DAv1';
+  bool lightTheme = false;
+  void registerNotification() async {
+    // 1. Initialize the Firebase app
+    await Firebase.initializeApp();
+    getProfilePics();
+    // 2. Instantiate Firebase Messaging
+    _messaging = FirebaseMessaging.instance;
+
+    // 3. On iOS, this helps to take the user permissions
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      var userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) {
+        return;
+      }
+      var token = await _messaging.getToken();
+      print(token);
+      await FirebaseFirestore.instance
+          .collection("user")
+          .doc(userId)
+          .update({'deviceToken': token});
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        // Backround checking
+      });
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    fetchLocation();
+    registerNotification();
+    // test = widget.uid ;
+    MatchServices.getMatches(context);
+  }
+
+  String getUid() {
+    return widget.uid;
   }
 
   void _onItemTapped(int index) {
@@ -54,28 +99,79 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('CheckMate')),
+        backgroundColor: Theme.of(context).primaryColorDark,
+        actions: <Widget>[
+          Switch(
+            value: lightTheme,
+            onChanged: (value) {
+              setState(() {
+                lightTheme = value;
+                if (lightTheme) {
+                  MyApp.of(context)!.changeTheme(ThemeMode.dark);
+                } else {
+                  MyApp.of(context)!.changeTheme(ThemeMode.light);
+                }
+              });
+            },
+          ),
+        ],
+        leading: IconButton(
+          icon: const Icon(
+            Icons.logout,
+            color: Colors.white,
+          ),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => SignInScreen()));
+          },
+        ),
+        title: const Text('CheckMate'),
+        automaticallyImplyLeading: false,
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: <Widget>[
+        // Put your widgets in here
+        UserPage(
+          uid: widget.uid,
+          editable: true,
+        ),
+        SwipePage(),
+        FriendList(uid: widget.uid),
+        MapPage(uid: widget.uid),
+      ].elementAt(_selectedIndex),
+      //_widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         unselectedItemColor: Colors.black,
         type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(
+              Icons.account_circle,
+              color: Theme.of(context).primaryColorDark,
+            ),
             label: 'Me',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.swipe),
+            icon: Icon(
+              Icons.swipe,
+              color: Theme.of(context).primaryColorDark,
+            ),
             label: 'Swipe',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(
+              Icons.chat,
+              color: Theme.of(context).primaryColorDark,
+            ),
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
+            icon: Icon(
+              Icons.map,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            label: 'Tournaments',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -84,45 +180,40 @@ class _NavBarState extends State<NavBar> {
       ),
     );
   }
+}
 
-  fetchLocation() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+class NotificationBadge extends StatelessWidget {
+  final int totalNotifications;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
+  const NotificationBadge({required this.totalNotifications});
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _currentPosition = await location.getLocation();
-    log('data: $_currentPosition');
-    FirebaseFirestore.instance
-        .collection("tmp_locationData")
-        .doc(tmp_location_list_id)
-        .collection("location_list")
-        .add({
-          'author': userId,
-          'createdAt': DateTime.now(),
-          'lat': _currentPosition!.latitude,
-          'lon': _currentPosition!.longitude,
-        })
-        .then((value) => print("Message Added"))
-        .catchError((error) => print("Failed to add message: $error"));
-    // location.onLocationChanged.listen((LocationData currentLocation) {
-    //   setState(() {
-    //     _currentPosition = currentLocation;
-    //   });
-    // });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40.0,
+      height: 40.0,
+      decoration: new BoxDecoration(
+        color: Colors.red,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '$totalNotifications',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ),
+    );
   }
+}
+
+class PushNotification {
+  PushNotification({
+    this.title,
+    this.body,
+  });
+  String? title;
+  String? body;
 }
