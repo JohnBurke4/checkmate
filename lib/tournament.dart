@@ -243,11 +243,10 @@ class Tournament {
     AlertDialog alert = AlertDialog(
       title: Text(tournamentName),
       content: Container(
-        height: MediaQuery.of(context).size.height * 0.06,
+        height: MediaQuery.of(context).size.height*.025,
         child: Column(
           children: [
             Text(currentPlayers.length.toString() + " / $size players"),
-            Text("Would you like to view this tournament?"),
           ],
         ),
       ),
