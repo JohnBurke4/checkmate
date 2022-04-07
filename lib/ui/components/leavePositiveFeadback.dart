@@ -135,7 +135,12 @@ class LeavePositiveFeadback extends StatelessWidget {
                               )
                             ]);
                       }),
-                  Text(data['friendliness'].toString())
+                  Text(
+                    data['friendliness'].toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
                 ])),
                 Expanded(
                     child: Row(children: <Widget>[
@@ -163,7 +168,12 @@ class LeavePositiveFeadback extends StatelessWidget {
                               )
                             ]);
                       }),
-                  Text(data['punctuality'].toString())
+                  Text(
+                    data['punctuality'].toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
                 ])),
                 Expanded(
                     child: Row(children: <Widget>[
@@ -191,7 +201,12 @@ class LeavePositiveFeadback extends StatelessWidget {
                               )
                             ]);
                       }),
-                  Text(data['hangOutAgain'].toString())
+                  Text(
+                    data['hangOutAgain'].toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
                 ])),
               ],
             );
